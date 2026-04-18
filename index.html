@@ -1,0 +1,4608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EPS — Course d'orientation</title>
+  <link rel="icon" type="image/png" href="assets/logo-co.png" sizes="512x512" />
+  <link rel="apple-touch-icon" href="assets/logo-co.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#1a3a63" />
+  <meta name="application-name" content="CO EPS" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="CO EPS" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <style>
+    :root {
+      --bg: #e8f0e6;
+      --bg-deep: #d6e7d0;
+      --card: rgba(255, 255, 255, 0.82);
+      --card-strong: rgba(255, 255, 255, 0.94);
+      --text: #193028;
+      --muted: #5d7467;
+      --primary: #1f7a5a;
+      --primary-dark: #14513d;
+      --secondary: #2f6b57;
+      --accent: #b7d88d;
+      --accent-strong: #86b04a;
+      --danger: #c1443c;
+      --border: rgba(42, 78, 60, 0.12);
+      --shadow: 0 18px 50px rgba(35, 61, 48, 0.12);
+      --shadow-soft: 0 10px 30px rgba(35, 61, 48, 0.08);
+      --radius: 22px;
+      --card-border: rgba(255, 255, 255, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(183, 216, 141, 0.65) 0, transparent 26%),
+        radial-gradient(circle at 100% 12%, rgba(129, 174, 94, 0.32) 0, transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(58, 126, 89, 0.18) 0, transparent 32%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    #fullscreenToggleBtn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 20;
+      min-height: 32px;
+      padding: 5px 9px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(42, 78, 60, 0.18);
+      color: #29463a;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 22px rgba(35, 61, 48, 0.12);
+      opacity: 0.86;
+    }
+
+    #fullscreenToggleBtn:hover {
+      opacity: 1;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(245, 251, 245, 0.72));
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      position: sticky;
+      top: 12px;
+      z-index: 5;
+    }
+
+    .session-core-topbar {
+      position: relative;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      min-height: 168px;
+      /* Réserve la zone du bouton « Précédent » (absolu en haut à droite) : évite la superposition avec Reset chrono */
+      padding: 12px clamp(100px, 26vw, 132px) 12px clamp(12px, 3vw, 18px);
+    }
+
+    #coreBackToSessionsBtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 7;
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 11px;
+      font-size: 0.82rem;
+    }
+
+    .session-core-topbar .session-global-timer-wrap {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: min(880px, 100%);
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .session-core-topbar .session-global-timer-wrap .timer-box {
+      font-size: 4.2rem;
+      line-height: 1;
+      padding: 5px 12px;
+      flex: 0 1 auto;
+      min-width: 0;
+      justify-content: center;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 122, 90, 0.14);
+      background: linear-gradient(135deg, rgba(31, 122, 90, 0.11), rgba(183, 216, 141, 0.16));
+      box-shadow: none;
+    }
+
+    .session-core-topbar .session-global-timer-wrap #resetGlobalBtn {
+      flex: 0 0 auto;
+      align-self: stretch;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 6px 11px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      border-radius: 14px;
+      white-space: nowrap;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .session-core-topbar .timer-box span:first-child {
+      display: none;
+    }
+
+    .session-core-topbar .controls {
+      justify-content: center;
+      gap: 12px;
+    }
+
+    #coreStudentsSection .panel-header {
+      margin-bottom: 6px;
+    }
+
+    #coreGroupColorSelect,
+    #corePrepModeBtn,
+    #coreResetChoicesBtn,
+    #coreSummaryBtn {
+      min-height: 40px;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      border-radius: 13px;
+    }
+
+    #coreSummaryBtn {
+      opacity: 0.9;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      min-height: 32px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      border-radius: 10px;
+    }
+
+    #coreActionsRow {
+      width: 100%;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    #coreResetChoicesBtn {
+      margin-left: auto;
+    }
+
+    #coreSecondaryActionsRow {
+      width: 100%;
+      justify-content: flex-end;
+      margin-top: -4px;
+    }
+
+    #coreResetSessionBtn {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 18;
+      min-height: 30px;
+      padding: 4px 9px;
+      font-size: 0.72rem;
+      border-radius: 9px;
+      opacity: 0.82;
+    }
+
+    #coreStudentsGrid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+      max-height: 56vh;
+      overflow: auto;
+      align-content: start;
+    }
+
+    #coreStudentsGrid .student-card {
+      min-height: 90px;
+      gap: 2px;
+      padding: 7px 8px;
+    }
+
+    #coreStudentsGrid .student-card .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: nowrap;
+      margin-bottom: -3px;
+    }
+
+    #coreStudentsGrid .student-card .row + .mini {
+      margin-top: 0;
+    }
+
+    #coreStudentsGrid .student-card .name {
+      font-size: 0.94rem;
+      line-height: 1.05;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #coreStudentsGrid .student-card .badge {
+      padding: 2px 7px;
+      font-size: 0.66rem;
+      flex-shrink: 0;
+    }
+
+    #coreStudentsGrid .actions .btn {
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 28px;
+      padding: 4px 6px;
+      font-size: 0.74rem;
+      border-radius: 9px;
+    }
+
+    #coreStudentsGrid .actions .btn.btn-danger {
+      min-width: 0;
+    }
+
+    #coreStudentsGrid .actions {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .success-counter-row {
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #summaryList {
+      max-height: 58vh;
+      overflow: auto;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      padding-right: 4px;
+    }
+
+    .summary-student-card .summary-totals {
+      margin-top: 4px;
+    }
+
+    .summary-run-detail-label {
+      font-weight: 800;
+      margin-top: 10px;
+      font-size: 0.82rem;
+      color: #1f3f33;
+    }
+
+    .summary-run-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 4px;
+    }
+
+    .summary-run-line {
+      display: grid;
+      grid-template-columns: 1.5rem minmax(0, 1fr) auto auto auto;
+      gap: 8px 10px;
+      align-items: center;
+      font-size: 0.8rem;
+      padding: 5px 6px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(24, 47, 38, 0.08);
+    }
+
+    .summary-run-num {
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .summary-run-out.ok {
+      color: #166534;
+      font-weight: 800;
+      font-size: 0.76rem;
+    }
+
+    .summary-run-out.ko {
+      color: #991b1b;
+      font-weight: 800;
+      font-size: 0.76rem;
+    }
+
+    .summary-run-err {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .summary-run-time {
+      color: #475569;
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
+    #sessionSummaryView .summary-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    #successErrorCount {
+      min-width: 36px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1f3f33;
+    }
+
+    #coreStudentsGrid .student-card .mini {
+      font-size: 0.76rem;
+      line-height: 1.05;
+      margin: 0;
+    }
+
+    @media (max-width: 1100px) {
+      .session-core-topbar .session-global-timer-wrap .timer-box {
+        font-size: 2.8rem;
+      }
+    }
+
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.35rem;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(31, 122, 90, 0.12), rgba(183, 216, 141, 0.18));
+      border: 1px solid rgba(31, 122, 90, 0.12);
+    }
+
+    .controls, .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button, .btn-file {
+      border: 1px solid transparent;
+      border-radius: 16px;
+      padding: 11px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 800;
+      min-height: 46px;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--text);
+      border-color: rgba(42, 78, 60, 0.08);
+    }
+
+    .btn:hover, .btn-file:hover, .btn-go:hover, .class-delete-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(31, 71, 50, 0.16);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #3b8f65);
+      color: #fff;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); }
+
+    #coreGroupColorSelect.group-color-all {
+      background: linear-gradient(135deg, var(--primary), #3b8f65);
+      color: #fff;
+      border-color: rgba(24, 92, 64, 0.22);
+    }
+
+    #coreGroupColorSelect.group-color-noir {
+      background: linear-gradient(135deg, #27272a, #111827);
+      color: #fff;
+      border-color: rgba(0, 0, 0, 0.45);
+    }
+
+    #coreGroupColorSelect.group-color-rouge {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: #fff;
+      border-color: rgba(127, 29, 29, 0.35);
+    }
+
+    #coreGroupColorSelect.group-color-rose {
+      background: linear-gradient(135deg, #f9a8d4, #f472b6);
+      color: #4a044e;
+      border-color: rgba(190, 24, 93, 0.28);
+    }
+
+    #coreGroupColorSelect.group-color-vert {
+      background: linear-gradient(135deg, #22c55e, #15803d);
+      color: #fff;
+      border-color: rgba(21, 128, 61, 0.36);
+    }
+
+    #coreGroupColorSelect.group-color-bleu {
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: #fff;
+      border-color: rgba(37, 99, 235, 0.36);
+    }
+
+    #coreGroupColorSelect.group-color-jaune {
+      background: linear-gradient(135deg, #fde047, #facc15);
+      color: #422006;
+      border-color: rgba(202, 138, 4, 0.35);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #a92f2f);
+      color: #fff;
+    }
+    .btn-danger:hover { background: linear-gradient(135deg, #a93532, #8f2222); }
+
+    .btn-create {
+      background: linear-gradient(135deg, #2f8a62, #3f9d73);
+      color: #fff;
+      border-color: rgba(24, 92, 64, 0.3);
+    }
+
+    .btn-create::before {
+      content: "+ ";
+      font-weight: 900;
+    }
+
+    .btn-create:hover {
+      background: linear-gradient(135deg, #25704f, #2f8a62);
+    }
+
+    .btn-delete {
+      background: linear-gradient(135deg, #c64a42, #ad3430);
+      color: #fff;
+      border-color: rgba(90, 15, 12, 0.25);
+    }
+
+    .btn-delete::before {
+      content: "x ";
+      font-weight: 900;
+    }
+
+    .btn-delete:hover {
+      background: linear-gradient(135deg, #ae3a34, #952722);
+    }
+    .btn-file {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(135deg, #3b6f5d, #24493c);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-file input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .menu-bar {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(244, 249, 244, 0.74));
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 251, 246, 0.76));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      display: grid;
+      gap: 6px;
+      backdrop-filter: blur(14px);
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .menu-btn {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+    }
+
+    .menu-btn.active {
+      background: linear-gradient(135deg, var(--primary), #3d8d67);
+      color: #fff;
+    }
+
+    .session-choice-btn {
+      min-width: 98px;
+    }
+
+    .session-choice-btn.active {
+      background: linear-gradient(135deg, #3f7c66, #23483c);
+      color: #fff;
+    }
+
+    .class-choice-btn {
+      min-width: 110px;
+    }
+
+    .class-choice-btn.active {
+      background: linear-gradient(135deg, var(--primary), #458b67);
+      color: #fff;
+    }
+
+    .class-choice-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .class-delete-btn {
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #d2554d, #b6332d);
+      color: #fff;
+      font-size: 0.85rem;
+      border: 1px solid rgba(90, 15, 12, 0.25);
+    }
+
+    .class-delete-btn:hover {
+      background: #b91c1c;
+    }
+
+    .dashboard {
+      display: grid;
+      gap: 16px;
+    }
+
+    .dashboard.two-panels {
+      grid-template-columns: 1.2fr 1fr;
+    }
+
+    .view-hidden {
+      display: none;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, var(--card-strong), rgba(246, 251, 246, 0.74));
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      padding: 18px;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    h2 {
+      font-size: 1.24rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .setup-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #setupView {
+      flex-direction: row;
+      align-items: stretch;
+      flex-wrap: nowrap;
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+      min-height: min(88vh, 920px);
+      max-width: 100%;
+    }
+
+    #setupView > .setup-hero-column {
+      position: relative;
+      flex: 0 0 clamp(240px, 36vw, 460px);
+      width: clamp(240px, 36vw, 460px);
+      max-width: 46%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px 20px 20px;
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.98) 0%, rgba(232, 246, 232, 0.92) 100%);
+      border-right: 1px solid var(--border);
+    }
+
+    /* Deuxième menu (séances) : au-dessus du logo, coin haut-gauche */
+    #setupView #changeClassTopBtn {
+      position: absolute;
+      top: max(12px, env(safe-area-inset-top, 0px) + 8px);
+      left: max(12px, env(safe-area-inset-left, 0px) + 8px);
+      z-index: 4;
+      min-height: 44px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(42, 78, 60, 0.22);
+      color: #23483c;
+      box-shadow: 0 6px 20px rgba(35, 61, 48, 0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    #setupView #changeClassTopBtn:hover {
+      background: rgba(255, 255, 255, 0.98);
+    }
+
+    .setup-brand-logo-large {
+      width: 100%;
+      height: auto;
+      max-width: min(100%, 420px);
+      max-height: min(84vh, 820px);
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 14px 32px rgba(35, 61, 48, 0.18));
+    }
+
+    /* Menu d'accueil : centrage vertical (colonne) + horizontal (bloc centré). */
+    #setupView > .setup-content-column {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: clamp(16px, 2.4vw, 22px);
+      padding: clamp(22px, 3.8vw, 40px) clamp(18px, 4vw, 40px);
+      justify-content: center;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(242, 249, 240, 0.78)),
+        radial-gradient(circle at 100% 0%, rgba(183, 216, 141, 0.35), transparent 30%);
+    }
+
+    #setupView .setup-content-column > .panel-header {
+      width: 100%;
+      max-width: min(720px, 100%);
+      margin: 0 auto 2px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(10px, 2vw, 16px);
+    }
+
+    #setupView .setup-content-column .setup-header-right {
+      justify-content: center;
+      width: 100%;
+    }
+
+    #setupView .setup-content-column > p.muted {
+      width: 100%;
+      max-width: min(36rem, 94vw);
+      margin: 0 auto;
+      padding: 0 6px;
+      line-height: 1.5;
+      font-size: clamp(0.94rem, 1.35vw, 1.06rem);
+    }
+
+    #setupView #setupTitle {
+      text-align: center;
+      width: 100%;
+      max-width: min(720px, 100%);
+      margin: 0 auto;
+      font-size: clamp(1.5rem, 3vw, 2.05rem);
+      letter-spacing: -0.03em;
+    }
+
+    /* :not(.view-hidden) évite d'écraser display:none de .view-hidden (spécificité plus haute avec 2 #id). */
+    #setupView .setup-content-column #setupClassesStep:not(.view-hidden),
+    #setupView .setup-content-column #setupSessionsStep:not(.view-hidden) {
+      width: 100%;
+      max-width: min(720px, 100%);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(12px, 2vw, 18px);
+    }
+
+    #setupView .setup-content-column .input-row {
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      gap: 12px;
+    }
+
+    #setupView .setup-content-column #setupClassesStep .input-row:has(#newClassInput) {
+      max-width: 540px;
+      margin-inline: auto;
+    }
+
+    #setupView #setupClassesStep > .input-row:first-child {
+      justify-content: center;
+    }
+
+    #setupView #classButtonsRow {
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-inline: auto;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    #setupView #classButtonsRow .mini {
+      display: block;
+      text-align: center;
+      width: min(100%, 30rem);
+      margin-inline: auto;
+    }
+
+    /* 7 séances : 4 boutons sur la 1re ligne, 3 sur la 2e (grille 4 colonnes). */
+    #setupView #sessionButtonsRow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px 14px;
+      width: 100%;
+      max-width: min(720px, 100%);
+      margin-inline: auto;
+      justify-items: stretch;
+    }
+
+    #setupView #sessionButtonsRow .session-choice-item {
+      width: 100%;
+      min-width: 0;
+    }
+
+    #setupView #sessionButtonsRow .session-choice-btn {
+      width: 100%;
+      min-width: 0;
+    }
+
+    #setupView #setupSummary,
+    #setupView #selectedSessionLabel {
+      text-align: center;
+      width: 100%;
+      max-width: min(36rem, 94vw);
+      margin-inline: auto;
+      padding: 0 6px;
+    }
+
+    /* « Créer une nouvelle séance » et « Supprimer des séances » sur une même ligne (les boutons du mode suppression suivent sur la ligne suivante si besoin). */
+    #setupView .setup-content-column .session-actions-row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px 12px;
+      max-width: min(720px, 100%);
+      margin-inline: auto;
+      width: 100%;
+    }
+
+    #setupView .setup-content-column .session-actions-row .session-actions-right {
+      display: contents;
+      margin-left: 0;
+      justify-content: unset;
+      align-items: unset;
+      width: unset;
+      flex-wrap: unset;
+    }
+
+    /* Un peu plus compacts pour tenir sur une ligne avec le texte long. */
+    #setupView #setupSessionsStep #createFreshSessionBtn,
+    #setupView #setupSessionsStep #toggleDeleteSessionsBtn {
+      min-height: 42px;
+      padding: 8px 14px;
+      font-size: 0.93rem;
+      white-space: nowrap;
+    }
+
+    #setupView #newClassInput {
+      flex: 1 1 200px;
+      max-width: min(340px, 100%);
+      min-width: min(100%, 180px);
+    }
+
+    #setupView .setup-content-column .class-choice-item {
+      justify-content: center;
+    }
+
+    #setupView .setup-content-column .btn {
+      min-height: 48px;
+      padding: 12px 20px;
+      font-size: 1rem;
+    }
+
+    #setupView .setup-content-column .class-delete-btn {
+      min-height: 44px;
+      padding: 8px 14px;
+    }
+
+    #setupView .session-choice-btn {
+      min-width: 108px;
+      min-height: 50px;
+      font-size: 1.02rem;
+    }
+
+    #setupView .class-choice-btn {
+      min-width: 120px;
+      min-height: 50px;
+      font-size: 1.02rem;
+    }
+
+    @media (max-width: 900px) {
+      #setupView {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      #setupView > .setup-hero-column {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+      }
+
+      .setup-brand-logo-large {
+        max-height: min(42vh, 360px);
+        max-width: min(92vw, 340px);
+      }
+
+      #setupView > .setup-content-column {
+        padding: 22px clamp(16px, 5vw, 40px) 28px;
+      }
+    }
+
+    #workspaceView {
+      display: grid;
+      gap: 18px;
+      width: 100%;
+    }
+
+    #setupView .panel-header {
+      margin-bottom: 10px;
+    }
+
+    #setupView #sessionButtonsRow,
+    #setupView #classButtonsRow {
+      gap: 14px;
+    }
+
+    .session-choice-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #setupView .setup-content-column .session-choice-item {
+      justify-content: center;
+    }
+
+    .session-actions-row {
+      display: flex;
+      width: 100%;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+
+    .session-actions-right {
+      display: flex;
+      margin-left: auto;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: nowrap;
+      min-width: fit-content;
+    }
+
+    .session-choice-btn.delete-selected {
+      background: linear-gradient(135deg, #c1443c, #9f302d);
+      color: #fff;
+      border-color: rgba(90, 15, 12, 0.2);
+    }
+
+    #setupClassesStep #classButtonsRow {
+      margin-bottom: 14px;
+    }
+
+    #setupSessionsStep #sessionButtonsRow {
+      margin-bottom: 22px;
+    }
+
+    #selectedSessionLabel {
+      margin-bottom: 14px;
+    }
+
+    .muted { color: var(--muted); font-size: 0.92rem; }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"], select, textarea {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      min-height: 46px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      width: 100%;
+    }
+
+
+    .session-setup-summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 4px;
+      margin-bottom: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .session-setup-summary-row #sessionSetupSummary {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .session-setup-actions-row {
+      flex: 0 0 auto;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn-compact {
+      min-height: 38px;
+      padding: 8px 11px;
+      font-size: 0.85rem;
+    }
+
+    #studentSearchInput {
+      flex: 1 1 260px;
+    }
+
+    .student-list, .active-list, .results-list {
+      display: grid;
+      gap: 10px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .active-list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      align-content: start;
+    }
+
+    #setupStudentsPreview {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      max-height: 220px;
+      overflow: auto;
+      align-content: start;
+    }
+
+    #setupStudentsPreview .student-card {
+      cursor: pointer;
+    }
+
+    #setupStudentsPreview .student-card.setup-card-absent {
+      opacity: 0.6;
+      border-style: dashed;
+    }
+
+    #setupStudentsPreview .student-card.setup-card-selected-delete {
+      outline: 2px solid rgba(198, 74, 66, 0.85);
+      background: rgba(255, 239, 238, 0.95);
+    }
+
+    #setupStudentsPreview .student-card.setup-card-selected-absent {
+      outline: 2px solid rgba(191, 135, 64, 0.9);
+      background: rgba(255, 248, 235, 0.95);
+    }
+
+    #sessionSetupCourseRow {
+      justify-content: center;
+      align-items: center;
+      margin-top: 6px;
+      padding: 12px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(183, 216, 141, 0.26), rgba(227, 244, 229, 0.62));
+      border: 1px solid rgba(31, 122, 90, 0.18);
+      box-shadow: var(--shadow-soft);
+    }
+
+    #sessionSetupCourseLabel {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #1f5c45;
+      margin: 0 4px 0 0;
+    }
+
+    #sessionCourseCountSelect {
+      min-width: 170px;
+      font-weight: 800;
+      border: 2px solid rgba(31, 122, 90, 0.35);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    #sessionBeaconCountSelect {
+      min-width: 170px;
+      font-weight: 800;
+      border: 2px solid rgba(31, 122, 90, 0.35);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Zone manuelle : texte à gauche (flex), bouton à droite, même hauteur que le textarea. */
+    #sessionSetupMainRow {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+
+    #sessionSetupMainRow #manualStudentsInput {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+      min-height: 100px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    #sessionSetupMainRow #addStudentBtn {
+      flex: 0 0 auto;
+      align-self: stretch;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 158px;
+      max-width: 200px;
+    }
+
+    #sessionValidateRow {
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    #goToCoreBtn {
+      min-width: 280px;
+      min-height: 52px;
+      font-size: 1rem;
+      box-shadow: 0 14px 26px rgba(31, 71, 50, 0.16);
+    }
+
+    .student-card, .active-card {
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.84);
+      transition: 0.18s ease;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .student-card.drag-over {
+      outline: 3px dashed var(--primary);
+      background: rgba(219, 245, 231, 0.95);
+    }
+
+    .active-card {
+      border-width: 2px;
+      border-color: rgba(31, 122, 90, 0.3);
+      background: linear-gradient(135deg, rgba(235, 250, 240, 0.96), rgba(244, 255, 238, 0.9));
+      padding: 10px;
+      gap: 6px;
+    }
+
+    .student-card strong, .active-card strong {
+      font-size: 1rem;
+    }
+
+    .name-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .badge-idle { background: #6b7280; }
+    .badge-running { background: linear-gradient(135deg, #1f7a5a, #2f946d); }
+    .badge-present {
+      background: #bfdbfe;
+      color: #1e3a8a;
+    }
+    .badge-absent {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .mini {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .course {
+      border-radius: 18px;
+      border: 1px solid rgba(24, 47, 38, 0.16);
+      padding: 5px 4px;
+      text-align: center;
+      font-weight: 800;
+      cursor: grab;
+      user-select: none;
+      color: #111827;
+      min-height: 42px;
+      display: grid;
+      place-content: center;
+      gap: 2px;
+      box-shadow: var(--shadow-soft);
+      font-size: 0.88rem;
+    }
+
+    .course small {
+      font-size: 0.64rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .course.busy {
+      opacity: 0.38;
+      cursor: not-allowed;
+      filter: grayscale(0.22);
+    }
+
+    .course.student-blocked {
+      opacity: 0.3;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .course.course-picked {
+      outline: 3px solid #166534;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85) inset;
+    }
+
+    .numeric-pad {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin: 10px 0 14px;
+    }
+
+    .numeric-pad .num-key {
+      min-width: 2.5rem;
+      padding: 10px 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(24, 47, 38, 0.2);
+      background: linear-gradient(180deg, #fff, #f0fdf4);
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .numeric-pad .num-key.is-selected {
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      color: #fff;
+      border-color: #15803d;
+    }
+
+    .numeric-pad .num-key:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .outcome-pick-grid {
+      max-height: 38vh;
+      margin-top: 6px;
+    }
+
+    .outcome-pick-block {
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(24, 47, 38, 0.22);
+    }
+
+    .outcome-pick-label {
+      font-weight: 800;
+      margin-bottom: 6px;
+      font-size: 0.88rem;
+    }
+
+    #successFlowBody,
+    #failureFlowBody {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history {
+      border-top: 1px solid var(--card-border);
+      padding-top: 6px;
+      display: grid;
+      gap: 3px;
+      max-height: 140px;
+      overflow: auto;
+    }
+
+    .history-item {
+      font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .legend span {
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(42, 78, 60, 0.08);
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(183, 216, 141, 0.24);
+      color: var(--secondary);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .compact-select {
+      min-height: 34px;
+      padding: 4px 8px;
+      font-size: 0.84rem;
+      border-radius: 8px;
+    }
+
+    .btn-go {
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 0.84rem;
+      background: linear-gradient(135deg, #356853, #24483b);
+      color: #fff;
+    }
+
+    .btn-go:hover {
+      background: linear-gradient(135deg, #24483b, #1c382e);
+    }
+
+    .toast-wrap {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      gap: 8px;
+      z-index: 99;
+      width: min(360px, 90vw);
+    }
+
+    .toast {
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: #fff;
+      box-shadow: var(--shadow);
+      font-size: 0.9rem;
+      font-weight: 700;
+      animation: slideIn 0.2s ease;
+    }
+
+    .toast.info { background: linear-gradient(135deg, #356853, #24483b); }
+    .toast.success { background: linear-gradient(135deg, #2d8a5f, #1f6f4d); }
+    .toast.warn { background: linear-gradient(135deg, #bb8740, #9a6931); }
+    .toast.error { background: linear-gradient(135deg, #c74b42, #a9322c); }
+
+    @keyframes slideIn {
+      from { transform: translateY(6px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    dialog {
+      border: none;
+      border-radius: 24px;
+      padding: 0;
+      width: min(860px, 94vw);
+      max-height: 92vh;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    dialog::backdrop {
+      background: rgba(17, 24, 39, 0.45);
+    }
+
+    .modal {
+      padding: 20px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
+      gap: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,250,244,0.9));
+      max-height: 92vh;
+      overflow: hidden;
+    }
+
+    #modalCourseGrid {
+      min-height: 120px;
+      max-height: 56vh;
+      overflow: auto;
+      padding-right: 4px;
+      align-content: start;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      background: rgba(227, 244, 229, 0.9);
+      border: 1px solid rgba(31, 122, 90, 0.14);
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 0.85rem;
+      color: #255641;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard.two-panels { grid-template-columns: 1fr; }
+      .panel { min-height: auto; }
+      .active-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      #setupStudentsPreview {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      dialog {
+        width: min(96vw, 860px);
+        max-height: 95vh;
+      }
+      .modal {
+        padding: 14px;
+        max-height: 95vh;
+      }
+      #modalCourseGrid {
+        max-height: 62vh;
+      }
+      .session-setup-summary-row {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 720px) {
+      #setupStudentsPreview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #coreStudentsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .active-list {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="btn" id="fullscreenToggleBtn" title="Basculer en plein écran">Plein ecran</button>
+  <main class="container">
+    <section class="panel" id="setupView">
+      <aside class="setup-hero-column">
+        <button type="button" class="btn view-hidden" id="changeClassTopBtn">Changer de classe</button>
+        <img
+          class="setup-brand-logo-large"
+          src="assets/logo-co.png"
+          alt=""
+          width="512"
+          height="512"
+          decoding="async"
+          aria-hidden="true"
+        />
+      </aside>
+      <div class="setup-content-column">
+        <div class="panel-header">
+          <h2 id="setupTitle">Menu des séances</h2>
+          <div class="setup-header-right">
+            <span class="muted" id="setupSubtitle">Choisir votre séance</span>
+          </div>
+        </div>
+        <p class="muted">Application de pilotage EPS pour la course d'orientation, pensee pour une utilisation tactile rapide sur tablette.</p>
+
+        <div id="setupClassesStep">
+          <div class="input-row">
+            <div class="input-row" id="classButtonsRow"></div>
+          </div>
+          <div class="input-row">
+            <input type="text" id="newClassInput" placeholder="Nom de classe (ex: 5eA)" />
+            <button class="btn btn-create" id="createClassBtn">Créer classe</button>
+          </div>
+          <p class="muted" id="setupSummary">Sélectionnez une séance et une classe pour commencer.</p>
+        </div>
+
+        <div id="setupSessionsStep" class="view-hidden">
+          <p class="mini" id="selectedSessionLabel"></p>
+          <div class="input-row" id="sessionButtonsRow"></div>
+          <p class="muted view-hidden" id="deleteSessionsHint">Mode suppression actif : appuyez sur une ou plusieurs séances à supprimer, puis confirmez.</p>
+          <div class="input-row session-actions-row">
+            <button class="btn btn-create" id="createFreshSessionBtn">Créer une nouvelle séance</button>
+            <div class="input-row session-actions-right">
+              <button class="btn btn-delete" id="toggleDeleteSessionsBtn">Supprimer des séances</button>
+              <button class="btn btn-delete view-hidden" id="confirmDeleteSessionsBtn">Confirmer la suppression</button>
+              <button class="btn view-hidden" id="selectAllSessionsBtn">Tout cocher</button>
+              <button class="btn view-hidden" id="cancelDeleteSessionsBtn">Annuler</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workspaceView" class="view-hidden">
+      <section class="panel" id="sessionSetupView">
+        <div class="panel-header">
+          <h2>Paramétrage de la séance</h2>
+          <div class="setup-header-right">
+            <button class="btn" id="backFromSessionSetupBtn">Précédent</button>
+          </div>
+        </div>
+        <span class="view-hidden" id="studentCount">0 élève</span>
+        <p class="muted">Étape 1 : renseigner les élèves (manuel ou CSV), puis choisir le nombre de parcours.</p>
+        <div class="input-row">
+          <label class="btn-file">
+            Import CSV élèves
+            <input id="csvInput" type="file" accept=".csv,text/csv" />
+          </label>
+        </div>
+        <div class="input-row" id="sessionSetupMainRow">
+          <textarea id="manualStudentsInput" placeholder="Saisie manuelle : 1 ligne = 1 élève&#10;Exemples :&#10;Marie&#10;Dupont Marie&#10;Dupont;Marie"></textarea>
+          <button class="btn btn-create" id="addStudentBtn">Ajouter élève</button>
+        </div>
+        <div class="session-setup-summary-row">
+          <p class="muted" id="sessionSetupSummary"></p>
+          <div class="input-row session-setup-actions-row">
+            <button class="btn btn-delete btn-compact" id="toggleDeleteStudentsBtn">Supprimer prénoms</button>
+            <button class="btn btn-delete view-hidden btn-compact" id="confirmDeleteStudentsBtn">Confirmer suppression</button>
+            <button class="btn view-hidden btn-compact" id="selectAllDeleteStudentsBtn">Tout cocher</button>
+            <button class="btn view-hidden btn-compact" id="cancelDeleteStudentsBtn">Annuler</button>
+            <button class="btn btn-compact" id="toggleAbsentStudentsBtn">Sélectionner absents</button>
+            <button class="btn btn-primary view-hidden btn-compact" id="applyAbsentStudentsBtn">Valider absences</button>
+            <button class="btn view-hidden btn-compact" id="selectAllAbsentStudentsBtn">Tout cocher</button>
+            <button class="btn view-hidden btn-compact" id="cancelAbsentStudentsBtn">Annuler absences</button>
+          </div>
+        </div>
+        <p class="muted view-hidden" id="setupStudentsActionHint"></p>
+        <div class="student-list" id="setupStudentsPreview"></div>
+        <div class="input-row" id="sessionSetupCourseRow">
+          <label class="mini" id="sessionSetupCourseLabel" for="sessionCourseCountSelect">Nombre de parcours :</label>
+          <select id="sessionCourseCountSelect" title="Nombre de parcours pour la séance"></select>
+          <label class="mini" for="sessionBeaconCountSelect">Balises / parcours :</label>
+          <select id="sessionBeaconCountSelect" title="Nombre de balises par parcours"></select>
+        </div>
+        <div class="input-row" id="sessionValidateRow">
+          <button class="btn btn-primary" id="goToCoreBtn">Valider le paramétrage</button>
+        </div>
+      </section>
+
+      <section id="sessionCoreView" class="view-hidden">
+        <section class="topbar session-core-topbar">
+          <button class="btn" id="coreBackToSessionsBtn">Précédent</button>
+          <div class="session-global-timer-wrap">
+            <div class="timer-box">
+              <span>Chrono séance :</span>
+              <span id="globalTimer">00:00:00</span>
+            </div>
+            <button type="button" class="btn btn-danger" id="resetGlobalBtn">Reset chrono</button>
+          </div>
+          <div class="controls">
+            <button type="button" class="btn btn-primary" id="startGlobalBtn">Démarrer</button>
+            <button type="button" class="btn" id="pauseGlobalBtn">Pause</button>
+            <button type="button" class="btn btn-danger" id="endSessionFinBtn">Fin de séance</button>
+          </div>
+          <button class="btn" id="coreSummaryBtn">Résumé élèves</button>
+        </section>
+        <section class="panel" id="coreStudentsSection">
+          <div class="panel-header">
+            <h2>Gestion des élèves</h2>
+            <span class="muted" id="corePresentCount"></span>
+          </div>
+          <div class="input-row" id="coreActionsRow">
+            <button class="btn btn-primary" id="corePrepModeBtn">Mode préparation : OFF</button>
+            <select id="coreGroupColorSelect" title="Couleur du départ groupé">
+              <option value="all">Toutes couleurs</option>
+              <option value="noir">Noir</option>
+              <option value="rouge">Rouge</option>
+              <option value="rose">Rose</option>
+              <option value="vert">Vert</option>
+              <option value="bleu">Bleu</option>
+              <option value="jaune">Jaune</option>
+            </select>
+            <button class="btn btn-danger" id="coreResetChoicesBtn">Reset choix</button>
+          </div>
+          <div class="input-row" id="coreSecondaryActionsRow">
+            <button class="btn btn-danger" id="coreResetSessionBtn" title="Remise à zéro complète de la séance">Reset séance</button>
+          </div>
+          <div class="student-list" id="coreStudentsGrid"></div>
+        </section>
+      </section>
+      <section class="panel view-hidden" id="sessionSummaryView">
+        <div class="summary-topbar">
+          <button class="btn" id="summaryBackBtn">Précédent</button>
+          <h2>Résumé de séance par élève</h2>
+          <button class="btn btn-primary" id="printSummaryBtn">Imprimer</button>
+        </div>
+        <p class="note">Pour chaque élève : nombre de parcours réussis / en échec, puis le détail de chaque parcours (numéro, couleur, résultat, fautes, durée).</p>
+        <div id="summaryList"></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="assignDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3 id="assignTitle">Envoyer un élève</h3>
+        <button class="btn" id="closeAssignDialogBtn">Fermer</button>
+      </div>
+      <p class="note">
+        Règles : même numéro interdit 2 fois pour le même élève (toutes couleurs confondues).<br />
+        Un parcours précis (numéro + couleur) déjà en cours est bloqué pour les autres.
+      </p>
+      <div class="input-row">
+        <label class="mini">Filtre couleur</label>
+        <select id="modalColorFilter"></select>
+      </div>
+      <div class="course-grid" id="modalCourseGrid"></div>
+    </div>
+  </dialog>
+
+  <dialog id="successDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3 id="successTitle">Parcours réussi</h3>
+        <button class="btn" id="closeSuccessDialogBtn">Fermer</button>
+      </div>
+      <div id="successFlowBody">
+        <div id="successErrInteractive">
+          <p class="note">Indiquez les fautes sur le pavé, puis choisissez le nouveau parcours : l’envoi se fait tout seul dès que les deux sont saisis. Utilisez « Réussi » seul pour terminer sans parcours suivant.</p>
+          <div class="mini">Fautes signalées : <strong id="successErrorCount">0</strong></div>
+          <div id="successErrorPad" class="numeric-pad" aria-label="Pavé numérique fautes"></div>
+          <div class="outcome-pick-block">
+            <div class="outcome-pick-label">Nouveau parcours</div>
+            <div class="input-row">
+              <label class="mini">Filtre couleur</label>
+              <select id="successPickColorFilter"></select>
+            </div>
+            <div class="course-grid outcome-pick-grid" id="successPickCourseGrid"></div>
+          </div>
+          <div class="input-row">
+            <button class="btn btn-primary" type="button" id="successValidateBtn">Réussi (sans parcours suivant)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="failureDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3 id="failureTitle">Parcours suivant (échec)</h3>
+        <button class="btn" id="closeFailureDialogBtn">Fermer</button>
+      </div>
+      <div id="failureFlowBody">
+        <div id="failureErrInteractive">
+          <p class="note">Fautes, balises (pavés) puis nouveau parcours : l’envoi part automatiquement dès que les trois sont saisis (un clic sur chaque pavé concerné, puis la case du parcours).</p>
+          <div class="mini">Fautes : <strong id="failureErrorCount">0</strong></div>
+          <div id="failureErrorPad" class="numeric-pad" aria-label="Pavé numérique fautes"></div>
+          <div class="mini">Balises trouvées : <strong id="failureBeaconCount">0</strong> <span class="mini" id="failureBeaconTotal">/ 0</span></div>
+          <div id="failureBeaconPad" class="numeric-pad" aria-label="Pavé numérique balises"></div>
+          <div class="outcome-pick-block">
+            <div class="outcome-pick-label">Nouveau parcours</div>
+            <div class="input-row">
+              <label class="mini">Filtre couleur</label>
+              <select id="failurePickColorFilter"></select>
+            </div>
+            <div class="course-grid outcome-pick-grid" id="failurePickCourseGrid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script>
+    "use strict";
+
+    const STORAGE_KEY = "eps_orienteering_app_v1";
+    const OUTCOME_ERR_MAX = 10;
+    const COLORS = [
+      { key: "vert", label: "Vert", hex: "#22c55e" },
+      { key: "bleu", label: "Bleu", hex: "#60a5fa" },
+      { key: "jaune", label: "Jaune", hex: "#fde047" },
+      { key: "rose", label: "Rose", hex: "#f9a8d4" },
+      { key: "rouge", label: "Rouge", hex: "#f87171" },
+      { key: "noir", label: "Noir", hex: "#a3a3a3" }
+    ];
+    const VISUAL_COLOR_ORDER = ["vert", "bleu", "jaune", "rose", "noir", "rouge"];
+    const MAX_NUMBERS = 35;
+    const MIN_NUMBERS = 5;
+    const MIN_BEACONS = 1;
+    const MAX_BEACONS = 50;
+    const MAX_SESSIONS = 7;
+
+    const state = {
+      session: { running: false, elapsedMs: 0, lastStartTs: null },
+      students: [],
+      classes: [],
+      classSessions: {},
+      soundEnabled: false,
+      ui: {
+        appView: "setup",
+        setupStep: "classes",
+        sessionWorkspaceStep: "setup",
+        selectedSessionNumber: 1,
+        selectedClassId: null,
+        sessionDeleteMode: false,
+        sessionDeleteTargets: [],
+        studentDeleteMode: false,
+        studentDeleteTargets: [],
+        absenceMode: false,
+        absentDraftIds: [],
+        colorFilter: "all",
+        selectedStudentForModal: null,
+        selectedStudentForSuccessDialog: null,
+        selectedStudentForFailureDialog: null,
+        successErrorCount: 0,
+        successFaultPadTouched: false,
+        successPickColorFilter: "all",
+        successSelectedCourseId: null,
+        failureErrorCount: 0,
+        failureBeaconCount: 0,
+        failureErrorPadTouched: false,
+        failureBeaconPadTouched: false,
+        failurePickColorFilter: "all",
+        failureSelectedCourseId: null,
+        modalColorFilter: "all",
+        activeMenu: "seance",
+        studentSearch: "",
+        resultSort: "name",
+        prepMode: false,
+        sessionCourseCount: 35,
+        sessionBeaconCount: 12,
+        groupLaunchColor: "all"
+      }
+    };
+
+    const refs = {
+      setupView: document.getElementById("setupView"),
+      fullscreenToggleBtn: document.getElementById("fullscreenToggleBtn"),
+      workspaceView: document.getElementById("workspaceView"),
+      sessionSetupView: document.getElementById("sessionSetupView"),
+      sessionCoreView: document.getElementById("sessionCoreView"),
+      sessionSummaryView: document.getElementById("sessionSummaryView"),
+      setupTitle: document.getElementById("setupTitle"),
+      setupSubtitle: document.getElementById("setupSubtitle"),
+      setupSessionsStep: document.getElementById("setupSessionsStep"),
+      setupClassesStep: document.getElementById("setupClassesStep"),
+      selectedSessionLabel: document.getElementById("selectedSessionLabel"),
+      changeClassTopBtn: document.getElementById("changeClassTopBtn"),
+      sessionButtonsRow: document.getElementById("sessionButtonsRow"),
+      classButtonsRow: document.getElementById("classButtonsRow"),
+      newClassInput: document.getElementById("newClassInput"),
+      createClassBtn: document.getElementById("createClassBtn"),
+      toggleDeleteSessionsBtn: document.getElementById("toggleDeleteSessionsBtn"),
+      confirmDeleteSessionsBtn: document.getElementById("confirmDeleteSessionsBtn"),
+      selectAllSessionsBtn: document.getElementById("selectAllSessionsBtn"),
+      cancelDeleteSessionsBtn: document.getElementById("cancelDeleteSessionsBtn"),
+      deleteSessionsHint: document.getElementById("deleteSessionsHint"),
+      createFreshSessionBtn: document.getElementById("createFreshSessionBtn"),
+      setupSummary: document.getElementById("setupSummary"),
+      sessionSetupSummary: document.getElementById("sessionSetupSummary"),
+      backFromSessionSetupBtn: document.getElementById("backFromSessionSetupBtn"),
+      globalTimer: document.getElementById("globalTimer"),
+      corePresentCount: document.getElementById("corePresentCount"),
+      coreGroupColorSelect: document.getElementById("coreGroupColorSelect"),
+      corePrepModeBtn: document.getElementById("corePrepModeBtn"),
+      coreSummaryBtn: document.getElementById("coreSummaryBtn"),
+      coreResetChoicesBtn: document.getElementById("coreResetChoicesBtn"),
+      coreResetSessionBtn: document.getElementById("coreResetSessionBtn"),
+      coreStudentsGrid: document.getElementById("coreStudentsGrid"),
+      goToCoreBtn: document.getElementById("goToCoreBtn"),
+      backToSessionSetupBtn: document.getElementById("backToSessionSetupBtn"),
+      coreBackToSessionsBtn: document.getElementById("coreBackToSessionsBtn"),
+      startGlobalBtn: document.getElementById("startGlobalBtn"),
+      pauseGlobalBtn: document.getElementById("pauseGlobalBtn"),
+      resetGlobalBtn: document.getElementById("resetGlobalBtn"),
+      endSessionFinBtn: document.getElementById("endSessionFinBtn"),
+      csvInput: document.getElementById("csvInput"),
+      exportBtn: document.getElementById("exportBtn"),
+      resetAppBtn: document.getElementById("resetAppBtn"),
+      soundToggle: document.getElementById("soundToggle"),
+      manualStudentsInput: document.getElementById("manualStudentsInput"),
+      studentSearchInput: document.getElementById("studentSearchInput"),
+      addStudentBtn: document.getElementById("addStudentBtn"),
+      toggleDeleteStudentsBtn: document.getElementById("toggleDeleteStudentsBtn"),
+      confirmDeleteStudentsBtn: document.getElementById("confirmDeleteStudentsBtn"),
+      selectAllDeleteStudentsBtn: document.getElementById("selectAllDeleteStudentsBtn"),
+      cancelDeleteStudentsBtn: document.getElementById("cancelDeleteStudentsBtn"),
+      toggleAbsentStudentsBtn: document.getElementById("toggleAbsentStudentsBtn"),
+      applyAbsentStudentsBtn: document.getElementById("applyAbsentStudentsBtn"),
+      selectAllAbsentStudentsBtn: document.getElementById("selectAllAbsentStudentsBtn"),
+      cancelAbsentStudentsBtn: document.getElementById("cancelAbsentStudentsBtn"),
+      setupStudentsActionHint: document.getElementById("setupStudentsActionHint"),
+      setupStudentsPreview: document.getElementById("setupStudentsPreview"),
+      groupColorSelect: document.getElementById("groupColorSelect"),
+      launchAllByColorBtn: document.getElementById("launchAllByColorBtn"),
+      studentList: document.getElementById("studentList"),
+      studentCount: document.getElementById("studentCount"),
+      courseGrid: document.getElementById("courseGrid"),
+      sessionCourseCountSelect: document.getElementById("sessionCourseCountSelect"),
+      sessionBeaconCountSelect: document.getElementById("sessionBeaconCountSelect"),
+      colorFilter: document.getElementById("colorFilter"),
+      courseStats: document.getElementById("courseStats"),
+      activeList: document.getElementById("activeList"),
+      activeCount: document.getElementById("activeCount"),
+      resultsList: document.getElementById("resultsList"),
+      resultsCount: document.getElementById("resultsCount"),
+      resultSortSelect: document.getElementById("resultSortSelect"),
+      kpiStudents: document.getElementById("kpiStudents"),
+      kpiActive: document.getElementById("kpiActive"),
+      kpiValidated: document.getElementById("kpiValidated"),
+      kpiFreeCourses: document.getElementById("kpiFreeCourses"),
+      menuSeanceBtn: document.getElementById("menuSeanceBtn"),
+      menuResultsBtn: document.getElementById("menuResultsBtn"),
+      viewSeance: document.getElementById("viewSeance"),
+      viewResults: document.getElementById("viewResults"),
+      toastWrap: document.getElementById("toastWrap"),
+      assignDialog: document.getElementById("assignDialog"),
+      assignTitle: document.getElementById("assignTitle"),
+      modalCourseGrid: document.getElementById("modalCourseGrid"),
+      modalColorFilter: document.getElementById("modalColorFilter"),
+      closeAssignDialogBtn: document.getElementById("closeAssignDialogBtn"),
+      successDialog: document.getElementById("successDialog"),
+      successTitle: document.getElementById("successTitle"),
+      closeSuccessDialogBtn: document.getElementById("closeSuccessDialogBtn"),
+      successFlowBody: document.getElementById("successFlowBody"),
+      successErrInteractive: document.getElementById("successErrInteractive"),
+      successErrorPad: document.getElementById("successErrorPad"),
+      successErrorCount: document.getElementById("successErrorCount"),
+      successValidateBtn: document.getElementById("successValidateBtn"),
+      successPickColorFilter: document.getElementById("successPickColorFilter"),
+      successPickCourseGrid: document.getElementById("successPickCourseGrid"),
+      failureDialog: document.getElementById("failureDialog"),
+      failureTitle: document.getElementById("failureTitle"),
+      closeFailureDialogBtn: document.getElementById("closeFailureDialogBtn"),
+      failureFlowBody: document.getElementById("failureFlowBody"),
+      failureErrInteractive: document.getElementById("failureErrInteractive"),
+      failureErrorPad: document.getElementById("failureErrorPad"),
+      failureBeaconPad: document.getElementById("failureBeaconPad"),
+      failureErrorCount: document.getElementById("failureErrorCount"),
+      failureBeaconCount: document.getElementById("failureBeaconCount"),
+      failureBeaconTotal: document.getElementById("failureBeaconTotal"),
+      failurePickColorFilter: document.getElementById("failurePickColorFilter"),
+      failurePickCourseGrid: document.getElementById("failurePickCourseGrid"),
+      summaryList: document.getElementById("summaryList"),
+      summaryBackBtn: document.getElementById("summaryBackBtn"),
+      printSummaryBtn: document.getElementById("printSummaryBtn")
+    };
+
+    function buildAllCourses() {
+      const courses = [];
+      for (let number = 1; number <= MAX_NUMBERS; number += 1) {
+        for (const c of COLORS) {
+          courses.push({
+            id: `${number}-${c.key}`,
+            number,
+            color: c.key,
+            colorLabel: c.label,
+            colorHex: c.hex
+          });
+        }
+      }
+      return courses;
+    }
+
+    const ALL_COURSES = buildAllCourses();
+
+    function uid() {
+      return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    function formatMs(ms) {
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const h = String(Math.floor(total / 3600)).padStart(2, "0");
+      const m = String(Math.floor((total % 3600) / 60)).padStart(2, "0");
+      const s = String(total % 60).padStart(2, "0");
+      return `${h}:${m}:${s}`;
+    }
+
+    function parseCSV(content) {
+      const lines = content.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      const rows = [];
+      for (const raw of lines) {
+        const parts = raw.split(";").length >= 2 ? raw.split(";") : raw.split(",");
+        if (parts.length >= 2) {
+          const lastName = parts[0].trim();
+          const firstName = parts[1].trim();
+          if (lastName && firstName) rows.push({ lastName, firstName });
+        }
+      }
+      return rows;
+    }
+
+    function parseManualFullName(rawValue) {
+      const value = rawValue.trim().replace(/\s+/g, " ");
+      if (!value) return null;
+
+      const semicolonParts = value.split(";");
+      if (semicolonParts.length >= 2) {
+        const lastName = semicolonParts[0].trim();
+        const firstName = semicolonParts.slice(1).join(" ").trim();
+        return lastName && firstName ? { lastName, firstName } : null;
+      }
+
+      const commaParts = value.split(",");
+      if (commaParts.length >= 2) {
+        const lastName = commaParts[0].trim();
+        const firstName = commaParts.slice(1).join(" ").trim();
+        return lastName && firstName ? { lastName, firstName } : null;
+      }
+
+      const words = value.split(" ").filter(Boolean);
+      if (words.length === 1) {
+        return { lastName: "", firstName: words[0] };
+      }
+      return { lastName: words[0], firstName: words.slice(1).join(" ") };
+    }
+
+    function parseManualEntries(rawText) {
+      const lines = rawText.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      const students = [];
+      for (const line of lines) {
+        const parsed = parseManualFullName(line);
+        if (parsed) students.push(parsed);
+      }
+      return students;
+    }
+
+    function getStudentDisplayName(student) {
+      return `${student.lastName} ${student.firstName}`.replace(/\s+/g, " ").trim();
+    }
+
+    function escHtml(text) {
+      return String(text ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function getStudentById(studentId) {
+      return state.students.find((s) => s.id === studentId);
+    }
+
+    function normalizeStudent(student) {
+      const history = Array.isArray(student.history) ? student.history : [];
+      const currentRun = student.currentRun
+        ? {
+          ...student.currentRun,
+          isPaused: Boolean(student.currentRun.isPaused),
+          pausedElapsedMs: Number.isFinite(student.currentRun.pausedElapsedMs) ? student.currentRun.pausedElapsedMs : 0
+        }
+        : null;
+      return {
+        ...student,
+        history,
+        currentRun,
+        pendingRun: student.pendingRun || null,
+        hasStartedOnce: Boolean(student.hasStartedOnce) || history.length > 0 || Boolean(currentRun),
+        isAbsent: Boolean(student.isAbsent)
+      };
+    }
+
+    function getPresentStudents() {
+      return state.students.filter((s) => !s.isAbsent);
+    }
+
+    function getOccupiedCourseIds(options = {}) {
+      const { includePending = true, ignoreStudentId = null } = options;
+      const set = new Set();
+      for (const s of state.students) {
+        if (ignoreStudentId && s.id === ignoreStudentId) continue;
+        if (s.currentRun) set.add(s.currentRun.courseId);
+        if (includePending && s.pendingRun) set.add(s.pendingRun.courseId);
+      }
+      return set;
+    }
+
+    function hasDoneNumber(student, number) {
+      return student.history.some((h) => h.number === number);
+    }
+
+    function canAssignCourse(student, course) {
+      if (student.currentRun) return false;
+      if (student.isAbsent) return false;
+      if (hasDoneNumber(student, course.number)) return false;
+      const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
+      if (occupied.has(course.id)) return false;
+      return true;
+    }
+
+    /** Choix du parcours suivant pendant que le parcours actuel est encore ouvert (validation + envoi au même endroit). */
+    function canPickFollowUpCourse(student, course) {
+      if (!student || !course || student.isAbsent) return false;
+      if (course.number > state.ui.sessionCourseCount) return false;
+      if (hasDoneNumber(student, course.number)) return false;
+      if (student.currentRun) {
+        if (student.currentRun.courseId === course.id) return false;
+        if (student.currentRun.number === course.number) return false;
+      }
+      const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
+      if (occupied.has(course.id)) return false;
+      return true;
+    }
+
+    function playSound() {
+      if (!state.soundEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = 980;
+        gain.gain.value = 0.0001;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.06, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+        osc.stop(ctx.currentTime + 0.22);
+      } catch (err) {
+        console.warn("Audio non disponible:", err);
+      }
+    }
+
+    function notify(message, type = "info") {
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      refs.toastWrap.appendChild(toast);
+      window.setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(6px)";
+        window.setTimeout(() => toast.remove(), 220);
+      }, 2600);
+    }
+
+    function getAvailableCoursesForStudent(student) {
+      if (!student || student.currentRun) return [];
+      const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
+      return getSessionCourses().filter((course) => !occupied.has(course.id) && !hasDoneNumber(student, course.number));
+    }
+
+    function getColorByKey(colorKey) {
+      return COLORS.find((c) => c.key === colorKey) || null;
+    }
+
+    function sortCoursesByNumberThenColor(courses) {
+      const order = new Map(VISUAL_COLOR_ORDER.map((key, index) => [key, index]));
+      return [...courses].sort((a, b) => {
+        if (a.number !== b.number) return a.number - b.number;
+        const colorRankA = order.has(a.color) ? order.get(a.color) : Number.MAX_SAFE_INTEGER;
+        const colorRankB = order.has(b.color) ? order.get(b.color) : Number.MAX_SAFE_INTEGER;
+        return colorRankA - colorRankB;
+      });
+    }
+
+    function getGroupLaunchPreferredColor() {
+      if (state.ui.groupLaunchColor === "all") return null;
+      return state.ui.groupLaunchColor;
+    }
+
+    function shouldUsePrepModeForStudent(student) {
+      if (!state.ui.prepMode) return false;
+      if (!student) return false;
+      // Préparation uniquement tant qu'aucun parcours n'a été validé (aucun chrono « en course » démarré puis terminé).
+      if (student.currentRun) return false;
+      const history = Array.isArray(student.history) ? student.history : [];
+      return history.length === 0;
+    }
+
+    function applyCoreGroupColorSelectStyle() {
+      const variants = ["all", "noir", "rouge", "rose", "vert", "bleu", "jaune"];
+      for (const variant of variants) {
+        refs.coreGroupColorSelect.classList.remove(`group-color-${variant}`);
+      }
+      const selected = variants.includes(state.ui.groupLaunchColor) ? state.ui.groupLaunchColor : "all";
+      refs.coreGroupColorSelect.classList.add(`group-color-${selected}`);
+    }
+
+    function getNextCourseForStudent(student, preferredColor) {
+      const available = getAvailableCoursesForStudent(student);
+      if (!available.length) return null;
+      const byPreferredColor = available
+        .filter((c) => c.color === preferredColor)
+        .sort((a, b) => a.number - b.number);
+      if (byPreferredColor.length) return byPreferredColor[0];
+      return available.sort((a, b) => a.number - b.number)[0];
+    }
+
+    function getRandomCourseForStudent(student, preferredColor) {
+      const available = getAvailableCoursesForStudent(student);
+      if (!available.length) return null;
+      if (preferredColor) {
+        const preferred = available.filter((course) => course.color === preferredColor);
+        if (preferred.length) {
+          return preferred[Math.floor(Math.random() * preferred.length)];
+        }
+      }
+      return available[Math.floor(Math.random() * available.length)];
+    }
+
+    function getSessionCourses() {
+      return ALL_COURSES.filter((course) => course.number <= state.ui.sessionCourseCount);
+    }
+
+    function getSessionSlotKey(classId, sessionNumber) {
+      return `${classId}__S${sessionNumber}`;
+    }
+
+    function createEmptySessionData() {
+      return { running: false, elapsedMs: 0, lastStartTs: null };
+    }
+
+    function getStudentRosterKey(lastName, firstName) {
+      return `${String(lastName || "").trim().toLowerCase()}|${String(firstName || "").trim().toLowerCase()}`;
+    }
+
+    function sortStudentsByName(students) {
+      students.sort((a, b) => (a.lastName + a.firstName).localeCompare(b.lastName + b.firstName, "fr"));
+    }
+
+    function getClassRosterTemplate(classId) {
+      if (!classId) return [];
+      const byKey = new Map();
+      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+        const key = getSessionSlotKey(classId, sessionNumber);
+        const slot = state.classSessions[key];
+        if (!slot || !Array.isArray(slot.students)) continue;
+        for (const student of slot.students) {
+          if (!student) continue;
+          const rosterKey = getStudentRosterKey(student.lastName, student.firstName);
+          if (!rosterKey.trim()) continue;
+          if (byKey.has(rosterKey)) continue;
+          byKey.set(rosterKey, {
+            id: student.id || uid(),
+            lastName: String(student.lastName || "").trim(),
+            firstName: String(student.firstName || "").trim()
+          });
+        }
+      }
+      const roster = [...byKey.values()].map((student) => ({
+        id: student.id,
+        lastName: student.lastName,
+        firstName: student.firstName,
+        history: [],
+        currentRun: null,
+        pendingRun: null,
+        hasStartedOnce: false,
+        isAbsent: false
+      }));
+      sortStudentsByName(roster);
+      return roster;
+    }
+
+    function ensureClassSessionSlots(classId) {
+      if (!classId) return;
+      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+        const key = getSessionSlotKey(classId, sessionNumber);
+        if (!state.classSessions[key]) {
+          state.classSessions[key] = {
+            session: createEmptySessionData(),
+            students: []
+          };
+        } else {
+          if (!state.classSessions[key].session) {
+            state.classSessions[key].session = createEmptySessionData();
+          }
+          if (!Array.isArray(state.classSessions[key].students)) {
+            state.classSessions[key].students = [];
+          }
+        }
+      }
+    }
+
+    function syncStudentAdditionAcrossClass(addedStudent) {
+      const classId = state.ui.selectedClassId;
+      if (!classId || !addedStudent) return;
+      ensureClassSessionSlots(classId);
+      const addedKey = getStudentRosterKey(addedStudent.lastName, addedStudent.firstName);
+      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+        const key = getSessionSlotKey(classId, sessionNumber);
+        const slot = state.classSessions[key];
+        if (!slot || !Array.isArray(slot.students)) continue;
+        const alreadyExists = slot.students.some((student) => {
+          if (!student) return false;
+          if (student.id === addedStudent.id) return true;
+          return getStudentRosterKey(student.lastName, student.firstName) === addedKey;
+        });
+        if (alreadyExists) continue;
+        slot.students.push({
+          id: addedStudent.id,
+          lastName: addedStudent.lastName,
+          firstName: addedStudent.firstName,
+          history: [],
+          currentRun: null,
+          pendingRun: null,
+          hasStartedOnce: false,
+          isAbsent: false
+        });
+        sortStudentsByName(slot.students);
+      }
+    }
+
+    function syncStudentRemovalAcrossClass(removedStudents) {
+      const classId = state.ui.selectedClassId;
+      if (!classId || !Array.isArray(removedStudents) || !removedStudents.length) return;
+      ensureClassSessionSlots(classId);
+      const removedIds = new Set(removedStudents.map((student) => student.id));
+      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+        const key = getSessionSlotKey(classId, sessionNumber);
+        const slot = state.classSessions[key];
+        if (!slot || !Array.isArray(slot.students)) continue;
+        const nameCounts = new Map();
+        for (const removed of removedStudents) {
+          const rosterKey = getStudentRosterKey(removed.lastName, removed.firstName);
+          nameCounts.set(rosterKey, (nameCounts.get(rosterKey) || 0) + 1);
+        }
+
+        // Priorité au matching par id quand il existe.
+        const afterIdRemoval = [];
+        for (const student of slot.students) {
+          if (!removedIds.has(student.id)) {
+            afterIdRemoval.push(student);
+            continue;
+          }
+          const rosterKey = getStudentRosterKey(student.lastName, student.firstName);
+          const left = nameCounts.get(rosterKey) || 0;
+          if (left > 0) nameCounts.set(rosterKey, left - 1);
+        }
+
+        // Fallback par nom/prénom (anciens ids non synchronisés).
+        const afterNameFallback = [];
+        for (const student of afterIdRemoval) {
+          const rosterKey = getStudentRosterKey(student.lastName, student.firstName);
+          const left = nameCounts.get(rosterKey) || 0;
+          if (left > 0) {
+            nameCounts.set(rosterKey, left - 1);
+            continue;
+          }
+          afterNameFallback.push(student);
+        }
+
+        slot.students = afterNameFallback;
+      }
+    }
+
+    function getSelectedClass() {
+      return state.classes.find((c) => c.id === state.ui.selectedClassId) || null;
+    }
+
+    function saveActiveSlotToStore() {
+      if (!state.ui.selectedClassId || !state.ui.selectedSessionNumber) return;
+      const key = getSessionSlotKey(state.ui.selectedClassId, state.ui.selectedSessionNumber);
+      state.classSessions[key] = {
+        session: state.session,
+        students: state.students
+      };
+    }
+
+    function loadActiveSlotFromStore(options = {}) {
+      const classId = state.ui.selectedClassId;
+      const sessionNumber = state.ui.selectedSessionNumber;
+      if (!classId || !sessionNumber) return;
+      const key = getSessionSlotKey(classId, sessionNumber);
+      const slot = state.classSessions[key];
+      if (slot) {
+        state.session = slot.session || { running: false, elapsedMs: 0, lastStartTs: null };
+        state.students = Array.isArray(slot.students) ? slot.students.map(normalizeStudent) : [];
+        return;
+      }
+      if (options.createIfMissing) {
+        state.session = createEmptySessionData();
+        state.students = getClassRosterTemplate(classId);
+        saveActiveSlotToStore();
+      }
+    }
+
+    function createClass(name, options = {}) {
+      const clean = name.trim();
+      if (!clean) return null;
+      const existing = state.classes.find((c) => c.name.toLowerCase() === clean.toLowerCase());
+      if (existing) return existing;
+      const created = { id: uid(), name: clean };
+      state.classes.push(created);
+      state.classes.sort((a, b) => a.name.localeCompare(b.name, "fr"));
+      if (!options.silent) notify(`Classe créée : ${clean}`, "success");
+      return created;
+    }
+
+    function removeClass(classId) {
+      const classe = state.classes.find((c) => c.id === classId);
+      if (!classe) return;
+      const ok = window.confirm(`Supprimer la classe "${classe.name}" et toutes ses séances ?`);
+      if (!ok) return;
+
+      state.classes = state.classes.filter((c) => c.id !== classId);
+
+      // Supprime toutes les données de séances associées à la classe.
+      for (const key of Object.keys(state.classSessions)) {
+        if (key.startsWith(`${classId}__`)) delete state.classSessions[key];
+      }
+
+      if (state.ui.selectedClassId === classId) {
+        state.ui.selectedClassId = state.classes.length ? state.classes[0].id : null;
+      }
+
+      if (!state.classes.length) {
+        state.classSessions = {};
+        state.students = [];
+        state.session = createEmptySessionData();
+        state.ui.appView = "setup";
+        state.ui.setupStep = "classes";
+        state.ui.sessionWorkspaceStep = "setup";
+        state.ui.selectedSessionNumber = 1;
+        state.ui.sessionDeleteMode = false;
+        state.ui.sessionDeleteTargets = [];
+        state.ui.studentDeleteMode = false;
+        state.ui.studentDeleteTargets = [];
+        state.ui.absenceMode = false;
+        state.ui.absentDraftIds = [];
+        state.ui.selectedStudentForModal = null;
+        state.ui.selectedStudentForSuccessDialog = null;
+        state.ui.selectedStudentForFailureDialog = null;
+        state.ui.studentSearch = "";
+        state.ui.colorFilter = "all";
+        state.ui.modalColorFilter = "all";
+        state.ui.prepMode = false;
+        state.ui.groupLaunchColor = "all";
+        state.ui.sessionCourseCount = 35;
+        state.ui.sessionBeaconCount = 12;
+        if (refs.assignDialog.open) refs.assignDialog.close();
+        if (refs.successDialog.open) refs.successDialog.close();
+        if (refs.failureDialog.open) refs.failureDialog.close();
+      } else {
+        loadActiveSlotFromStore({ createIfMissing: false });
+      }
+
+      saveState();
+      notify(`Classe supprimée : ${classe.name}`, "warn");
+      render();
+    }
+
+    function ensureDefaultData() {
+      if (!state.ui.selectedClassId && state.classes.length) {
+        state.ui.selectedClassId = state.classes[0].id;
+      }
+      if (state.ui.selectedClassId && !state.classes.some((c) => c.id === state.ui.selectedClassId)) {
+        state.ui.selectedClassId = state.classes.length ? state.classes[0].id : null;
+      }
+      if (!Number.isInteger(state.ui.selectedSessionNumber) || state.ui.selectedSessionNumber < 1 || state.ui.selectedSessionNumber > MAX_SESSIONS) {
+        state.ui.selectedSessionNumber = 1;
+      }
+      if (!["setup", "workspace"].includes(state.ui.appView)) {
+        state.ui.appView = "setup";
+      }
+      if (!["sessions", "classes"].includes(state.ui.setupStep)) {
+        state.ui.setupStep = "classes";
+      }
+      if (!["setup", "core", "summary"].includes(state.ui.sessionWorkspaceStep)) {
+        state.ui.sessionWorkspaceStep = "setup";
+      }
+      if (!Number.isInteger(state.ui.sessionBeaconCount) || state.ui.sessionBeaconCount < MIN_BEACONS || state.ui.sessionBeaconCount > MAX_BEACONS) {
+        state.ui.sessionBeaconCount = 12;
+      }
+      if (!Array.isArray(state.ui.sessionDeleteTargets)) {
+        state.ui.sessionDeleteTargets = [];
+      }
+      if (!Array.isArray(state.ui.studentDeleteTargets)) {
+        state.ui.studentDeleteTargets = [];
+      }
+      if (!Array.isArray(state.ui.absentDraftIds)) {
+        state.ui.absentDraftIds = [];
+      }
+    }
+
+    function saveState() {
+      saveActiveSlotToStore();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        classes: state.classes,
+        classSessions: state.classSessions,
+        soundEnabled: state.soundEnabled,
+        ui: {
+          appView: state.ui.appView,
+          setupStep: state.ui.setupStep,
+          sessionWorkspaceStep: state.ui.sessionWorkspaceStep,
+          selectedSessionNumber: state.ui.selectedSessionNumber,
+          selectedClassId: state.ui.selectedClassId,
+          studentDeleteMode: state.ui.studentDeleteMode,
+          studentDeleteTargets: state.ui.studentDeleteTargets,
+          absenceMode: state.ui.absenceMode,
+          absentDraftIds: state.ui.absentDraftIds,
+          colorFilter: state.ui.colorFilter,
+          modalColorFilter: state.ui.modalColorFilter,
+          activeMenu: state.ui.activeMenu,
+          studentSearch: state.ui.studentSearch,
+          resultSort: state.ui.resultSort,
+          prepMode: state.ui.prepMode,
+          sessionCourseCount: state.ui.sessionCourseCount,
+          sessionBeaconCount: state.ui.sessionBeaconCount,
+          groupLaunchColor: state.ui.groupLaunchColor
+        }
+      }));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        state.classes = Array.isArray(parsed.classes) ? parsed.classes : [];
+        state.classSessions = parsed.classSessions && typeof parsed.classSessions === "object" ? parsed.classSessions : {};
+        state.soundEnabled = Boolean(parsed.soundEnabled);
+        if (parsed.ui && parsed.ui.appView) state.ui.appView = parsed.ui.appView;
+        if (parsed.ui && parsed.ui.setupStep) state.ui.setupStep = parsed.ui.setupStep;
+        if (parsed.ui && parsed.ui.sessionWorkspaceStep) state.ui.sessionWorkspaceStep = parsed.ui.sessionWorkspaceStep;
+        if (parsed.ui && Number.isInteger(parsed.ui.selectedSessionNumber)) {
+          state.ui.selectedSessionNumber = Math.min(MAX_SESSIONS, Math.max(1, parsed.ui.selectedSessionNumber));
+        }
+        if (parsed.ui && typeof parsed.ui.selectedClassId === "string") {
+          state.ui.selectedClassId = parsed.ui.selectedClassId;
+        }
+        if (parsed.ui && typeof parsed.ui.studentDeleteMode === "boolean") {
+          state.ui.studentDeleteMode = parsed.ui.studentDeleteMode;
+        }
+        if (parsed.ui && Array.isArray(parsed.ui.studentDeleteTargets)) {
+          state.ui.studentDeleteTargets = parsed.ui.studentDeleteTargets;
+        }
+        if (parsed.ui && typeof parsed.ui.absenceMode === "boolean") {
+          state.ui.absenceMode = parsed.ui.absenceMode;
+        }
+        if (parsed.ui && Array.isArray(parsed.ui.absentDraftIds)) {
+          state.ui.absentDraftIds = parsed.ui.absentDraftIds;
+        }
+        if (parsed.ui && parsed.ui.colorFilter) state.ui.colorFilter = parsed.ui.colorFilter;
+        if (parsed.ui && parsed.ui.modalColorFilter) state.ui.modalColorFilter = parsed.ui.modalColorFilter;
+        if (parsed.ui && (parsed.ui.activeMenu === "seance" || parsed.ui.activeMenu === "results")) {
+          state.ui.activeMenu = parsed.ui.activeMenu;
+        }
+        if (parsed.ui && typeof parsed.ui.studentSearch === "string") {
+          state.ui.studentSearch = parsed.ui.studentSearch;
+        }
+        if (parsed.ui && ["name", "count", "timeAsc", "timeDesc"].includes(parsed.ui.resultSort)) {
+          state.ui.resultSort = parsed.ui.resultSort;
+        }
+        if (parsed.ui && typeof parsed.ui.prepMode === "boolean") {
+          state.ui.prepMode = parsed.ui.prepMode;
+        }
+        if (parsed.ui && Number.isInteger(parsed.ui.sessionCourseCount)) {
+          state.ui.sessionCourseCount = Math.min(MAX_NUMBERS, Math.max(MIN_NUMBERS, parsed.ui.sessionCourseCount));
+        }
+        if (parsed.ui && Number.isInteger(parsed.ui.sessionBeaconCount)) {
+          state.ui.sessionBeaconCount = Math.min(MAX_BEACONS, Math.max(MIN_BEACONS, parsed.ui.sessionBeaconCount));
+        }
+        if (parsed.ui && (parsed.ui.groupLaunchColor === "all" || COLORS.some((c) => c.key === parsed.ui.groupLaunchColor))) {
+          state.ui.groupLaunchColor = parsed.ui.groupLaunchColor;
+        }
+
+        // Migration depuis l'ancien format mono-séance.
+        if (!state.classes.length && (parsed.session || parsed.students)) {
+          const created = createClass("Classe A", { silent: true });
+          if (created) {
+            const key = getSessionSlotKey(created.id, 1);
+            state.classSessions[key] = {
+              session: parsed.session || { running: false, elapsedMs: 0, lastStartTs: null },
+              students: Array.isArray(parsed.students) ? parsed.students : []
+            };
+            state.ui.selectedClassId = created.id;
+            state.ui.selectedSessionNumber = 1;
+          }
+        }
+
+        ensureDefaultData();
+        // Toujours repartir du parcours guidé : classe -> séance -> interface.
+        state.ui.appView = "setup";
+        state.ui.setupStep = "classes";
+        loadActiveSlotFromStore({ createIfMissing: true });
+      } catch (err) {
+        console.warn("Restauration localStorage impossible:", err);
+      }
+    }
+
+    function renderSetupView() {
+      const isClassStep = state.ui.setupStep === "classes";
+      const isDeleteMode = state.ui.sessionDeleteMode && !isClassStep;
+      refs.setupClassesStep.classList.toggle("view-hidden", !isClassStep);
+      refs.setupSessionsStep.classList.toggle("view-hidden", isClassStep);
+      refs.changeClassTopBtn.classList.toggle("view-hidden", isClassStep);
+      refs.setupSubtitle.classList.toggle("view-hidden", isClassStep);
+      refs.setupTitle.textContent = isClassStep ? "Choix de la classe" : "Choix de la séance";
+      refs.setupSubtitle.textContent = isClassStep
+        ? ""
+        : (isDeleteMode ? "Sélectionnez une ou plusieurs séances à supprimer" : "Touchez une séance pour ouvrir directement l'interface");
+
+      refs.toggleDeleteSessionsBtn.classList.toggle("view-hidden", isClassStep || isDeleteMode);
+      refs.createFreshSessionBtn.classList.toggle("view-hidden", isClassStep || isDeleteMode);
+      refs.confirmDeleteSessionsBtn.classList.toggle("view-hidden", !(isDeleteMode));
+      refs.selectAllSessionsBtn.classList.toggle("view-hidden", !(isDeleteMode));
+      refs.cancelDeleteSessionsBtn.classList.toggle("view-hidden", !(isDeleteMode));
+      refs.deleteSessionsHint.classList.toggle("view-hidden", !(isDeleteMode));
+      const allSessionsCount = MAX_SESSIONS;
+      refs.selectAllSessionsBtn.textContent = state.ui.sessionDeleteTargets.length === allSessionsCount ? "Tout décocher" : "Tout cocher";
+
+      refs.sessionButtonsRow.innerHTML = "";
+      for (let i = 1; i <= MAX_SESSIONS; i += 1) {
+        const item = document.createElement("div");
+        item.className = "session-choice-item";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        const isSelectedForDelete = state.ui.sessionDeleteTargets.includes(i);
+        btn.className = `btn session-choice-btn ${state.ui.selectedSessionNumber === i ? "active" : ""} ${isSelectedForDelete ? "delete-selected" : ""}`;
+        btn.textContent = `Séance ${i}`;
+        btn.addEventListener("click", () => {
+          if (state.ui.sessionDeleteMode) {
+            toggleSessionDeleteTarget(i);
+            return;
+          }
+          saveActiveSlotToStore();
+          state.ui.selectedSessionNumber = i;
+          loadActiveSlotFromStore({ createIfMissing: false });
+          openSelectedSession();
+        });
+
+        item.appendChild(btn);
+        refs.sessionButtonsRow.appendChild(item);
+      }
+
+      refs.classButtonsRow.innerHTML = "";
+      if (!state.classes.length) {
+        refs.classButtonsRow.innerHTML = '<span class="mini">Aucune classe créée pour le moment.</span>';
+      } else {
+        if (!state.ui.selectedClassId || !state.classes.some((c) => c.id === state.ui.selectedClassId)) {
+          state.ui.selectedClassId = state.classes[0].id;
+        }
+        for (const classe of state.classes) {
+          const item = document.createElement("div");
+          item.className = "class-choice-item";
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `btn class-choice-btn ${state.ui.selectedClassId === classe.id ? "active" : ""}`;
+          btn.textContent = classe.name;
+          btn.addEventListener("click", () => {
+            saveActiveSlotToStore();
+            state.ui.selectedClassId = classe.id;
+            state.ui.setupStep = "sessions";
+            state.ui.sessionDeleteMode = false;
+            state.ui.sessionDeleteTargets = [];
+            state.ui.studentDeleteMode = false;
+            state.ui.studentDeleteTargets = [];
+            state.ui.absenceMode = false;
+            state.ui.absentDraftIds = [];
+            loadActiveSlotFromStore({ createIfMissing: false });
+            saveState();
+            renderSetupView();
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.type = "button";
+          deleteBtn.className = "class-delete-btn";
+          deleteBtn.textContent = "Suppr.";
+          deleteBtn.title = `Supprimer ${classe.name}`;
+          deleteBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            removeClass(classe.id);
+          });
+
+          item.appendChild(btn);
+          item.appendChild(deleteBtn);
+          refs.classButtonsRow.appendChild(item);
+        }
+      }
+
+      const selectedClass = getSelectedClass();
+      const key = selectedClass ? getSessionSlotKey(selectedClass.id, state.ui.selectedSessionNumber) : null;
+      const slot = key ? state.classSessions[key] : null;
+      const count = slot && Array.isArray(slot.students) ? slot.students.length : 0;
+      refs.selectedSessionLabel.textContent = selectedClass
+        ? `Classe : ${selectedClass.name} - Séance sélectionnée : ${state.ui.selectedSessionNumber}`
+        : `Séance sélectionnée : ${state.ui.selectedSessionNumber}`;
+      if (isClassStep) {
+        if (selectedClass) {
+          refs.setupSummary.textContent = "";
+          refs.setupSummary.classList.add("view-hidden");
+        } else {
+          refs.setupSummary.textContent = "Créez d'abord une classe.";
+          refs.setupSummary.classList.remove("view-hidden");
+        }
+      } else {
+        refs.setupSummary.classList.remove("view-hidden");
+        refs.setupSummary.textContent = isDeleteMode
+          ? `Séances sélectionnées : ${state.ui.sessionDeleteTargets.length}`
+          : (selectedClass ? `${selectedClass.name} - Séance ${state.ui.selectedSessionNumber} : ${count} élève(s) enregistrés` : "Aucune classe sélectionnée.");
+      }
+    }
+
+    function toggleSessionDeleteTarget(sessionNumber) {
+      if (!state.ui.sessionDeleteMode) return;
+      if (state.ui.sessionDeleteTargets.includes(sessionNumber)) {
+        state.ui.sessionDeleteTargets = state.ui.sessionDeleteTargets.filter((n) => n !== sessionNumber);
+      } else {
+        state.ui.sessionDeleteTargets = [...state.ui.sessionDeleteTargets, sessionNumber].sort((a, b) => a - b);
+      }
+      renderSetupView();
+    }
+
+    function enableSessionDeleteMode() {
+      const ok = window.confirm(
+        "Activer le mode suppression des séances ?\n\n" +
+        "Vous pourrez ensuite sélectionner les séances à supprimer."
+      );
+      if (!ok) return;
+      state.ui.sessionDeleteMode = true;
+      state.ui.sessionDeleteTargets = [];
+      renderSetupView();
+    }
+
+    function toggleSelectAllSessionsForDelete() {
+      if (!state.ui.sessionDeleteMode) return;
+      const allSessions = Array.from({ length: MAX_SESSIONS }, (_, index) => index + 1);
+      const hasAllSelected = state.ui.sessionDeleteTargets.length === allSessions.length;
+      state.ui.sessionDeleteTargets = hasAllSelected ? [] : [...allSessions];
+      renderSetupView();
+    }
+
+    function cancelSessionDeleteMode() {
+      state.ui.sessionDeleteMode = false;
+      state.ui.sessionDeleteTargets = [];
+      renderSetupView();
+    }
+
+    function deleteSessionForSelectedClass(sessionNumbers) {
+      const selectedClass = getSelectedClass();
+      if (!selectedClass) {
+        notify("Sélectionnez une classe d'abord.", "warn");
+        return;
+      }
+
+      const targets = Array.isArray(sessionNumbers) ? sessionNumbers : [sessionNumbers];
+      if (!targets.length) {
+        notify("Sélectionnez au moins une séance à supprimer.", "warn");
+        return;
+      }
+
+      let totalStudents = 0;
+      for (const sessionNumber of targets) {
+        const key = getSessionSlotKey(selectedClass.id, sessionNumber);
+        const slot = state.classSessions[key];
+        totalStudents += slot && Array.isArray(slot.students) ? slot.students.length : 0;
+      }
+      const ok = window.confirm(
+        `Supprimer ${targets.length} séance(s) pour ${selectedClass.name} ?\n\n` +
+        `Total élèves concernés : ${totalStudents}\n` +
+        `Séances : ${targets.join(", ")}`
+      );
+      if (!ok) return;
+
+      for (const sessionNumber of targets) {
+        const key = getSessionSlotKey(selectedClass.id, sessionNumber);
+        delete state.classSessions[key];
+        if (state.ui.selectedSessionNumber === sessionNumber) {
+          state.session = { running: false, elapsedMs: 0, lastStartTs: null };
+          state.students = [];
+        }
+      }
+      if (refs.assignDialog.open) refs.assignDialog.close();
+      state.ui.sessionDeleteMode = false;
+      state.ui.sessionDeleteTargets = [];
+      saveState();
+      notify(`Séance(s) supprimée(s) pour ${selectedClass.name}.`, "warn");
+      renderSetupView();
+    }
+
+    function createFreshSelectedSession() {
+      const selectedClass = getSelectedClass();
+      if (!selectedClass) {
+        notify("Choisissez une classe d'abord.", "warn");
+        return;
+      }
+      const ok = window.confirm(`Créer une nouvelle séance vide pour ${selectedClass.name} - Séance ${state.ui.selectedSessionNumber} ?`);
+      if (!ok) return;
+      state.session = { running: false, elapsedMs: 0, lastStartTs: null };
+      state.students = [];
+      saveActiveSlotToStore();
+      saveState();
+      notify("Nouvelle séance créée.", "success");
+      renderSetupView();
+    }
+
+    function openSelectedSession() {
+      const selectedClass = getSelectedClass();
+      if (!selectedClass) {
+        notify("Choisissez une classe.", "warn");
+        return;
+      }
+      loadActiveSlotFromStore({ createIfMissing: true });
+      state.ui.appView = "workspace";
+      state.ui.sessionWorkspaceStep = "setup";
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absenceMode = false;
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      saveState();
+      render();
+      notify(`Ouverture ${selectedClass.name} - Séance ${state.ui.selectedSessionNumber}`, "info");
+    }
+
+    function backToSetup() {
+      saveActiveSlotToStore();
+      state.ui.appView = "setup";
+      state.ui.setupStep = "classes";
+      state.ui.sessionWorkspaceStep = "setup";
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absenceMode = false;
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      saveState();
+      render();
+    }
+
+    function backToSessions() {
+      saveActiveSlotToStore();
+      state.ui.appView = "setup";
+      state.ui.setupStep = "sessions";
+      state.ui.sessionWorkspaceStep = "setup";
+      state.ui.sessionDeleteMode = false;
+      state.ui.sessionDeleteTargets = [];
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absenceMode = false;
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      saveState();
+      render();
+    }
+
+    /** Depuis le cœur de séance : retour au paramétrage (pas au menu choix de séances). */
+    function backFromCoreToSessionSetup() {
+      saveActiveSlotToStore();
+      state.ui.appView = "workspace";
+      state.ui.sessionWorkspaceStep = "setup";
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absenceMode = false;
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      saveState();
+      render();
+    }
+
+    function renderAppView() {
+      const isSetup = state.ui.appView === "setup";
+      refs.setupView.classList.toggle("view-hidden", !isSetup);
+      refs.workspaceView.classList.toggle("view-hidden", isSetup);
+      refs.setupView.hidden = !isSetup;
+      refs.workspaceView.hidden = isSetup;
+    }
+
+    function renderWorkspaceStep() {
+      const step = state.ui.sessionWorkspaceStep;
+      const isSetup = step === "setup";
+      const isCore = step === "core";
+      const isSummary = step === "summary";
+      refs.sessionSetupView.classList.toggle("view-hidden", !isSetup);
+      refs.sessionCoreView.classList.toggle("view-hidden", !isCore);
+      refs.sessionSummaryView.classList.toggle("view-hidden", !isSummary);
+      refs.sessionSetupView.hidden = !isSetup;
+      refs.sessionCoreView.hidden = !isCore;
+      refs.sessionSummaryView.hidden = !isSummary;
+    }
+
+    function renderSessionSetupPanel() {
+      renderSessionCourseCountOptions();
+      renderSessionBeaconCountOptions();
+      const selectedClass = getSelectedClass();
+      const presentCount = getPresentStudents().length;
+      refs.studentCount.textContent = `${state.students.length} élève${state.students.length > 1 ? "s" : ""}`;
+      refs.sessionSetupSummary.textContent = selectedClass
+        ? `Résumé : Classe ${selectedClass.name} - Séance ${state.ui.selectedSessionNumber} et élèves prêts : ${presentCount}`
+        : `Résumé : Séance ${state.ui.selectedSessionNumber} et élèves prêts : ${presentCount}`;
+
+      const isDeleteMode = state.ui.studentDeleteMode;
+      const isAbsenceMode = state.ui.absenceMode;
+      refs.toggleDeleteStudentsBtn.classList.toggle("view-hidden", isDeleteMode || isAbsenceMode);
+      refs.toggleAbsentStudentsBtn.classList.toggle("view-hidden", isDeleteMode || isAbsenceMode);
+      refs.confirmDeleteStudentsBtn.classList.toggle("view-hidden", !isDeleteMode);
+      refs.selectAllDeleteStudentsBtn.classList.toggle("view-hidden", !isDeleteMode);
+      refs.cancelDeleteStudentsBtn.classList.toggle("view-hidden", !isDeleteMode);
+      refs.applyAbsentStudentsBtn.classList.toggle("view-hidden", !isAbsenceMode);
+      refs.selectAllAbsentStudentsBtn.classList.toggle("view-hidden", !isAbsenceMode);
+      refs.cancelAbsentStudentsBtn.classList.toggle("view-hidden", !isAbsenceMode);
+      refs.setupStudentsActionHint.classList.toggle("view-hidden", !(isDeleteMode || isAbsenceMode));
+      const allStudentIds = state.students.map((student) => student.id);
+      const hasAllDeleteSelected = allStudentIds.length > 0 && state.ui.studentDeleteTargets.length === allStudentIds.length;
+      const hasAllAbsentSelected = allStudentIds.length > 0 && state.ui.absentDraftIds.length === allStudentIds.length;
+      refs.selectAllDeleteStudentsBtn.textContent = hasAllDeleteSelected ? "Tout décocher" : "Tout cocher";
+      refs.selectAllAbsentStudentsBtn.textContent = hasAllAbsentSelected ? "Tout décocher" : "Tout cocher";
+      if (isDeleteMode) {
+        refs.setupStudentsActionHint.textContent = `Mode suppression : sélectionnez les élèves à supprimer (${state.ui.studentDeleteTargets.length} sélectionné(s)).`;
+      } else if (isAbsenceMode) {
+        refs.setupStudentsActionHint.textContent = `Mode absences : sélectionnez les élèves absents (${state.ui.absentDraftIds.length} sélectionné(s)).`;
+      }
+
+      refs.setupStudentsPreview.innerHTML = "";
+      if (!state.students.length) {
+        refs.setupStudentsPreview.innerHTML = '<div class="mini">Aucun élève inscrit pour le moment.</div>';
+        return;
+      }
+      for (const student of state.students) {
+        const card = document.createElement("div");
+        card.className = "student-card";
+        const selectedDelete = state.ui.studentDeleteTargets.includes(student.id);
+        const selectedAbsent = state.ui.absentDraftIds.includes(student.id);
+        if (student.isAbsent) card.classList.add("setup-card-absent");
+        if (selectedDelete) card.classList.add("setup-card-selected-delete");
+        if (selectedAbsent) card.classList.add("setup-card-selected-absent");
+        let badgeLabel = student.isAbsent ? "Absent" : "Présent";
+        let badgeClass = student.isAbsent ? "badge-absent" : "badge-present";
+        if (isDeleteMode && selectedDelete) badgeLabel = "À supprimer";
+        else if (isAbsenceMode && selectedAbsent) badgeLabel = "Absent";
+        else if (student.isAbsent) badgeLabel = "Absent";
+        if ((isDeleteMode && selectedDelete) || (isAbsenceMode && selectedAbsent)) {
+          badgeClass = "badge-absent";
+        }
+        card.innerHTML = `
+          <div class="name-line">
+            <strong>${getStudentDisplayName(student)}</strong>
+            <span class="badge ${badgeClass}">${badgeLabel}</span>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          if (isDeleteMode) {
+            toggleStudentDeleteTarget(student.id);
+            return;
+          }
+          if (isAbsenceMode) {
+            toggleAbsentDraftTarget(student.id);
+          }
+        });
+        refs.setupStudentsPreview.appendChild(card);
+      }
+    }
+
+    function startGlobalTimer() {
+      if (state.session.running) return;
+      state.session.running = true;
+      state.session.lastStartTs = Date.now();
+      const preferredColor = getGroupLaunchPreferredColor();
+
+      if (state.ui.prepMode) {
+        const idleStudents = getPresentStudents().filter((student) => !student.currentRun);
+        let launched = 0;
+        for (const student of idleStudents) {
+          if (!student.pendingRun) continue;
+          const pendingCourse = ALL_COURSES.find((c) => c.id === student.pendingRun.courseId);
+          if (!pendingCourse || pendingCourse.number > state.ui.sessionCourseCount) {
+            student.pendingRun = null;
+            continue;
+          }
+          if (!canAssignCourse(student, pendingCourse)) {
+            notify(`${getStudentDisplayName(student)} : parcours préparé plus disponible, préparation annulée.`, "warn");
+            student.pendingRun = null;
+            continue;
+          }
+          const ok = sendStudentOnCourse(student.id, pendingCourse.id, { silent: true, skipRender: true });
+          if (ok) launched += 1;
+        }
+        if (launched > 0) {
+          notify(`${launched} élève(s) lancé(s) sur le parcours préparé.`, "success");
+        } else if (idleStudents.length) {
+          notify(
+            "Mode préparation actif : aucun élève avec parcours préparé. Préparez les parcours puis redémarrez, ou passez le mode préparation sur OFF pour un lancement aléatoire.",
+            "warn"
+          );
+        }
+      } else {
+        for (const student of state.students) {
+          student.pendingRun = null;
+        }
+        const idleStudents = getPresentStudents().filter((student) => !student.currentRun);
+        let launched = 0;
+        for (const student of idleStudents) {
+          const randomCourse = getRandomCourseForStudent(student, preferredColor);
+          if (!randomCourse) continue;
+          const ok = sendStudentOnCourse(student.id, randomCourse.id, { silent: true, skipRender: true });
+          if (ok) launched += 1;
+        }
+        if (launched > 0) {
+          const color = getColorByKey(preferredColor);
+          const colorLabel = color ? ` (${color.label})` : "";
+          notify(`${launched} élève(s) lancé(s) automatiquement${colorLabel}.`, "success");
+        }
+      }
+      saveState();
+      render();
+    }
+
+    function pauseGlobalTimer() {
+      if (!state.session.running) return;
+      state.session.elapsedMs += Date.now() - state.session.lastStartTs;
+      state.session.lastStartTs = null;
+      state.session.running = false;
+      saveState();
+      render();
+    }
+
+    function pauseAllStudentRunTimers() {
+      let pausedCount = 0;
+      for (const student of state.students) {
+        if (!student.currentRun || student.currentRun.isPaused) continue;
+        const run = student.currentRun;
+        run.pausedElapsedMs = Math.max(0, Date.now() - run.startTs);
+        run.isPaused = true;
+        pausedCount += 1;
+      }
+      return pausedCount;
+    }
+
+    /** Arrête le chrono séance et tous les chronos élèves en parcours ; ne valide ni n’annule les parcours en cours. */
+    function endSessionFin() {
+      const ok = window.confirm(
+        "Mettre fin à la chronométrie de la séance ?\n\n" +
+        "Le chrono général et les chronos des élèves en parcours seront mis en pause. " +
+        "Les parcours en cours restent ouverts (non validés, non marqués comme faux)."
+      );
+      if (!ok) return;
+      if (state.session.running) {
+        state.session.elapsedMs += Date.now() - state.session.lastStartTs;
+        state.session.lastStartTs = null;
+        state.session.running = false;
+      }
+      const pausedStudents = pauseAllStudentRunTimers();
+      saveState();
+      notify(
+        pausedStudents > 0
+          ? `Fin de séance chronométrique : chrono général arrêté, ${pausedStudents} chrono(s) élève(s) en pause.`
+          : "Fin de séance chronométrique : chrono général arrêté.",
+        "info"
+      );
+      render();
+    }
+
+    function resetGlobalTimer() {
+      const ok = window.confirm("Confirmer la remise à zéro du chrono général ?");
+      if (!ok) return;
+      let stoppedRuns = 0;
+      for (const student of state.students) {
+        if (!student.currentRun) continue;
+        student.currentRun = null;
+        stoppedRuns += 1;
+      }
+      state.session.running = false;
+      state.session.elapsedMs = 0;
+      state.session.lastStartTs = null;
+      saveState();
+      notify(
+        stoppedRuns > 0
+          ? `Chrono général remis à zéro. ${stoppedRuns} parcours en cours arrêté(s).`
+          : "Chrono général remis à zéro.",
+        "warn"
+      );
+      render();
+    }
+
+    function currentGlobalMs() {
+      if (!state.session.running) return state.session.elapsedMs;
+      return state.session.elapsedMs + (Date.now() - state.session.lastStartTs);
+    }
+
+    function getCurrentRunElapsedMs(run) {
+      if (!run) return 0;
+      if (run.isPaused) return Math.max(0, Number(run.pausedElapsedMs) || 0);
+      return Math.max(0, Date.now() - run.startTs);
+    }
+
+    function isRunSuccessful(historyEntry) {
+      return historyEntry.outcome !== "switch";
+    }
+
+    function getValidatedRunCount(student) {
+      return student.history.filter(isRunSuccessful).length;
+    }
+
+    function addStudent(lastName, firstName, options = {}) {
+      const student = {
+        id: uid(),
+        lastName: lastName.trim(),
+        firstName: firstName.trim(),
+        history: [],
+        currentRun: null,
+        pendingRun: null,
+        hasStartedOnce: false,
+        isAbsent: false
+      };
+      state.students.push(student);
+      sortStudentsByName(state.students);
+      syncStudentAdditionAcrossClass(student);
+      saveState();
+      if (!options.silent) notify(`Élève ajouté : ${getStudentDisplayName(student)}`, "success");
+      if (!options.skipRender) render();
+    }
+
+    function removeStudent(studentId) {
+      const student = getStudentById(studentId);
+      if (!student) return;
+      if (student.currentRun) {
+        notify("Impossible de supprimer un élève en activité.", "warn");
+        return;
+      }
+      const ok = window.confirm(`Supprimer ${getStudentDisplayName(student)} ?`);
+      if (!ok) return;
+      const removedStudents = [student];
+      state.students = state.students.filter((s) => s.id !== studentId);
+      syncStudentRemovalAcrossClass(removedStudents);
+      saveState();
+      notify("Élève supprimé.", "warn");
+      render();
+    }
+
+    function resetApplicationData() {
+      const totalStudents = state.students.length;
+      const totalResults = state.students.reduce((acc, s) => acc + s.history.length, 0);
+      const ok = window.confirm(
+        `Confirmer la réinitialisation de la séance ?\n\n` +
+        `Élèves: ${totalStudents}\n` +
+        `Résultats enregistrés: ${totalResults}\n\n` +
+        `Les prénoms des élèves seront conservés, mais tous les parcours, chronos et résultats seront effacés.`
+      );
+      if (!ok) return;
+      state.session = { running: false, elapsedMs: 0, lastStartTs: null };
+      for (const student of state.students) {
+        student.history = [];
+        student.currentRun = null;
+        student.pendingRun = null;
+        student.hasStartedOnce = false;
+      }
+      state.ui.selectedStudentForModal = null;
+      state.ui.selectedStudentForSuccessDialog = null;
+      state.ui.selectedStudentForFailureDialog = null;
+      if (refs.assignDialog.open) refs.assignDialog.close();
+      if (refs.successDialog.open) refs.successDialog.close();
+      if (refs.failureDialog.open) refs.failureDialog.close();
+      saveState();
+      notify("Séance réinitialisée.", "success");
+      render();
+    }
+
+    function enableStudentDeleteMode() {
+      if (!state.students.length) {
+        notify("Aucun élève à supprimer.", "warn");
+        return;
+      }
+      const ok = window.confirm(
+        "Activer le mode suppression des prénoms ?\n\n" +
+        "Vous pourrez ensuite sélectionner les élèves à supprimer."
+      );
+      if (!ok) return;
+      state.ui.studentDeleteMode = true;
+      state.ui.absenceMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      renderSessionSetupPanel();
+    }
+
+    function cancelStudentDeleteMode() {
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      renderSessionSetupPanel();
+    }
+
+    function toggleStudentDeleteTarget(studentId) {
+      if (!state.ui.studentDeleteMode) return;
+      if (state.ui.studentDeleteTargets.includes(studentId)) {
+        state.ui.studentDeleteTargets = state.ui.studentDeleteTargets.filter((id) => id !== studentId);
+      } else {
+        state.ui.studentDeleteTargets = [...state.ui.studentDeleteTargets, studentId];
+      }
+      renderSessionSetupPanel();
+    }
+
+    function toggleSelectAllStudentsForDelete() {
+      if (!state.ui.studentDeleteMode) return;
+      const allStudentIds = state.students.map((student) => student.id);
+      const hasAllSelected = allStudentIds.length > 0 && state.ui.studentDeleteTargets.length === allStudentIds.length;
+      state.ui.studentDeleteTargets = hasAllSelected ? [] : [...allStudentIds];
+      renderSessionSetupPanel();
+    }
+
+    function confirmDeleteSelectedStudents() {
+      const targets = state.ui.studentDeleteTargets;
+      if (!targets.length) {
+        notify("Sélectionnez au moins un élève à supprimer.", "warn");
+        return;
+      }
+      const ok = window.confirm(`Supprimer ${targets.length} élève(s) sélectionné(s) ?`);
+      if (!ok) return;
+      const removedStudents = state.students.filter((student) => targets.includes(student.id));
+      state.students = state.students.filter((s) => !targets.includes(s.id));
+      syncStudentRemovalAcrossClass(removedStudents);
+      state.ui.selectedStudentForModal = null;
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      if (refs.assignDialog.open) refs.assignDialog.close();
+      saveState();
+      notify("Élèves supprimés.", "warn");
+      render();
+    }
+
+    function enableAbsenceMode() {
+      if (!state.students.length) {
+        notify("Aucun élève à gérer.", "warn");
+        return;
+      }
+      state.ui.absenceMode = true;
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      renderSessionSetupPanel();
+    }
+
+    function cancelAbsenceMode() {
+      state.ui.absenceMode = false;
+      state.ui.absentDraftIds = state.students.filter((s) => s.isAbsent).map((s) => s.id);
+      renderSessionSetupPanel();
+    }
+
+    function toggleAbsentDraftTarget(studentId) {
+      if (!state.ui.absenceMode) return;
+      if (state.ui.absentDraftIds.includes(studentId)) {
+        state.ui.absentDraftIds = state.ui.absentDraftIds.filter((id) => id !== studentId);
+      } else {
+        state.ui.absentDraftIds = [...state.ui.absentDraftIds, studentId];
+      }
+      renderSessionSetupPanel();
+    }
+
+    function toggleSelectAllAbsentDraftTargets() {
+      if (!state.ui.absenceMode) return;
+      const allStudentIds = state.students.map((student) => student.id);
+      const hasAllSelected = allStudentIds.length > 0 && state.ui.absentDraftIds.length === allStudentIds.length;
+      state.ui.absentDraftIds = hasAllSelected ? [] : [...allStudentIds];
+      renderSessionSetupPanel();
+    }
+
+    function applyAbsenceSelection() {
+      const draft = new Set(state.ui.absentDraftIds);
+      for (const student of state.students) {
+        student.isAbsent = draft.has(student.id);
+        if (student.isAbsent) {
+          student.currentRun = null;
+          student.pendingRun = null;
+        }
+      }
+      state.ui.absenceMode = false;
+      state.ui.selectedStudentForModal = null;
+      if (refs.assignDialog.open) refs.assignDialog.close();
+      saveState();
+      notify("Absences mises à jour.", "success");
+      render();
+    }
+
+    function resetPreparedChoices() {
+      const preparedCount = state.students.filter((student) => Boolean(student.pendingRun)).length;
+      const ok = window.confirm(
+        `Réinitialiser ${preparedCount} choix préparé(s) ?\n\n` +
+        `Les parcours en cours ne seront pas arrêtés.`
+      );
+      if (!ok) return;
+      if (!preparedCount) {
+        notify("Aucun choix préparé à réinitialiser.", "warn");
+        return;
+      }
+      for (const student of state.students) {
+        student.pendingRun = null;
+      }
+      saveState();
+      notify("Choix préparés remis à zéro.", "warn");
+      render();
+    }
+
+    function sendStudentOnCourse(studentId, courseId, options = {}) {
+      const student = getStudentById(studentId);
+      if (!student) return;
+      const course = ALL_COURSES.find((c) => c.id === courseId);
+      if (!course) return;
+      if (course.number > state.ui.sessionCourseCount) return;
+      if (!canAssignCourse(student, course)) return;
+      const runData = {
+        courseId: course.id,
+        number: course.number,
+        color: course.color,
+        colorLabel: course.colorLabel
+      };
+      if (options.prepareOnly) {
+        student.pendingRun = runData;
+        saveState();
+        if (!options.silent) notify(`${getStudentDisplayName(student)} préparé : ${course.number} ${course.colorLabel}`, "info");
+        if (!options.skipRender) render();
+        return true;
+      }
+      student.pendingRun = null;
+      student.currentRun = {
+        ...runData,
+        startTs: Date.now(),
+        isPaused: false,
+        pausedElapsedMs: 0
+      };
+      student.hasStartedOnce = true;
+      saveState();
+      playSound();
+      if (!options.silent) notify(`${getStudentDisplayName(student)} -> ${course.number} ${course.colorLabel}`, "info");
+      if (!options.skipRender) render();
+      return true;
+    }
+
+    function launchStudentByColor(studentId, preferredColor) {
+      const student = getStudentById(studentId);
+      if (!student) return;
+      if (shouldUsePrepModeForStudent(student)) {
+        if (student.pendingRun) {
+          notify(`${getStudentDisplayName(student)} est déjà préparé.`, "warn");
+          return;
+        }
+        const plannedCourse = getNextCourseForStudent(student, preferredColor);
+        if (!plannedCourse) {
+          notify(`Aucun parcours disponible pour ${getStudentDisplayName(student)}.`, "warn");
+          return;
+        }
+        sendStudentOnCourse(student.id, plannedCourse.id, { prepareOnly: true });
+        return;
+      }
+      const course = getNextCourseForStudent(student, preferredColor);
+      if (!course) {
+        notify(`Aucun parcours disponible pour ${getStudentDisplayName(student)}.`, "warn");
+        return;
+      }
+      sendStudentOnCourse(student.id, course.id);
+    }
+
+    function launchAllByColor(preferredColor) {
+      const idleStudents = getPresentStudents().filter((s) => !s.currentRun);
+      if (!idleStudents.length) {
+        notify("Aucun élève disponible à lancer.", "warn");
+        return;
+      }
+
+      let launched = 0;
+      for (const student of idleStudents) {
+        let course = null;
+        if (student.pendingRun) {
+          const pending = ALL_COURSES.find((c) => c.id === student.pendingRun.courseId);
+          if (pending && pending.number <= state.ui.sessionCourseCount && canAssignCourse(student, pending)) {
+            course = pending;
+          }
+        }
+        if (!course) {
+          course = getNextCourseForStudent(student, preferredColor);
+        }
+        if (!course) continue;
+        const ok = sendStudentOnCourse(student.id, course.id, { silent: true, skipRender: true });
+        if (ok) launched += 1;
+      }
+
+      if (launched > 0 && !state.session.running) {
+        startGlobalTimer();
+      } else {
+        render();
+      }
+      const color = getColorByKey(preferredColor);
+      const colorLabel = color ? ` sur ${color.label}` : "";
+      notify(`${launched} élève(s) lancé(s)${colorLabel}.`, launched ? "success" : "warn");
+    }
+
+    function validateRun(studentId, options = {}) {
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      const now = Date.now();
+      const durationMs = getCurrentRunElapsedMs(student.currentRun);
+      const outcome = options.outcome === "switch" ? "switch" : "success";
+      const errorCount = Math.max(0, Number.isFinite(Number(options.errorCount)) ? Number(options.errorCount) : 0);
+      const beaconFoundCountRaw = Number(options.beaconFoundCount);
+      const beaconFoundCount = Number.isFinite(beaconFoundCountRaw)
+        ? Math.max(0, Math.min(state.ui.sessionBeaconCount, beaconFoundCountRaw))
+        : null;
+      student.history.push({
+        courseId: student.currentRun.courseId,
+        number: student.currentRun.number,
+        color: student.currentRun.color,
+        colorLabel: student.currentRun.colorLabel,
+        startTs: student.currentRun.startTs,
+        endTs: now,
+        durationMs,
+        outcome,
+        errorCount,
+        beaconFoundCount,
+        beaconTotalCount: state.ui.sessionBeaconCount
+      });
+      student.currentRun = null;
+      saveState();
+      playSound();
+      if (outcome === "success") {
+        notify(`Parcours réussi : ${getStudentDisplayName(student)}`, "success");
+      } else {
+        notify(`Parcours non réussi : ${getStudentDisplayName(student)} (passage au suivant)`, "warn");
+      }
+      render();
+
+      if (options.proposeNext === false) return;
+
+      const available = getAvailableCoursesForStudent(student);
+      if (!available.length) {
+        notify(`Plus aucun parcours disponible pour ${getStudentDisplayName(student)}.`, "warn");
+        return;
+      }
+
+      const wantsNext = window.confirm(
+        `${getStudentDisplayName(student)} a terminé.\n\n` +
+        `Voulez-vous l'envoyer immédiatement sur un autre parcours disponible ?`
+      );
+      if (wantsNext) openAssignDialog(student.id);
+    }
+
+    function toggleStudentRunPause(studentId) {
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      const run = student.currentRun;
+      if (run.isPaused) {
+        run.startTs = Date.now() - (Number(run.pausedElapsedMs) || 0);
+        run.isPaused = false;
+      } else {
+        run.pausedElapsedMs = Math.max(0, Date.now() - run.startTs);
+        run.isPaused = true;
+      }
+      saveState();
+      render();
+    }
+
+    function populateOutcomeColorSelect(selectEl, currentValue) {
+      if (!selectEl) return;
+      selectEl.innerHTML = "";
+      const allOpt = document.createElement("option");
+      allOpt.value = "all";
+      allOpt.textContent = "Toutes couleurs";
+      selectEl.appendChild(allOpt);
+      for (const c of COLORS) {
+        const opt = document.createElement("option");
+        opt.value = c.key;
+        opt.textContent = c.label;
+        selectEl.appendChild(opt);
+      }
+      const ok = currentValue === "all" || COLORS.some((c) => c.key === currentValue);
+      selectEl.value = ok ? currentValue : "all";
+    }
+
+    function fillNumericPad(container, opts) {
+      if (!container) return;
+      const { min, max, value, onSelect, highlightSelection = false } = opts;
+      const shouldHighlight = Boolean(highlightSelection);
+      container.innerHTML = "";
+      container.classList.add("numeric-pad");
+      for (let n = min; n <= max; n += 1) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = `btn num-key${shouldHighlight && n === value ? " is-selected" : ""}`;
+        b.textContent = String(n);
+        b.addEventListener("click", () => onSelect(n));
+        container.appendChild(b);
+      }
+    }
+
+    function renderOutcomeCoursePickerGrid(gridEl, studentId, colorFilterKey, selectedCourseId, onPickCourseId, options = {}) {
+      const pickWhileCurrentRun = Boolean(options.pickWhileCurrentRun);
+      if (!gridEl) return;
+      const student = getStudentById(studentId);
+      gridEl.innerHTML = "";
+      if (!student) return;
+      const prepForThisStudent = pickWhileCurrentRun ? false : shouldUsePrepModeForStudent(student);
+      const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
+      const filtered = sortCoursesByNumberThenColor(
+        getSessionCourses().filter((c) => colorFilterKey === "all" || c.color === colorFilterKey)
+      );
+      for (const course of filtered) {
+        const blockedByNumber =
+          hasDoneNumber(student, course.number) ||
+          (pickWhileCurrentRun && student.currentRun && student.currentRun.number === course.number);
+        const busy = occupied.has(course.id);
+        const allowed = pickWhileCurrentRun ? canPickFollowUpCourse(student, course) : canAssignCourse(student, course);
+        const tile = createCourseTile(course, {
+          busy,
+          studentBlocked: blockedByNumber,
+          disabled: !allowed
+        });
+        tile.title = blockedByNumber
+          ? "Numéro déjà réalisé ou identique au parcours en cours."
+          : busy
+            ? "Parcours déjà réservé par un autre élève."
+            : prepForThisStudent
+              ? "Cliquer pour préparer ce parcours"
+              : pickWhileCurrentRun
+                ? "Sélectionner pour l'envoi après validation"
+                : "Cliquer pour envoyer sur ce parcours";
+        if (selectedCourseId === course.id) tile.classList.add("course-picked");
+        tile.addEventListener("click", () => {
+          if (!allowed) return;
+          onPickCourseId(course.id);
+        });
+        gridEl.appendChild(tile);
+      }
+    }
+
+    function renderSuccessDialog() {
+      const studentId = state.ui.selectedStudentForSuccessDialog;
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) {
+        refs.successTitle.textContent = "Parcours réussi";
+        refs.successErrorCount.textContent = "0";
+        fillNumericPad(refs.successErrorPad, {
+          min: 0,
+          max: OUTCOME_ERR_MAX,
+          value: 0,
+          highlightSelection: false,
+          onSelect: () => {}
+        });
+        refs.successPickCourseGrid.innerHTML = "";
+        return;
+      }
+      refs.successTitle.textContent = `Parcours réussi : ${getStudentDisplayName(student)} (${student.currentRun.number} ${student.currentRun.colorLabel})`;
+      const errVal = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.successErrorCount) || 0));
+      state.ui.successErrorCount = errVal;
+      refs.successErrorCount.textContent = String(errVal);
+      fillNumericPad(refs.successErrorPad, {
+        min: 0,
+        max: OUTCOME_ERR_MAX,
+        value: errVal,
+        highlightSelection: state.ui.successFaultPadTouched,
+        onSelect: (n) => {
+          state.ui.successFaultPadTouched = true;
+          state.ui.successErrorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, n));
+          refs.successErrorCount.textContent = String(state.ui.successErrorCount);
+          if (state.ui.successSelectedCourseId) tryAutoSuccessWithFollowCourse();
+          else renderSuccessDialog();
+        }
+      });
+      populateOutcomeColorSelect(refs.successPickColorFilter, state.ui.successPickColorFilter);
+      state.ui.successPickColorFilter = refs.successPickColorFilter.value;
+      renderOutcomeCoursePickerGrid(
+        refs.successPickCourseGrid,
+        studentId,
+        state.ui.successPickColorFilter,
+        state.ui.successSelectedCourseId,
+        (courseId) => {
+          state.ui.successSelectedCourseId = courseId;
+          if (state.ui.successFaultPadTouched) tryAutoSuccessWithFollowCourse();
+          else renderSuccessDialog();
+        },
+        { pickWhileCurrentRun: true }
+      );
+    }
+
+    function tryAutoSuccessWithFollowCourse() {
+      if (!state.ui.successFaultPadTouched || !state.ui.successSelectedCourseId) return;
+      const studentId = state.ui.selectedStudentForSuccessDialog;
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      const courseId = state.ui.successSelectedCourseId;
+      const course = ALL_COURSES.find((c) => c.id === courseId);
+      if (!course || !canPickFollowUpCourse(student, course)) {
+        notify("Ce parcours n'est pas disponible. Choisissez-en un autre dans la grille.", "warn");
+        state.ui.successSelectedCourseId = null;
+        renderSuccessDialog();
+        return;
+      }
+      const errorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.successErrorCount) || 0));
+      state.ui.successErrorCount = errorCount;
+      validateRun(studentId, { proposeNext: false, outcome: "success", errorCount });
+      const refreshed = getStudentById(studentId);
+      if (!refreshed) {
+        closeSuccessDialog();
+        return;
+      }
+      const prep = shouldUsePrepModeForStudent(refreshed);
+      const ok = sendStudentOnCourse(studentId, courseId, { prepareOnly: prep });
+      if (!ok) {
+        notify("Impossible d'envoyer sur ce parcours après validation. Utilisez « Choisir parcours » sur la fiche élève.", "warn");
+      }
+      closeSuccessDialog();
+    }
+
+    function openSuccessDialog(studentId) {
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      state.ui.selectedStudentForSuccessDialog = studentId;
+      state.ui.successErrorCount = 0;
+      state.ui.successFaultPadTouched = false;
+      state.ui.successSelectedCourseId = null;
+      state.ui.successPickColorFilter = state.ui.groupLaunchColor === "all" ? "all" : state.ui.groupLaunchColor;
+      renderSuccessDialog();
+      refs.successDialog.showModal();
+    }
+
+    function closeSuccessDialog() {
+      state.ui.selectedStudentForSuccessDialog = null;
+      state.ui.successErrorCount = 0;
+      state.ui.successFaultPadTouched = false;
+      state.ui.successSelectedCourseId = null;
+      state.ui.successPickColorFilter = "all";
+      if (refs.successDialog.open) refs.successDialog.close();
+    }
+
+    function confirmSuccessOnly() {
+      const studentId = state.ui.selectedStudentForSuccessDialog;
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) {
+        closeSuccessDialog();
+        return;
+      }
+      const errorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.successErrorCount) || 0));
+      state.ui.successErrorCount = errorCount;
+      validateRun(studentId, { proposeNext: false, outcome: "success", errorCount });
+      closeSuccessDialog();
+    }
+
+    function renderSummaryPanel() {
+      refs.summaryList.innerHTML = "";
+      const students = [...state.students];
+      sortStudentsByName(students);
+      if (!students.length) {
+        refs.summaryList.innerHTML = '<div class="mini">Aucun élève inscrit pour cette séance.</div>';
+        return;
+      }
+      for (const student of students) {
+        const name = getStudentDisplayName(student);
+        const reussis = student.history.filter((h) => h.outcome !== "switch").length;
+        const echecs = student.history.filter((h) => h.outcome === "switch").length;
+        const cumulErreurs = student.history.reduce((acc, h) => acc + (Number(h.errorCount) || 0), 0);
+        const cumulTemps = student.history.reduce((acc, h) => acc + (Number(h.durationMs) || 0), 0);
+        let statusLabel;
+        if (student.isAbsent) statusLabel = "Absent";
+        else if (student.currentRun) statusLabel = student.currentRun.isPaused ? "En pause" : "En action";
+        else if (student.pendingRun) statusLabel = "Préparé";
+        else statusLabel = "Disponible";
+        const badgeClass = student.isAbsent ? "badge-absent" : student.currentRun ? "b-running" : "b-ready";
+
+        const card = document.createElement("article");
+        card.className = "student-card summary-student-card";
+        card.innerHTML = `
+          <div class="row">
+            <div class="name">${escHtml(name)}</div>
+            <span class="badge ${badgeClass}">${statusLabel}</span>
+          </div>
+          <div class="mini summary-totals">
+            Parcours réussis : <strong>${reussis}</strong>
+            · Parcours en échec : <strong>${echecs}</strong>
+            · Fautes cumulées : <strong>${cumulErreurs}</strong>
+            · Temps cumulé : <strong>${formatMs(cumulTemps)}</strong>
+          </div>
+          <div class="summary-run-detail-label">Détail des parcours (${student.history.length})</div>
+        `;
+        const runList = document.createElement("div");
+        runList.className = "summary-run-list";
+        if (!student.history.length) {
+          const empty = document.createElement("div");
+          empty.className = "mini muted";
+          empty.textContent = "Aucun parcours validé pour l'instant.";
+          runList.appendChild(empty);
+        } else {
+          for (let i = 0; i < student.history.length; i += 1) {
+            const h = student.history[i];
+            const ok = h.outcome !== "switch";
+            const err = Number(h.errorCount) || 0;
+            const dur = formatMs(Number(h.durationMs) || 0);
+            const row = document.createElement("div");
+            row.className = "summary-run-line";
+            row.innerHTML = `
+              <span class="summary-run-num">${i + 1}.</span>
+              <span class="summary-run-course"><strong>${h.number}</strong> ${escHtml(h.colorLabel)}</span>
+              <span class="summary-run-out ${ok ? "ok" : "ko"}">${ok ? "Réussi" : "Échec"}</span>
+              <span class="summary-run-err">${err} faute(s)</span>
+              <span class="summary-run-time">${dur}</span>
+            `;
+            runList.appendChild(row);
+          }
+        }
+        card.appendChild(runList);
+        refs.summaryList.appendChild(card);
+      }
+    }
+
+    function openSummaryView() {
+      state.ui.sessionWorkspaceStep = "summary";
+      render();
+      renderSummaryPanel();
+    }
+
+    function backToCoreFromSummary() {
+      state.ui.sessionWorkspaceStep = "core";
+      render();
+    }
+
+    function printSummaryResults() {
+      const students = [...state.students];
+      sortStudentsByName(students);
+      const selectedClass = getSelectedClass();
+      const title = selectedClass
+        ? `${selectedClass.name} - Séance ${state.ui.selectedSessionNumber}`
+        : `Séance ${state.ui.selectedSessionNumber}`;
+
+      const sections = students.length
+        ? students
+          .map((student) => {
+            const name = escHtml(getStudentDisplayName(student));
+            const reussis = student.history.filter((h) => h.outcome !== "switch").length;
+            const echecs = student.history.filter((h) => h.outcome === "switch").length;
+            const cumulErreurs = student.history.reduce((a, h) => a + (Number(h.errorCount) || 0), 0);
+            const cumulTemps = student.history.reduce((a, h) => a + (Number(h.durationMs) || 0), 0);
+            const runRows = student.history.length
+              ? student.history
+                .map((h, i) => {
+                  const ok = h.outcome !== "switch";
+                  const err = Number(h.errorCount) || 0;
+                  const dur = formatMs(Number(h.durationMs) || 0);
+                  return `<tr>
+                    <td>${i + 1}</td>
+                    <td>${h.number} ${escHtml(h.colorLabel)}</td>
+                    <td>${ok ? "Réussi" : "Échec"}</td>
+                    <td>${err}</td>
+                    <td>${dur}</td>
+                  </tr>`;
+                })
+                .join("")
+              : '<tr><td colspan="5" style="color:#64748b">Aucun parcours validé</td></tr>';
+            return `
+              <section style="margin-bottom:28px; page-break-inside:avoid;">
+                <h2 style="font-size:1.1rem;margin:18px 0 6px;border-bottom:2px solid #166534;padding-bottom:4px;">${name}</h2>
+                <p style="margin:0 0 10px;font-size:0.95rem;">
+                  Parcours réussis : <strong>${reussis}</strong> · Parcours en échec : <strong>${echecs}</strong>
+                  · Fautes cumulées : <strong>${cumulErreurs}</strong> · Temps cumulé : <strong>${formatMs(cumulTemps)}</strong>
+                </p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Parcours (n° couleur)</th>
+                      <th>Résultat</th>
+                      <th>Fautes</th>
+                      <th>Durée</th>
+                    </tr>
+                  </thead>
+                  <tbody>${runRows}</tbody>
+                </table>
+              </section>
+            `;
+          })
+          .join("")
+        : '<p>Aucun élève inscrit.</p>';
+
+      const printable = window.open("", "_blank", "width=980,height=720");
+      if (!printable) {
+        notify("Impossible d'ouvrir la fenêtre d'impression.", "warn");
+        return;
+      }
+      printable.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="utf-8" />
+          <title>Résumé séance - ${escHtml(title)}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; color: #1f2937; }
+            h1 { margin-bottom: 4px; }
+            p { margin-top: 0; color: #4b5563; }
+            table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.92rem; }
+            th, td { border: 1px solid #d1d5db; padding: 7px 8px; text-align: left; }
+            th { background: #f3f4f6; }
+          </style>
+        </head>
+        <body>
+          <h1>Résumé de séance par élève</h1>
+          <p>${escHtml(title)}</p>
+          ${sections}
+        </body>
+        </html>
+      `);
+      printable.document.close();
+      printable.focus();
+      printable.print();
+    }
+
+    function renderFailureDialog() {
+      const studentId = state.ui.selectedStudentForFailureDialog;
+      const student = getStudentById(studentId);
+      const beaconMax = state.ui.sessionBeaconCount;
+      if (!student || !student.currentRun) {
+        refs.failureTitle.textContent = "Parcours suivant (échec)";
+        refs.failureErrorCount.textContent = "0";
+        refs.failureBeaconCount.textContent = "0";
+        refs.failureBeaconTotal.textContent = `/ ${beaconMax}`;
+        fillNumericPad(refs.failureErrorPad, {
+          min: 0,
+          max: OUTCOME_ERR_MAX,
+          value: 0,
+          highlightSelection: false,
+          onSelect: () => {}
+        });
+        fillNumericPad(refs.failureBeaconPad, {
+          min: 0,
+          max: beaconMax,
+          value: 0,
+          highlightSelection: false,
+          onSelect: () => {}
+        });
+        refs.failurePickCourseGrid.innerHTML = "";
+        return;
+      }
+      refs.failureTitle.textContent = `Échec : ${getStudentDisplayName(student)} (${student.currentRun.number} ${student.currentRun.colorLabel})`;
+      const errVal = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.failureErrorCount) || 0));
+      const bcVal = Math.max(0, Math.min(beaconMax, Number(state.ui.failureBeaconCount) || 0));
+      state.ui.failureErrorCount = errVal;
+      state.ui.failureBeaconCount = bcVal;
+      refs.failureErrorCount.textContent = String(errVal);
+      refs.failureBeaconCount.textContent = String(bcVal);
+      refs.failureBeaconTotal.textContent = `/ ${beaconMax}`;
+      fillNumericPad(refs.failureErrorPad, {
+        min: 0,
+        max: OUTCOME_ERR_MAX,
+        value: errVal,
+        highlightSelection: state.ui.failureErrorPadTouched,
+        onSelect: (n) => {
+          state.ui.failureErrorPadTouched = true;
+          state.ui.failureErrorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, n));
+          refs.failureErrorCount.textContent = String(state.ui.failureErrorCount);
+          if (state.ui.failureBeaconPadTouched && state.ui.failureSelectedCourseId) tryAutoFailureWithFollowCourse();
+          else renderFailureDialog();
+        }
+      });
+      fillNumericPad(refs.failureBeaconPad, {
+        min: 0,
+        max: beaconMax,
+        value: bcVal,
+        highlightSelection: state.ui.failureBeaconPadTouched,
+        onSelect: (n) => {
+          state.ui.failureBeaconPadTouched = true;
+          state.ui.failureBeaconCount = Math.max(0, Math.min(beaconMax, n));
+          refs.failureBeaconCount.textContent = String(state.ui.failureBeaconCount);
+          if (state.ui.failureErrorPadTouched && state.ui.failureSelectedCourseId) tryAutoFailureWithFollowCourse();
+          else renderFailureDialog();
+        }
+      });
+      populateOutcomeColorSelect(refs.failurePickColorFilter, state.ui.failurePickColorFilter);
+      state.ui.failurePickColorFilter = refs.failurePickColorFilter.value;
+      renderOutcomeCoursePickerGrid(
+        refs.failurePickCourseGrid,
+        studentId,
+        state.ui.failurePickColorFilter,
+        state.ui.failureSelectedCourseId,
+        (courseId) => {
+          state.ui.failureSelectedCourseId = courseId;
+          if (state.ui.failureErrorPadTouched && state.ui.failureBeaconPadTouched) tryAutoFailureWithFollowCourse();
+          else renderFailureDialog();
+        },
+        { pickWhileCurrentRun: true }
+      );
+    }
+
+    function tryAutoFailureWithFollowCourse() {
+      if (!state.ui.failureErrorPadTouched || !state.ui.failureBeaconPadTouched || !state.ui.failureSelectedCourseId) {
+        return;
+      }
+      const studentId = state.ui.selectedStudentForFailureDialog;
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      const courseId = state.ui.failureSelectedCourseId;
+      const course = ALL_COURSES.find((c) => c.id === courseId);
+      if (!course || !canPickFollowUpCourse(student, course)) {
+        notify("Ce parcours n'est pas disponible. Choisissez-en un autre dans la grille.", "warn");
+        state.ui.failureSelectedCourseId = null;
+        renderFailureDialog();
+        return;
+      }
+      const errorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.failureErrorCount) || 0));
+      const beaconFoundCount = Math.max(
+        0,
+        Math.min(state.ui.sessionBeaconCount, Number(state.ui.failureBeaconCount) || 0)
+      );
+      state.ui.failureErrorCount = errorCount;
+      state.ui.failureBeaconCount = beaconFoundCount;
+      validateRun(studentId, {
+        proposeNext: false,
+        outcome: "switch",
+        errorCount,
+        beaconFoundCount
+      });
+      const refreshed = getStudentById(studentId);
+      if (!refreshed) {
+        closeFailureDialog();
+        return;
+      }
+      const prep = shouldUsePrepModeForStudent(refreshed);
+      const ok = sendStudentOnCourse(studentId, courseId, { prepareOnly: prep });
+      if (!ok) {
+        notify("Impossible d'envoyer sur ce parcours après validation. Utilisez « Choisir parcours » sur la fiche élève.", "warn");
+      }
+      closeFailureDialog();
+    }
+
+    function openFailureDialog(studentId) {
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      state.ui.selectedStudentForFailureDialog = studentId;
+      state.ui.failureErrorCount = 0;
+      state.ui.failureBeaconCount = 0;
+      state.ui.failureErrorPadTouched = false;
+      state.ui.failureBeaconPadTouched = false;
+      state.ui.failureSelectedCourseId = null;
+      state.ui.failurePickColorFilter = state.ui.groupLaunchColor === "all" ? "all" : state.ui.groupLaunchColor;
+      renderFailureDialog();
+      refs.failureDialog.showModal();
+    }
+
+    function closeFailureDialog() {
+      state.ui.selectedStudentForFailureDialog = null;
+      state.ui.failureErrorCount = 0;
+      state.ui.failureBeaconCount = 0;
+      state.ui.failureErrorPadTouched = false;
+      state.ui.failureBeaconPadTouched = false;
+      state.ui.failureSelectedCourseId = null;
+      state.ui.failurePickColorFilter = "all";
+      if (refs.failureDialog.open) refs.failureDialog.close();
+    }
+
+    function exportResultsCSV() {
+      const rows = [["Nom", "Prenom", "Parcours", "Temps", "Statut", "Erreurs", "Balises trouvées", "Balises prévues"]];
+      for (const s of state.students) {
+        for (const h of s.history) {
+          rows.push([
+            s.lastName,
+            s.firstName,
+            `${h.number} ${h.colorLabel}`,
+            formatMs(h.durationMs),
+            h.outcome === "switch" ? "Parcours suivant (non réussi)" : "Réussi",
+            String(Number(h.errorCount) || 0),
+            h.beaconFoundCount == null ? "" : String(h.beaconFoundCount),
+            h.beaconTotalCount == null ? "" : String(h.beaconTotalCount)
+          ]);
+        }
+      }
+      const csv = rows.map((r) => r.join(";")).join("\n");
+      const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `resultats_orientation_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      notify("Export CSV généré.", "success");
+    }
+
+    function ensureGroupColorOptions() {
+      if (refs.groupColorSelect.options.length) return;
+      for (const color of COLORS) {
+        const option = document.createElement("option");
+        option.value = color.key;
+        option.textContent = color.label;
+        refs.groupColorSelect.appendChild(option);
+      }
+    }
+
+    function renderTop() {
+      refs.globalTimer.textContent = formatMs(currentGlobalMs());
+      if (refs.coreGroupColorSelect.value !== state.ui.groupLaunchColor) {
+        refs.coreGroupColorSelect.value = state.ui.groupLaunchColor;
+      }
+      refs.corePrepModeBtn.textContent = `Mode préparation : ${state.ui.prepMode ? "ON" : "OFF"}`;
+      refs.corePrepModeBtn.classList.toggle("btn-primary", state.ui.prepMode);
+      const hasPreparedChoices = state.students.some((student) => Boolean(student.pendingRun));
+      refs.coreResetChoicesBtn.disabled = !hasPreparedChoices;
+      applyCoreGroupColorSelectStyle();
+    }
+
+    function createCoreStudentCard(student) {
+      const card = document.createElement("article");
+      card.className = "student-card";
+
+      const isActive = Boolean(student.currentRun);
+      const isPrepared = !isActive && Boolean(student.pendingRun);
+      const isPaused = isActive && Boolean(student.currentRun.isPaused);
+      const statusClass = isPaused ? "badge-idle" : (isActive ? "b-running" : (isPrepared ? "badge-idle" : "b-ready"));
+      const statusLabel = isPaused ? "En pause" : (isActive ? "En action" : (isPrepared ? "Préparé" : "Disponible"));
+      const currentCourse = isActive
+        ? `${student.currentRun.number} ${student.currentRun.colorLabel}`
+        : isPrepared
+          ? `${student.pendingRun.number} ${student.pendingRun.colorLabel}`
+        : "Aucun parcours en cours";
+      const detailText = `Parcours validés : ${getValidatedRunCount(student)}`;
+
+      card.innerHTML = `
+        <div class="row">
+          <div class="name">${getStudentDisplayName(student)}</div>
+          <span class="badge ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="mini">Parcours : <strong>${currentCourse}</strong></div>
+        <div class="mini" data-core-timer="${student.id}">${isActive ? formatMs(getCurrentRunElapsedMs(student.currentRun)) : (isPrepared ? "En attente départ groupé" : "--:--:--")}</div>
+        <div class="mini">${detailText}</div>
+      `;
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      if (isActive) {
+        const pauseBtn = document.createElement("button");
+        pauseBtn.className = "btn";
+        pauseBtn.type = "button";
+        pauseBtn.textContent = isPaused ? "Play" : "Pause";
+        pauseBtn.addEventListener("click", () => toggleStudentRunPause(student.id));
+        actions.appendChild(pauseBtn);
+
+        const successBtn = document.createElement("button");
+        successBtn.className = "btn btn-primary";
+        successBtn.type = "button";
+        successBtn.textContent = "Réussi";
+        successBtn.addEventListener("click", () => openSuccessDialog(student.id));
+        actions.appendChild(successBtn);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "btn btn-danger";
+        nextBtn.type = "button";
+        nextBtn.textContent = "Échec";
+        nextBtn.addEventListener("click", () => openFailureDialog(student.id));
+        actions.appendChild(nextBtn);
+      } else {
+        const chooseBtn = document.createElement("button");
+        chooseBtn.className = "btn btn-primary";
+        chooseBtn.type = "button";
+        chooseBtn.textContent = shouldUsePrepModeForStudent(student) ? "Préparer parcours" : "Choisir parcours";
+        chooseBtn.addEventListener("click", () => openAssignDialog(student.id));
+        actions.appendChild(chooseBtn);
+      }
+
+      card.appendChild(actions);
+      return card;
+    }
+
+    function renderCoreStudentsPanel() {
+      const presentStudents = getPresentStudents();
+      const activeCount = presentStudents.filter((student) => student.currentRun).length;
+      refs.corePresentCount.textContent = `${presentStudents.length} élève(s) prêt(s) - ${activeCount} en action`;
+      refs.coreStudentsGrid.innerHTML = "";
+
+      if (!presentStudents.length) {
+        const empty = document.createElement("div");
+        empty.className = "muted";
+        empty.textContent = "Aucun élève présent pour cette séance.";
+        refs.coreStudentsGrid.appendChild(empty);
+        return;
+      }
+
+      for (const student of presentStudents) {
+        refs.coreStudentsGrid.appendChild(createCoreStudentCard(student));
+      }
+    }
+
+    function refreshCoreStudentTimers() {
+      if (!refs.coreStudentsGrid) return;
+      const timerNodes = refs.coreStudentsGrid.querySelectorAll("[data-core-timer]");
+      for (const node of timerNodes) {
+        const student = getStudentById(node.getAttribute("data-core-timer"));
+        if (!student || !student.currentRun) {
+          node.textContent = student && student.pendingRun ? "En attente départ groupé" : "--:--:--";
+          continue;
+        }
+        node.textContent = formatMs(getCurrentRunElapsedMs(student.currentRun));
+      }
+    }
+
+    function renderStats() {
+      const presentStudents = getPresentStudents();
+      const totalStudents = presentStudents.length;
+      const activeStudents = presentStudents.filter((s) => s.currentRun).length;
+      const validated = presentStudents.reduce((acc, s) => acc + s.history.length, 0);
+      const occupied = getOccupiedCourseIds();
+      const sessionCourses = getSessionCourses();
+      const freeCourses = sessionCourses.length - sessionCourses.filter((c) => occupied.has(c.id)).length;
+      refs.kpiStudents.textContent = String(totalStudents);
+      refs.kpiActive.textContent = String(activeStudents);
+      refs.kpiValidated.textContent = String(validated);
+      refs.kpiFreeCourses.textContent = String(freeCourses);
+    }
+
+    function createCourseTile(course, options = {}) {
+      const tile = document.createElement("button");
+      tile.className = "course";
+      tile.type = "button";
+      tile.style.background = course.colorHex;
+      tile.innerHTML = `<div>${course.number}</div>`;
+
+      if (options.busy) tile.classList.add("busy");
+      if (options.studentBlocked) tile.classList.add("student-blocked");
+      if (options.disabled) tile.disabled = true;
+      if (options.draggable) {
+        tile.draggable = true;
+        tile.addEventListener("dragstart", (ev) => {
+          ev.dataTransfer.setData("text/course-id", course.id);
+          ev.dataTransfer.effectAllowed = "copy";
+        });
+      }
+      return tile;
+    }
+
+    function renderSessionCourseCountOptions() {
+      refs.sessionCourseCountSelect.innerHTML = "";
+      for (let i = MIN_NUMBERS; i <= MAX_NUMBERS; i += 1) {
+        const option = document.createElement("option");
+        option.value = String(i);
+        option.textContent = `${i} parcours`;
+        refs.sessionCourseCountSelect.appendChild(option);
+      }
+      refs.sessionCourseCountSelect.value = String(state.ui.sessionCourseCount);
+    }
+
+    function renderSessionBeaconCountOptions() {
+      refs.sessionBeaconCountSelect.innerHTML = "";
+      for (let i = MIN_BEACONS; i <= MAX_BEACONS; i += 1) {
+        const option = document.createElement("option");
+        option.value = String(i);
+        option.textContent = `${i} balises`;
+        refs.sessionBeaconCountSelect.appendChild(option);
+      }
+      refs.sessionBeaconCountSelect.value = String(state.ui.sessionBeaconCount);
+    }
+
+    function renderCoursePanel() {
+      refs.colorFilter.innerHTML = "";
+      const allOpt = document.createElement("option");
+      allOpt.value = "all";
+      allOpt.textContent = "Toutes couleurs";
+      refs.colorFilter.appendChild(allOpt);
+      for (const c of COLORS) {
+        const opt = document.createElement("option");
+        opt.value = c.key;
+        opt.textContent = c.label;
+        refs.colorFilter.appendChild(opt);
+      }
+      refs.colorFilter.value = state.ui.colorFilter;
+
+      refs.courseGrid.innerHTML = "";
+      const occupied = getOccupiedCourseIds();
+      const sessionCourses = getSessionCourses();
+      const filtered = sortCoursesByNumberThenColor(
+        sessionCourses.filter((c) => state.ui.colorFilter === "all" || c.color === state.ui.colorFilter)
+      );
+      for (const course of filtered) {
+        const tile = createCourseTile(course, {
+          busy: occupied.has(course.id),
+          disabled: occupied.has(course.id),
+          draggable: !occupied.has(course.id)
+        });
+        refs.courseGrid.appendChild(tile);
+      }
+      refs.courseStats.textContent = `${filtered.length} affichés / ${sessionCourses.length}`;
+    }
+
+    function renderStudents() {
+      refs.studentList.innerHTML = "";
+      const search = state.ui.studentSearch.trim().toLowerCase();
+      const filteredStudents = getPresentStudents().filter((s) => {
+        if (!search) return true;
+        return getStudentDisplayName(s).toLowerCase().includes(search);
+      });
+
+      refs.studentCount.textContent = `${filteredStudents.length} élève${filteredStudents.length > 1 ? "s" : ""}`;
+      for (const student of filteredStudents) {
+        const card = document.createElement("div");
+        card.className = "student-card";
+        card.dataset.studentId = student.id;
+
+        const isRunning = Boolean(student.currentRun);
+        const runBadge = `<span class="badge ${isRunning ? "badge-running" : "badge-idle"}">${isRunning ? "En course" : "Disponible"}</span>`;
+        const header = document.createElement("div");
+        header.className = "name-line";
+        const quickColorOptions = COLORS.map((c) => `<option value="${c.key}" ${c.key === state.ui.groupLaunchColor ? "selected" : ""}>${c.label}</option>`).join("");
+        header.innerHTML = `
+          <strong>${getStudentDisplayName(student)}</strong>
+          <div class="input-row">
+            ${runBadge}
+            <select class="compact-select" data-quick-color="${student.id}" ${isRunning ? "disabled" : ""}>${quickColorOptions}</select>
+            <button class="btn-go" data-quick-go="${student.id}" ${isRunning ? "disabled" : ""}>GO</button>
+          </div>
+        `;
+        card.appendChild(header);
+
+        const info = document.createElement("div");
+        info.className = "mini";
+        const availableCount = getAvailableCoursesForStudent(student).length;
+        info.textContent = `Parcours validés : ${student.history.length} | Restants possibles : ${availableCount}`;
+        card.appendChild(info);
+
+        const actions = document.createElement("div");
+        actions.className = "input-row";
+
+        const sendBtn = document.createElement("button");
+        sendBtn.className = "btn btn-primary";
+        sendBtn.textContent = "Envoyer sur un parcours";
+        sendBtn.disabled = isRunning;
+        sendBtn.addEventListener("click", () => openAssignDialog(student.id));
+
+        const validateBtn = document.createElement("button");
+        validateBtn.className = "btn";
+        validateBtn.textContent = "Valider parcours";
+        validateBtn.disabled = !isRunning;
+        validateBtn.addEventListener("click", () => validateRun(student.id));
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-delete";
+        removeBtn.textContent = "Supprimer";
+        removeBtn.disabled = isRunning;
+        removeBtn.addEventListener("click", () => removeStudent(student.id));
+
+        actions.appendChild(sendBtn);
+        actions.appendChild(validateBtn);
+        actions.appendChild(removeBtn);
+        card.appendChild(actions);
+
+        const quickColorSelect = header.querySelector(`[data-quick-color="${student.id}"]`);
+        const quickGoBtn = header.querySelector(`[data-quick-go="${student.id}"]`);
+        if (quickGoBtn && quickColorSelect) {
+          quickGoBtn.addEventListener("click", () => launchStudentByColor(student.id, quickColorSelect.value));
+        }
+
+        if (!isRunning) {
+          const quick = document.createElement("div");
+          quick.className = "input-row";
+          const available = getAvailableCoursesForStudent(student);
+          if (available.length) {
+            const suggestion = available[0];
+            const quickBtn = document.createElement("button");
+            quickBtn.className = "btn";
+            quickBtn.innerHTML = `Départ rapide <span class="pill">${suggestion.number} ${suggestion.colorLabel}</span>`;
+            quickBtn.addEventListener("click", () => sendStudentOnCourse(student.id, suggestion.id));
+            quick.appendChild(quickBtn);
+          } else {
+            quick.innerHTML = '<span class="mini">Aucun parcours restant possible pour cet élève.</span>';
+          }
+          card.appendChild(quick);
+        }
+
+        const history = document.createElement("div");
+        history.className = "history";
+        if (!student.history.length) {
+          history.innerHTML = '<div class="mini">Aucun parcours validé.</div>';
+        } else {
+          const items = [...student.history].slice(-8).reverse();
+          for (const h of items) {
+            const row = document.createElement("div");
+            row.className = "history-item";
+            row.innerHTML = `<span>${h.number} ${h.colorLabel}</span><strong>${formatMs(h.durationMs)}</strong>`;
+            history.appendChild(row);
+          }
+        }
+        card.appendChild(history);
+
+        card.addEventListener("dragover", (ev) => {
+          ev.preventDefault();
+          card.classList.add("drag-over");
+        });
+        card.addEventListener("dragleave", () => card.classList.remove("drag-over"));
+        card.addEventListener("drop", (ev) => {
+          ev.preventDefault();
+          card.classList.remove("drag-over");
+          const courseId = ev.dataTransfer.getData("text/course-id");
+          if (!courseId) return;
+          sendStudentOnCourse(student.id, courseId);
+        });
+
+        refs.studentList.appendChild(card);
+      }
+    }
+
+    function renderActiveStudents() {
+      refs.activeList.innerHTML = "";
+      const active = getPresentStudents().filter((s) => s.currentRun);
+      refs.activeCount.textContent = `${active.length} en course`;
+      if (!active.length) {
+        refs.activeList.innerHTML = '<div class="mini">Aucun élève en activité.</div>';
+        return;
+      }
+      for (const student of active) {
+        const card = document.createElement("div");
+        card.className = "active-card";
+        card.dataset.activeStudentId = student.id;
+        const elapsed = Date.now() - student.currentRun.startTs;
+        card.innerHTML = `
+          <div class="name-line">
+            <strong>${getStudentDisplayName(student)}</strong>
+            <span class="badge badge-running">Actif</span>
+          </div>
+          <div>Parcours en cours : <strong>${student.currentRun.number} ${student.currentRun.colorLabel}</strong></div>
+          <div>Chrono individuel : <strong data-active-timer="${student.id}">${formatMs(elapsed)}</strong></div>
+          <button class="btn btn-primary" data-validate="${student.id}">Valider parcours</button>
+        `;
+        card.querySelector("button").addEventListener("click", () => validateRun(student.id));
+        refs.activeList.appendChild(card);
+      }
+    }
+
+    function refreshActiveTimers() {
+      const timers = refs.activeList.querySelectorAll("[data-active-timer]");
+      for (const timerNode of timers) {
+        const studentId = timerNode.getAttribute("data-active-timer");
+        const student = getStudentById(studentId);
+        if (!student || !student.currentRun) continue;
+        const elapsed = Date.now() - student.currentRun.startTs;
+        timerNode.textContent = formatMs(elapsed);
+      }
+    }
+
+    function renderResultsPanel() {
+      refs.resultsList.innerHTML = "";
+      const presentStudents = getPresentStudents();
+      const totalResults = presentStudents.reduce((acc, s) => acc + getValidatedRunCount(s), 0);
+      refs.resultsCount.textContent = `${totalResults} résultat${totalResults > 1 ? "s" : ""}`;
+
+      if (!presentStudents.length) {
+        refs.resultsList.innerHTML = '<div class="mini">Aucun élève enregistré.</div>';
+        return;
+      }
+
+      const sortedStudents = [...presentStudents].sort((a, b) => {
+        const aTime = a.history.reduce((acc, h) => acc + h.durationMs, 0);
+        const bTime = b.history.reduce((acc, h) => acc + h.durationMs, 0);
+        if (state.ui.resultSort === "count") return b.history.length - a.history.length;
+        if (state.ui.resultSort === "timeAsc") return aTime - bTime;
+        if (state.ui.resultSort === "timeDesc") return bTime - aTime;
+        return (a.lastName + a.firstName).localeCompare(b.lastName + b.firstName, "fr");
+      });
+
+      for (const student of sortedStudents) {
+        const card = document.createElement("div");
+        card.className = "student-card";
+        const totalTime = student.history.reduce((acc, h) => acc + h.durationMs, 0);
+        card.innerHTML = `
+          <div class="name-line">
+            <strong>${getStudentDisplayName(student)}</strong>
+            <span class="badge badge-idle">${getValidatedRunCount(student)} parcours validés</span>
+          </div>
+          <div class="mini">Temps cumulé : ${formatMs(totalTime)}</div>
+        `;
+
+        const history = document.createElement("div");
+        history.className = "history";
+        if (!student.history.length) {
+          history.innerHTML = '<div class="mini">Aucun parcours validé.</div>';
+        } else {
+          const rows = [...student.history].reverse();
+          for (const h of rows) {
+            const line = document.createElement("div");
+            line.className = "history-item";
+            const isSwitch = h.outcome === "switch";
+            const errorsInfo = Number(h.errorCount) > 0 ? ` | fautes: ${h.errorCount}` : "";
+            const beaconsInfo = h.beaconFoundCount == null
+              ? ""
+              : ` | balises: ${h.beaconFoundCount}/${h.beaconTotalCount || state.ui.sessionBeaconCount}`;
+            const label = isSwitch
+              ? `${h.number} ${h.colorLabel} (parcours suivant${errorsInfo}${beaconsInfo})`
+              : `${h.number} ${h.colorLabel}${errorsInfo}${beaconsInfo}`;
+            line.innerHTML = `<span>${label}</span><strong>${formatMs(h.durationMs)}</strong>`;
+            history.appendChild(line);
+          }
+        }
+        card.appendChild(history);
+        refs.resultsList.appendChild(card);
+      }
+    }
+
+    function renderMenu() {
+      const isSeance = state.ui.activeMenu === "seance";
+      refs.menuSeanceBtn.classList.toggle("active", isSeance);
+      refs.menuResultsBtn.classList.toggle("active", !isSeance);
+      refs.viewSeance.classList.toggle("view-hidden", !isSeance);
+      refs.viewResults.classList.toggle("view-hidden", isSeance);
+    }
+
+    function renderAssignDialog() {
+      const student = getStudentById(state.ui.selectedStudentForModal);
+      refs.modalCourseGrid.innerHTML = "";
+      if (!student) return;
+      const prepForThisStudent = shouldUsePrepModeForStudent(student);
+      refs.assignTitle.textContent = prepForThisStudent
+        ? `Préparer : ${getStudentDisplayName(student)}`
+        : `Envoyer : ${getStudentDisplayName(student)}`;
+
+      refs.modalColorFilter.innerHTML = "";
+      const allOpt = document.createElement("option");
+      allOpt.value = "all";
+      allOpt.textContent = "Toutes couleurs";
+      refs.modalColorFilter.appendChild(allOpt);
+      for (const c of COLORS) {
+        const opt = document.createElement("option");
+        opt.value = c.key;
+        opt.textContent = c.label;
+        refs.modalColorFilter.appendChild(opt);
+      }
+      refs.modalColorFilter.value = state.ui.modalColorFilter;
+
+      const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
+      const filtered = sortCoursesByNumberThenColor(
+        getSessionCourses().filter((c) => state.ui.modalColorFilter === "all" || c.color === state.ui.modalColorFilter)
+      );
+
+      for (const course of filtered) {
+        const blockedByNumber = hasDoneNumber(student, course.number);
+        const busy = occupied.has(course.id);
+        const allowed = canAssignCourse(student, course);
+        const tile = createCourseTile(course, {
+          busy,
+          studentBlocked: blockedByNumber,
+          disabled: !allowed
+        });
+        tile.title = blockedByNumber
+          ? "Numéro déjà réalisé par cet élève."
+          : busy
+            ? "Parcours déjà réservé par un autre élève."
+            : (prepForThisStudent ? "Cliquer pour préparer" : "Cliquer pour assigner");
+        tile.addEventListener("click", () => {
+          sendStudentOnCourse(student.id, course.id, { prepareOnly: prepForThisStudent });
+          refs.assignDialog.close();
+        });
+        refs.modalCourseGrid.appendChild(tile);
+      }
+    }
+
+    function openAssignDialog(studentId) {
+      const student = getStudentById(studentId);
+      if (!student || student.isAbsent) return;
+      if (shouldUsePrepModeForStudent(student)) {
+        state.ui.modalColorFilter = state.ui.groupLaunchColor === "all" ? "all" : state.ui.groupLaunchColor;
+      } else {
+        state.ui.modalColorFilter = "all";
+      }
+      state.ui.selectedStudentForModal = studentId;
+      renderAssignDialog();
+      refs.assignDialog.showModal();
+    }
+
+    function render() {
+      renderAppView();
+      renderSetupView();
+      const isCoreView = state.ui.appView === "workspace" && state.ui.sessionWorkspaceStep === "core";
+      refs.fullscreenToggleBtn.classList.toggle("view-hidden", !isCoreView);
+      if (document.fullscreenElement === refs.sessionCoreView && !isCoreView) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (state.ui.appView !== "workspace") return;
+      renderWorkspaceStep();
+      if (state.ui.sessionWorkspaceStep === "setup") {
+        renderSessionSetupPanel();
+        return;
+      }
+      if (state.ui.sessionWorkspaceStep === "summary") {
+        renderSummaryPanel();
+        return;
+      }
+      renderTop();
+      renderCoreStudentsPanel();
+    }
+
+    function syncFullscreenToggleLabel() {
+      const isCoreFullscreen = document.fullscreenElement === refs.sessionCoreView;
+      refs.fullscreenToggleBtn.textContent = isCoreFullscreen ? "Quitter plein ecran" : "Plein ecran";
+    }
+
+    async function toggleFullscreenMode() {
+      try {
+        const isCoreFullscreen = document.fullscreenElement === refs.sessionCoreView;
+        if (!isCoreFullscreen) {
+          await refs.sessionCoreView.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (err) {
+        notify("Mode plein écran non disponible.", "warn");
+      } finally {
+        syncFullscreenToggleLabel();
+      }
+    }
+
+    refs.startGlobalBtn.addEventListener("click", startGlobalTimer);
+    refs.coreBackToSessionsBtn.addEventListener("click", backFromCoreToSessionSetup);
+    refs.fullscreenToggleBtn.addEventListener("click", toggleFullscreenMode);
+    document.addEventListener("fullscreenchange", syncFullscreenToggleLabel);
+    refs.pauseGlobalBtn.addEventListener("click", pauseGlobalTimer);
+    refs.resetGlobalBtn.addEventListener("click", resetGlobalTimer);
+    refs.endSessionFinBtn.addEventListener("click", endSessionFin);
+    refs.coreGroupColorSelect.addEventListener("change", (e) => {
+      state.ui.groupLaunchColor = e.target.value;
+      saveState();
+      applyCoreGroupColorSelectStyle();
+    });
+    refs.corePrepModeBtn.addEventListener("click", () => {
+      state.ui.prepMode = !state.ui.prepMode;
+      saveState();
+      render();
+    });
+    refs.coreSummaryBtn.addEventListener("click", openSummaryView);
+    refs.coreResetChoicesBtn.addEventListener("click", resetPreparedChoices);
+    refs.coreResetSessionBtn.addEventListener("click", resetApplicationData);
+    refs.backFromSessionSetupBtn.addEventListener("click", backToSessions);
+    refs.goToCoreBtn.addEventListener("click", () => {
+      state.ui.sessionWorkspaceStep = "core";
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absenceMode = false;
+      saveState();
+      render();
+    });
+    refs.createClassBtn.addEventListener("click", () => {
+      const created = createClass(refs.newClassInput.value);
+      if (!created) {
+        notify("Nom de classe invalide.", "warn");
+        return;
+      }
+      state.ui.selectedClassId = created.id;
+      refs.newClassInput.value = "";
+      saveState();
+      renderSetupView();
+    });
+
+    refs.changeClassTopBtn.addEventListener("click", () => {
+      state.ui.setupStep = "classes";
+      state.ui.sessionDeleteMode = false;
+      state.ui.sessionDeleteTargets = [];
+      state.ui.studentDeleteMode = false;
+      state.ui.studentDeleteTargets = [];
+      state.ui.absenceMode = false;
+      state.ui.absentDraftIds = [];
+      saveState();
+      renderSetupView();
+    });
+
+    refs.toggleDeleteSessionsBtn.addEventListener("click", enableSessionDeleteMode);
+    refs.cancelDeleteSessionsBtn.addEventListener("click", cancelSessionDeleteMode);
+    refs.selectAllSessionsBtn.addEventListener("click", toggleSelectAllSessionsForDelete);
+    refs.confirmDeleteSessionsBtn.addEventListener("click", () => {
+      deleteSessionForSelectedClass(state.ui.sessionDeleteTargets);
+    });
+
+    refs.createFreshSessionBtn.addEventListener("click", createFreshSelectedSession);
+
+    refs.addStudentBtn.addEventListener("click", () => {
+      const entries = parseManualEntries(refs.manualStudentsInput.value);
+      if (!entries.length) {
+        notify("Saisir au moins une ligne (prénom seul ou nom prénom).", "warn");
+        return;
+      }
+      for (const entry of entries) {
+        addStudent(entry.lastName, entry.firstName, { silent: true, skipRender: true });
+      }
+      refs.manualStudentsInput.value = "";
+      render();
+      notify(`${entries.length} élève(s) ajouté(s).`, "success");
+    });
+
+    refs.toggleDeleteStudentsBtn.addEventListener("click", enableStudentDeleteMode);
+    refs.cancelDeleteStudentsBtn.addEventListener("click", cancelStudentDeleteMode);
+    refs.selectAllDeleteStudentsBtn.addEventListener("click", toggleSelectAllStudentsForDelete);
+    refs.confirmDeleteStudentsBtn.addEventListener("click", confirmDeleteSelectedStudents);
+    refs.toggleAbsentStudentsBtn.addEventListener("click", enableAbsenceMode);
+    refs.selectAllAbsentStudentsBtn.addEventListener("click", toggleSelectAllAbsentDraftTargets);
+    refs.cancelAbsentStudentsBtn.addEventListener("click", cancelAbsenceMode);
+    refs.applyAbsentStudentsBtn.addEventListener("click", applyAbsenceSelection);
+
+    refs.csvInput.addEventListener("change", async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const text = await file.text();
+      const rows = parseCSV(text);
+      if (!rows.length) {
+        notify("Aucun élève détecté dans le CSV.", "warn");
+        event.target.value = "";
+        return;
+      }
+      for (const r of rows) addStudent(r.lastName, r.firstName, { silent: true, skipRender: true });
+      render();
+      notify(`${rows.length} élève(s) importé(s).`, "success");
+      event.target.value = "";
+    });
+
+    refs.sessionCourseCountSelect.addEventListener("change", (e) => {
+      const nextValue = Number(e.target.value);
+      state.ui.sessionCourseCount = Math.min(MAX_NUMBERS, Math.max(MIN_NUMBERS, Number.isFinite(nextValue) ? nextValue : 35));
+      saveState();
+      render();
+      notify(`Nombre de parcours configuré: ${state.ui.sessionCourseCount}`, "info");
+    });
+
+    refs.sessionBeaconCountSelect.addEventListener("change", (e) => {
+      const nextValue = Number(e.target.value);
+      state.ui.sessionBeaconCount = Math.min(MAX_BEACONS, Math.max(MIN_BEACONS, Number.isFinite(nextValue) ? nextValue : 12));
+      saveState();
+      render();
+      notify(`Balises par parcours: ${state.ui.sessionBeaconCount}`, "info");
+    });
+
+    refs.modalColorFilter.addEventListener("change", (e) => {
+      state.ui.modalColorFilter = e.target.value;
+      saveState();
+      renderAssignDialog();
+    });
+
+    refs.closeAssignDialogBtn.addEventListener("click", () => refs.assignDialog.close());
+    refs.closeSuccessDialogBtn.addEventListener("click", closeSuccessDialog);
+    refs.successValidateBtn.addEventListener("click", confirmSuccessOnly);
+    refs.successPickColorFilter.addEventListener("change", (e) => {
+      state.ui.successPickColorFilter = e.target.value;
+      state.ui.successSelectedCourseId = null;
+      renderSuccessDialog();
+    });
+    refs.closeFailureDialogBtn.addEventListener("click", closeFailureDialog);
+    refs.failurePickColorFilter.addEventListener("change", (e) => {
+      state.ui.failurePickColorFilter = e.target.value;
+      state.ui.failureSelectedCourseId = null;
+      renderFailureDialog();
+    });
+    refs.summaryBackBtn.addEventListener("click", backToCoreFromSummary);
+    refs.printSummaryBtn.addEventListener("click", printSummaryResults);
+
+    loadState();
+    ensureDefaultData();
+    loadActiveSlotFromStore({ createIfMissing: true });
+    syncFullscreenToggleLabel();
+    render();
+
+    // Rafraîchissement en direct des chronos.
+    setInterval(() => {
+      if (state.ui.appView !== "workspace") return;
+      if (state.ui.sessionWorkspaceStep !== "core") return;
+      refs.globalTimer.textContent = formatMs(currentGlobalMs());
+      refreshCoreStudentTimers();
+    }, 250);
+  </script>
+</body>
+</html>
