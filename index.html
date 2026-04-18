@@ -1329,6 +1329,11 @@
       margin-top: 4px;
     }
 
+    .assign-modal-toolbar {
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
     .outcome-pick-head {
       display: flex;
       flex-direction: row;
@@ -1752,9 +1757,12 @@
         Règles : même numéro interdit 2 fois pour le même élève (toutes couleurs confondues).<br />
         Un parcours précis (numéro + couleur) déjà en cours est bloqué pour les autres.
       </p>
-      <div class="input-row">
-        <label class="mini">Filtre couleur</label>
-        <select id="modalColorFilter"></select>
+      <div class="outcome-pick-toolbar assign-modal-toolbar">
+        <div class="outcome-pick-head">
+          <span class="outcome-pick-label">Parcours disponibles</span>
+          <select id="modalColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
+        </div>
+        <div id="modalPickColorArrows" class="outcome-color-arrows" aria-label="Sens de tri par couleur"></div>
       </div>
       <div class="course-grid" id="modalCourseGrid"></div>
     </div>
@@ -1874,6 +1882,7 @@
         failurePickColorArrowRight: Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1])),
         failureSelectedCourseId: null,
         modalColorFilter: "all",
+        modalPickColorArrowRight: Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1])),
         activeMenu: "seance",
         studentSearch: "",
         resultSort: "name",
@@ -1969,6 +1978,7 @@
       assignTitle: document.getElementById("assignTitle"),
       modalCourseGrid: document.getElementById("modalCourseGrid"),
       modalColorFilter: document.getElementById("modalColorFilter"),
+      modalPickColorArrows: document.getElementById("modalPickColorArrows"),
       closeAssignDialogBtn: document.getElementById("closeAssignDialogBtn"),
       successDialog: document.getElementById("successDialog"),
       successTitle: document.getElementById("successTitle"),
@@ -2529,6 +2539,9 @@
       }
       if (!state.ui.failurePickColorArrowRight || typeof state.ui.failurePickColorArrowRight !== "object") {
         state.ui.failurePickColorArrowRight = defaultColorArrowMap();
+      }
+      if (!state.ui.modalPickColorArrowRight || typeof state.ui.modalPickColorArrowRight !== "object") {
+        state.ui.modalPickColorArrowRight = defaultColorArrowMap();
       }
     }
 
@@ -3527,9 +3540,19 @@
     }
 
     function renderOutcomeColorArrows(which) {
-      const wrap = which === "success" ? refs.successPickColorArrows : refs.failurePickColorArrows;
+      const wrap =
+        which === "success"
+          ? refs.successPickColorArrows
+          : which === "failure"
+            ? refs.failurePickColorArrows
+            : refs.modalPickColorArrows;
       if (!wrap) return;
-      const map = which === "success" ? state.ui.successPickColorArrowRight : state.ui.failurePickColorArrowRight;
+      const map =
+        which === "success"
+          ? state.ui.successPickColorArrowRight
+          : which === "failure"
+            ? state.ui.failurePickColorArrowRight
+            : state.ui.modalPickColorArrowRight;
       wrap.innerHTML = "";
       for (const key of VISUAL_COLOR_ORDER) {
         const col = document.createElement("div");
@@ -3555,7 +3578,8 @@
             map[order[i]] = i % 2 === idx % 2 ? newVal : !newVal;
           }
           if (which === "success") renderSuccessDialog();
-          else renderFailureDialog();
+          else if (which === "failure") renderFailureDialog();
+          else renderAssignDialog();
         });
         const sw = document.createElement("span");
         sw.className = "outcome-color-swatch";
@@ -4515,29 +4539,30 @@
     function renderAssignDialog() {
       const student = getStudentById(state.ui.selectedStudentForModal);
       refs.modalCourseGrid.innerHTML = "";
-      if (!student) return;
+      if (!student) {
+        if (refs.modalPickColorArrows) refs.modalPickColorArrows.innerHTML = "";
+        return;
+      }
       const prepForThisStudent = shouldUsePrepModeForStudent(student);
       refs.assignTitle.textContent = prepForThisStudent
         ? `Préparer : ${getStudentDisplayName(student)}`
         : `Envoyer : ${getStudentDisplayName(student)}`;
 
-      refs.modalColorFilter.innerHTML = "";
-      const allOpt = document.createElement("option");
-      allOpt.value = "all";
-      allOpt.textContent = "Toutes couleurs";
-      refs.modalColorFilter.appendChild(allOpt);
-      for (const c of COLORS) {
-        const opt = document.createElement("option");
-        opt.value = c.key;
-        opt.textContent = c.label;
-        refs.modalColorFilter.appendChild(opt);
-      }
-      refs.modalColorFilter.value = state.ui.modalColorFilter;
+      populateOutcomeColorSelect(refs.modalColorFilter, state.ui.modalColorFilter);
+      state.ui.modalColorFilter = refs.modalColorFilter.value;
+      renderOutcomeColorArrows("modal");
 
       const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
-      const filtered = sortCoursesByNumberThenColor(
-        getSessionCourses().filter((c) => state.ui.modalColorFilter === "all" || c.color === state.ui.modalColorFilter)
+      let filtered = getSessionCourses().filter(
+        (c) => state.ui.modalColorFilter === "all" || c.color === state.ui.modalColorFilter
       );
+      if (state.ui.modalColorFilter === "all") {
+        filtered = sortCoursesByNumberThenColor(filtered);
+      } else {
+        const sortDesc = Boolean(state.ui.modalPickColorArrowRight[state.ui.modalColorFilter]);
+        filtered.sort((a, b) => a.number - b.number);
+        if (sortDesc) filtered.reverse();
+      }
 
       for (const course of filtered) {
         const blockedByNumber = hasDoneNumber(student, course.number);
@@ -4569,6 +4594,7 @@
       } else {
         state.ui.modalColorFilter = "all";
       }
+      state.ui.modalPickColorArrowRight = defaultColorArrowMap();
       state.ui.selectedStudentForModal = studentId;
       renderAssignDialog();
       refs.assignDialog.showModal();
