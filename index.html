@@ -63,11 +63,33 @@
       gap: 18px;
     }
 
+    /* Coin haut-gauche : même emplacement qu’avant « Changer de classe » (padding main + colonne logo + safe-area). */
+    .nav-floating-corner {
+      position: fixed;
+      top: calc(22px + max(12px, env(safe-area-inset-top, 0px) + 8px));
+      left: calc(22px + max(12px, env(safe-area-inset-left, 0px) + 8px));
+      z-index: 21;
+      min-height: 44px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(42, 78, 60, 0.22);
+      color: #23483c;
+      box-shadow: 0 6px 20px rgba(35, 61, 48, 0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-floating-corner:hover {
+      background: rgba(255, 255, 255, 0.98);
+    }
+
     #fullscreenToggleBtn {
       position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 20;
+      top: max(10px, env(safe-area-inset-top, 0px) + 6px);
+      right: max(10px, env(safe-area-inset-right, 0px) + 6px);
+      left: auto;
+      z-index: 22;
       min-height: 32px;
       padding: 5px 9px;
       border-radius: 10px;
@@ -110,19 +132,7 @@
       text-align: center;
       gap: 8px;
       min-height: 168px;
-      /* Réserve la zone du bouton « Précédent » (absolu en haut à droite) : évite la superposition avec Reset chrono */
-      padding: 12px clamp(100px, 26vw, 132px) 12px clamp(12px, 3vw, 18px);
-    }
-
-    #coreBackToSessionsBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 7;
-      min-height: 34px;
-      padding: 6px 10px;
-      border-radius: 11px;
-      font-size: 0.82rem;
+      padding: 12px clamp(12px, 3vw, 18px);
     }
 
     .session-core-topbar .session-global-timer-wrap {
@@ -326,7 +336,7 @@
 
     .summary-run-line {
       display: grid;
-      grid-template-columns: 1.5rem minmax(0, 1fr) auto auto auto;
+      grid-template-columns: 1.5rem minmax(0, 1fr) auto auto auto auto;
       gap: 8px 10px;
       align-items: center;
       font-size: 0.8rem;
@@ -354,6 +364,13 @@
     }
 
     .summary-run-err {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .summary-run-beacon {
+      color: #334155;
+      font-size: 0.76rem;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -663,6 +680,11 @@
       flex-wrap: wrap;
     }
 
+    #sessionSetupView > .panel-header {
+      justify-content: center;
+      text-align: center;
+    }
+
     .setup-header-right {
       display: flex;
       align-items: center;
@@ -692,27 +714,6 @@
       padding: 20px 16px 20px 20px;
       background: linear-gradient(165deg, rgba(255, 255, 255, 0.98) 0%, rgba(232, 246, 232, 0.92) 100%);
       border-right: 1px solid var(--border);
-    }
-
-    /* Deuxième menu (séances) : au-dessus du logo, coin haut-gauche */
-    #setupView #changeClassTopBtn {
-      position: absolute;
-      top: max(12px, env(safe-area-inset-top, 0px) + 8px);
-      left: max(12px, env(safe-area-inset-left, 0px) + 8px);
-      z-index: 4;
-      min-height: 44px;
-      padding: 10px 14px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(42, 78, 60, 0.22);
-      color: #23483c;
-      box-shadow: 0 6px 20px rgba(35, 61, 48, 0.14);
-      backdrop-filter: blur(10px);
-    }
-
-    #setupView #changeClassTopBtn:hover {
-      background: rgba(255, 255, 255, 0.98);
     }
 
     .setup-brand-logo-large {
@@ -1237,6 +1238,11 @@
       padding-right: 3px;
     }
 
+    /* Filtre une couleur : une seule « bande » logique — pas de grille 6 colonnes type arc-en-ciel. */
+    .course-grid.course-grid--single-filter {
+      grid-template-columns: repeat(auto-fill, minmax(3.35rem, 1fr));
+    }
+
     .course {
       border-radius: 18px;
       border: 1px solid rgba(24, 47, 38, 0.16);
@@ -1596,11 +1602,14 @@
   </style>
 </head>
 <body>
-  <button class="btn" id="fullscreenToggleBtn" title="Basculer en plein écran">Plein ecran</button>
+  <button type="button" class="btn nav-floating-corner view-hidden" id="changeClassTopBtn">Changer de classe</button>
+  <button type="button" class="btn nav-floating-corner view-hidden" id="backFromSessionSetupBtn">Précédent</button>
+  <button type="button" class="btn nav-floating-corner view-hidden" id="coreBackToSessionsBtn">Précédent</button>
+  <button type="button" class="btn nav-floating-corner view-hidden" id="summaryBackBtn">Précédent</button>
+  <button class="btn" id="fullscreenToggleBtn" title="Basculer en plein écran">Plein écran</button>
   <main class="container">
     <section class="panel" id="setupView">
       <aside class="setup-hero-column">
-        <button type="button" class="btn view-hidden" id="changeClassTopBtn">Changer de classe</button>
         <img
           class="setup-brand-logo-large"
           src="logo-co.png"
@@ -1651,10 +1660,7 @@
     <section id="workspaceView" class="view-hidden">
       <section class="panel" id="sessionSetupView">
         <div class="panel-header">
-          <h2>Paramétrage de la séance</h2>
-          <div class="setup-header-right">
-            <button class="btn" id="backFromSessionSetupBtn">Précédent</button>
-          </div>
+          <h2>Paramétrage séance</h2>
         </div>
         <span class="view-hidden" id="studentCount">0 élève</span>
         <p class="muted">Étape 1 : renseigner les élèves (manuel ou CSV), puis choisir le nombre de parcours.</p>
@@ -1696,7 +1702,6 @@
 
       <section id="sessionCoreView" class="view-hidden">
         <section class="topbar session-core-topbar">
-          <button class="btn" id="coreBackToSessionsBtn">Précédent</button>
           <div class="session-global-timer-wrap">
             <div class="timer-box">
               <span>Chrono séance :</span>
@@ -1737,11 +1742,10 @@
       </section>
       <section class="panel view-hidden" id="sessionSummaryView">
         <div class="summary-topbar">
-          <button class="btn" id="summaryBackBtn">Précédent</button>
-          <h2>Résumé de séance par élève</h2>
+          <h2>Résumé par élève</h2>
           <button class="btn btn-primary" id="printSummaryBtn">Imprimer</button>
         </div>
-        <p class="note">Pour chaque élève : nombre de parcours réussis / en échec, puis le détail de chaque parcours (numéro, couleur, résultat, fautes, durée).</p>
+        <p class="note">Pour chaque élève : totaux (parcours, fautes, temps, balises trouvées, taux d’erreur), puis le détail par parcours (balises trouvées / prévues pour ce parcours).</p>
         <div id="summaryList"></div>
       </section>
     </section>
@@ -1762,7 +1766,7 @@
           <span class="outcome-pick-label">Parcours disponibles</span>
           <select id="modalColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
         </div>
-        <div id="modalPickColorArrows" class="outcome-color-arrows" aria-label="Sens de tri par couleur"></div>
+        <div id="modalPickColorArrows" class="outcome-color-arrows" aria-label="Repères par couleur (numéros toujours croissants)"></div>
       </div>
       <div class="course-grid" id="modalCourseGrid"></div>
     </div>
@@ -1776,7 +1780,7 @@
       </div>
       <div id="successFlowBody">
         <div id="successErrInteractive">
-          <p class="note">Indiquez les fautes sur le pavé, puis choisissez le nouveau parcours : l’envoi se fait tout seul dès que les deux sont saisis. Utilisez « Réussi » seul pour terminer sans parcours suivant.</p>
+          <p class="note">Indiquez les fautes sur le pavé, puis choisissez le nouveau parcours : l’envoi part automatiquement dès que les deux sont saisis.</p>
           <div class="mini">Fautes signalées : <strong id="successErrorCount">0</strong></div>
           <div id="successErrorPad" class="numeric-pad" aria-label="Pavé numérique fautes"></div>
           <div class="outcome-pick-block">
@@ -1785,12 +1789,9 @@
                 <span class="outcome-pick-label">Nouveau parcours</span>
                 <select id="successPickColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
               </div>
-              <div id="successPickColorArrows" class="outcome-color-arrows" aria-label="Sens de tri par couleur"></div>
+              <div id="successPickColorArrows" class="outcome-color-arrows" aria-label="Repères par couleur (numéros toujours croissants)"></div>
             </div>
             <div class="course-grid outcome-pick-grid" id="successPickCourseGrid"></div>
-          </div>
-          <div class="input-row">
-            <button class="btn btn-primary" type="button" id="successValidateBtn">Réussi (sans parcours suivant)</button>
           </div>
         </div>
       </div>
@@ -1816,7 +1817,7 @@
                 <span class="outcome-pick-label">Nouveau parcours</span>
                 <select id="failurePickColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
               </div>
-              <div id="failurePickColorArrows" class="outcome-color-arrows" aria-label="Sens de tri par couleur"></div>
+              <div id="failurePickColorArrows" class="outcome-color-arrows" aria-label="Repères par couleur (numéros toujours croissants)"></div>
             </div>
             <div class="course-grid outcome-pick-grid" id="failurePickCourseGrid"></div>
           </div>
@@ -1987,7 +1988,6 @@
       successErrInteractive: document.getElementById("successErrInteractive"),
       successErrorPad: document.getElementById("successErrorPad"),
       successErrorCount: document.getElementById("successErrorCount"),
-      successValidateBtn: document.getElementById("successValidateBtn"),
       successPickColorFilter: document.getElementById("successPickColorFilter"),
       successPickColorArrows: document.getElementById("successPickColorArrows"),
       successPickCourseGrid: document.getElementById("successPickCourseGrid"),
@@ -2660,7 +2660,7 @@
       const isDeleteMode = state.ui.sessionDeleteMode && !isClassStep;
       refs.setupClassesStep.classList.toggle("view-hidden", !isClassStep);
       refs.setupSessionsStep.classList.toggle("view-hidden", isClassStep);
-      refs.changeClassTopBtn.classList.toggle("view-hidden", isClassStep);
+      refs.changeClassTopBtn.classList.toggle("view-hidden", isClassStep || state.ui.appView !== "setup");
       refs.setupSubtitle.classList.toggle("view-hidden", isClassStep);
       refs.setupTitle.textContent = isClassStep ? "Choix de la classe" : "Choix de la séance";
       refs.setupSubtitle.textContent = isClassStep
@@ -3564,11 +3564,10 @@
         btn.textContent = pointsRight ? "→" : "←";
         btn.setAttribute(
           "aria-label",
-          `${getColorByKey(key)?.label || key} : ${pointsRight ? "ordre décroissant des numéros" : "ordre croissant des numéros"}`
+          `${getColorByKey(key)?.label || key} : numéros toujours du plus petit au plus grand`
         );
-        btn.title = pointsRight
-          ? "Ordre décroissant (grands numéros en premier). Clic : alterner et réaligner les autres couleurs."
-          : "Ordre croissant (petits numéros en premier). Clic : alterner et réaligner les autres couleurs.";
+        btn.title =
+          "Les parcours sont toujours listés par numéro croissant. Clic : alterner l’icône (repère visuel uniquement).";
         btn.addEventListener("click", () => {
           const order = VISUAL_COLOR_ORDER;
           const idx = order.indexOf(key);
@@ -3610,10 +3609,10 @@
 
     function renderOutcomeCoursePickerGrid(gridEl, studentId, colorFilterKey, selectedCourseId, onPickCourseId, options = {}) {
       const pickWhileCurrentRun = Boolean(options.pickWhileCurrentRun);
-      const sortNumberDesc = Boolean(options.sortNumberDesc);
       if (!gridEl) return;
       const student = getStudentById(studentId);
       gridEl.innerHTML = "";
+      gridEl.classList.toggle("course-grid--single-filter", colorFilterKey !== "all");
       if (!student) return;
       const prepForThisStudent = pickWhileCurrentRun ? false : shouldUsePrepModeForStudent(student);
       const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
@@ -3622,7 +3621,6 @@
         filtered = sortCoursesByNumberThenColor(filtered);
       } else {
         filtered.sort((a, b) => a.number - b.number);
-        if (sortNumberDesc) filtered.reverse();
       }
       for (const course of filtered) {
         const blockedByNumber =
@@ -3690,9 +3688,6 @@
       populateOutcomeColorSelect(refs.successPickColorFilter, state.ui.successPickColorFilter);
       state.ui.successPickColorFilter = refs.successPickColorFilter.value;
       renderOutcomeColorArrows("success");
-      const successSortDesc =
-        state.ui.successPickColorFilter !== "all" &&
-        Boolean(state.ui.successPickColorArrowRight[state.ui.successPickColorFilter]);
       renderOutcomeCoursePickerGrid(
         refs.successPickCourseGrid,
         studentId,
@@ -3703,7 +3698,7 @@
           if (state.ui.successFaultPadTouched) tryAutoSuccessWithFollowCourse();
           else renderSuccessDialog();
         },
-        { pickWhileCurrentRun: true, sortNumberDesc: successSortDesc }
+        { pickWhileCurrentRun: true }
       );
     }
 
@@ -3758,17 +3753,43 @@
       if (refs.successDialog.open) refs.successDialog.close();
     }
 
-    function confirmSuccessOnly() {
-      const studentId = state.ui.selectedStudentForSuccessDialog;
-      const student = getStudentById(studentId);
-      if (!student || !student.currentRun) {
-        closeSuccessDialog();
-        return;
+    /** Balises prévues pour une ligne d’historique (persistée ou paramètre séance actuel). */
+    function plannedBeaconsForHistoryEntry(h) {
+      const n = Number(h.beaconTotalCount);
+      if (Number.isFinite(n) && n > 0) return n;
+      return Math.max(0, Number(state.ui.sessionBeaconCount) || 0);
+    }
+
+    /**
+     * Balises trouvées effectives pour l’affichage agrégé.
+     * Si non saisies : parcours réussi → toutes les balises du parcours ; échec (switch) sans saisie → 0.
+     */
+    function effectiveBeaconFoundForHistoryEntry(h) {
+      const planned = plannedBeaconsForHistoryEntry(h);
+      if (h.beaconFoundCount != null) {
+        return Math.max(0, Math.min(planned, Number(h.beaconFoundCount) || 0));
       }
-      const errorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.successErrorCount) || 0));
-      state.ui.successErrorCount = errorCount;
-      validateRun(studentId, { proposeNext: false, outcome: "success", errorCount });
-      closeSuccessDialog();
+      if (h.outcome !== "switch") return planned;
+      return 0;
+    }
+
+    function aggregateStudentBeaconAndErrorStats(student) {
+      let totalFound = 0;
+      let totalPlanned = 0;
+      let totalFaults = 0;
+      for (const h of student.history) {
+        totalPlanned += plannedBeaconsForHistoryEntry(h);
+        totalFound += effectiveBeaconFoundForHistoryEntry(h);
+        totalFaults += Number(h.errorCount) || 0;
+      }
+      const errorRatePct =
+        totalPlanned > 0 ? Math.round((1000 * totalFaults) / totalPlanned) / 10 : null;
+      return { totalFound, totalPlanned, totalFaults, errorRatePct };
+    }
+
+    function formatErrorRatePct(pct) {
+      if (pct == null || !Number.isFinite(pct)) return "—";
+      return pct.toLocaleString("fr-FR", { maximumFractionDigits: 1, minimumFractionDigits: 0 }) + " %";
     }
 
     function renderSummaryPanel() {
@@ -3785,6 +3806,7 @@
         const echecs = student.history.filter((h) => h.outcome === "switch").length;
         const cumulErreurs = student.history.reduce((acc, h) => acc + (Number(h.errorCount) || 0), 0);
         const cumulTemps = student.history.reduce((acc, h) => acc + (Number(h.durationMs) || 0), 0);
+        const { totalFound, totalPlanned, errorRatePct } = aggregateStudentBeaconAndErrorStats(student);
         let statusLabel;
         if (student.isAbsent) statusLabel = "Absent";
         else if (student.currentRun) statusLabel = student.currentRun.isPaused ? "En pause" : "En action";
@@ -3794,6 +3816,16 @@
 
         const card = document.createElement("article");
         card.className = "student-card summary-student-card";
+        const beaconTotalsHtml =
+          student.history.length && totalPlanned > 0
+            ? `<div class="mini summary-totals summary-totals-beacons">
+            Balises trouvées (total) : <strong>${totalFound}</strong>
+            (sur <strong>${totalPlanned}</strong> balises prévues cumulées)
+            · Taux d’erreur (fautes ÷ balises prévues) : <strong>${formatErrorRatePct(errorRatePct)}</strong>
+          </div>`
+            : student.history.length
+              ? `<div class="mini summary-totals summary-totals-beacons muted">Balises / taux d’erreur : données insuffisantes (paramètre balises / parcours).</div>`
+              : "";
         card.innerHTML = `
           <div class="row">
             <div class="name">${escHtml(name)}</div>
@@ -3805,6 +3837,7 @@
             · Fautes cumulées : <strong>${cumulErreurs}</strong>
             · Temps cumulé : <strong>${formatMs(cumulTemps)}</strong>
           </div>
+          ${beaconTotalsHtml}
           <div class="summary-run-detail-label">Détail des parcours (${student.history.length})</div>
         `;
         const runList = document.createElement("div");
@@ -3820,6 +3853,9 @@
             const ok = h.outcome !== "switch";
             const err = Number(h.errorCount) || 0;
             const dur = formatMs(Number(h.durationMs) || 0);
+            const bcPlan = plannedBeaconsForHistoryEntry(h);
+            const bcFound = effectiveBeaconFoundForHistoryEntry(h);
+            const bcLabel = bcPlan > 0 ? `${bcFound} / ${bcPlan}` : "—";
             const row = document.createElement("div");
             row.className = "summary-run-line";
             row.innerHTML = `
@@ -3827,6 +3863,7 @@
               <span class="summary-run-course"><strong>${h.number}</strong> ${escHtml(h.colorLabel)}</span>
               <span class="summary-run-out ${ok ? "ok" : "ko"}">${ok ? "Réussi" : "Échec"}</span>
               <span class="summary-run-err">${err} faute(s)</span>
+              <span class="summary-run-beacon" title="Balises trouvées / balises prévues pour ce parcours">${bcLabel}</span>
               <span class="summary-run-time">${dur}</span>
             `;
             runList.appendChild(row);
@@ -3864,28 +3901,39 @@
             const echecs = student.history.filter((h) => h.outcome === "switch").length;
             const cumulErreurs = student.history.reduce((a, h) => a + (Number(h.errorCount) || 0), 0);
             const cumulTemps = student.history.reduce((a, h) => a + (Number(h.durationMs) || 0), 0);
+            const { totalFound, totalPlanned, errorRatePct } = aggregateStudentBeaconAndErrorStats(student);
+            const beaconSummaryLine =
+              student.history.length && totalPlanned > 0
+                ? `<br />Balises trouvées (total) : <strong>${totalFound}</strong> sur <strong>${totalPlanned}</strong> balises prévues cumulées · Taux d’erreur (fautes ÷ balises prévues) : <strong>${formatErrorRatePct(errorRatePct)}</strong>`
+                : student.history.length
+                  ? `<br /><span style="color:#64748b">Balises / taux d’erreur : données insuffisantes.</span>`
+                  : "";
             const runRows = student.history.length
               ? student.history
                 .map((h, i) => {
                   const ok = h.outcome !== "switch";
                   const err = Number(h.errorCount) || 0;
                   const dur = formatMs(Number(h.durationMs) || 0);
+                  const bcPlan = plannedBeaconsForHistoryEntry(h);
+                  const bcFound = effectiveBeaconFoundForHistoryEntry(h);
+                  const bcCell = bcPlan > 0 ? `${bcFound} / ${bcPlan}` : "—";
                   return `<tr>
                     <td>${i + 1}</td>
                     <td>${h.number} ${escHtml(h.colorLabel)}</td>
                     <td>${ok ? "Réussi" : "Échec"}</td>
                     <td>${err}</td>
+                    <td>${bcCell}</td>
                     <td>${dur}</td>
                   </tr>`;
                 })
                 .join("")
-              : '<tr><td colspan="5" style="color:#64748b">Aucun parcours validé</td></tr>';
+              : '<tr><td colspan="6" style="color:#64748b">Aucun parcours validé</td></tr>';
             return `
               <section style="margin-bottom:28px; page-break-inside:avoid;">
                 <h2 style="font-size:1.1rem;margin:18px 0 6px;border-bottom:2px solid #166534;padding-bottom:4px;">${name}</h2>
                 <p style="margin:0 0 10px;font-size:0.95rem;">
                   Parcours réussis : <strong>${reussis}</strong> · Parcours en échec : <strong>${echecs}</strong>
-                  · Fautes cumulées : <strong>${cumulErreurs}</strong> · Temps cumulé : <strong>${formatMs(cumulTemps)}</strong>
+                  · Fautes cumulées : <strong>${cumulErreurs}</strong> · Temps cumulé : <strong>${formatMs(cumulTemps)}</strong>${beaconSummaryLine}
                 </p>
                 <table>
                   <thead>
@@ -3894,6 +3942,7 @@
                       <th>Parcours (n° couleur)</th>
                       <th>Résultat</th>
                       <th>Fautes</th>
+                      <th>Balises (trouv. / prév.)</th>
                       <th>Durée</th>
                     </tr>
                   </thead>
@@ -4001,9 +4050,6 @@
       populateOutcomeColorSelect(refs.failurePickColorFilter, state.ui.failurePickColorFilter);
       state.ui.failurePickColorFilter = refs.failurePickColorFilter.value;
       renderOutcomeColorArrows("failure");
-      const failureSortDesc =
-        state.ui.failurePickColorFilter !== "all" &&
-        Boolean(state.ui.failurePickColorArrowRight[state.ui.failurePickColorFilter]);
       renderOutcomeCoursePickerGrid(
         refs.failurePickCourseGrid,
         studentId,
@@ -4014,7 +4060,7 @@
           if (state.ui.failureErrorPadTouched && state.ui.failureBeaconPadTouched) tryAutoFailureWithFollowCourse();
           else renderFailureDialog();
         },
-        { pickWhileCurrentRun: true, sortNumberDesc: failureSortDesc }
+        { pickWhileCurrentRun: true }
       );
     }
 
@@ -4305,6 +4351,7 @@
       const filtered = sortCoursesByNumberThenColor(
         sessionCourses.filter((c) => state.ui.colorFilter === "all" || c.color === state.ui.colorFilter)
       );
+      refs.courseGrid.classList.toggle("course-grid--single-filter", state.ui.colorFilter !== "all");
       for (const course of filtered) {
         const tile = createCourseTile(course, {
           busy: occupied.has(course.id),
@@ -4540,6 +4587,7 @@
       const student = getStudentById(state.ui.selectedStudentForModal);
       refs.modalCourseGrid.innerHTML = "";
       if (!student) {
+        refs.modalCourseGrid.classList.remove("course-grid--single-filter");
         if (refs.modalPickColorArrows) refs.modalPickColorArrows.innerHTML = "";
         return;
       }
@@ -4559,10 +4607,10 @@
       if (state.ui.modalColorFilter === "all") {
         filtered = sortCoursesByNumberThenColor(filtered);
       } else {
-        const sortDesc = Boolean(state.ui.modalPickColorArrowRight[state.ui.modalColorFilter]);
         filtered.sort((a, b) => a.number - b.number);
-        if (sortDesc) filtered.reverse();
       }
+
+      refs.modalCourseGrid.classList.toggle("course-grid--single-filter", state.ui.modalColorFilter !== "all");
 
       for (const course of filtered) {
         const blockedByNumber = hasDoneNumber(student, course.number);
@@ -4600,9 +4648,18 @@
       refs.assignDialog.showModal();
     }
 
+    function syncFloatingNavBackButtons() {
+      const inWorkspace = state.ui.appView === "workspace";
+      const step = state.ui.sessionWorkspaceStep;
+      refs.backFromSessionSetupBtn.classList.toggle("view-hidden", !inWorkspace || step !== "setup");
+      refs.coreBackToSessionsBtn.classList.toggle("view-hidden", !inWorkspace || step !== "core");
+      refs.summaryBackBtn.classList.toggle("view-hidden", !inWorkspace || step !== "summary");
+    }
+
     function render() {
       renderAppView();
       renderSetupView();
+      syncFloatingNavBackButtons();
       const isCoreView = state.ui.appView === "workspace" && state.ui.sessionWorkspaceStep === "core";
       refs.fullscreenToggleBtn.classList.toggle("view-hidden", !isCoreView);
       if (document.fullscreenElement === refs.sessionCoreView && !isCoreView) {
@@ -4624,7 +4681,7 @@
 
     function syncFullscreenToggleLabel() {
       const isCoreFullscreen = document.fullscreenElement === refs.sessionCoreView;
-      refs.fullscreenToggleBtn.textContent = isCoreFullscreen ? "Quitter plein ecran" : "Plein ecran";
+      refs.fullscreenToggleBtn.textContent = isCoreFullscreen ? "Quitter plein écran" : "Plein écran";
     }
 
     async function toggleFullscreenMode() {
@@ -4767,7 +4824,6 @@
 
     refs.closeAssignDialogBtn.addEventListener("click", () => refs.assignDialog.close());
     refs.closeSuccessDialogBtn.addEventListener("click", closeSuccessDialog);
-    refs.successValidateBtn.addEventListener("click", confirmSuccessOnly);
     refs.successPickColorFilter.addEventListener("change", (e) => {
       state.ui.successPickColorFilter = e.target.value;
       state.ui.successSelectedCourseId = null;
