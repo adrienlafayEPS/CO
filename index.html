@@ -1325,6 +1325,84 @@
       font-size: 0.88rem;
     }
 
+    .outcome-pick-toolbar {
+      margin-top: 4px;
+    }
+
+    .outcome-pick-head {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px 14px;
+      flex-wrap: wrap;
+    }
+
+    .outcome-pick-head .outcome-pick-label {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    select.outcome-color-select {
+      min-height: 30px;
+      height: 30px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      max-width: 11.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(31, 122, 90, 0.28);
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .outcome-color-arrows {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 4px;
+      margin-top: 10px;
+      padding: 0 2px;
+    }
+
+    .outcome-color-arrow-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .outcome-color-arrow-btn {
+      min-height: 32px;
+      min-width: 36px;
+      padding: 2px 6px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      line-height: 1;
+      border-radius: 10px;
+      border: 1px solid rgba(24, 47, 38, 0.18);
+      background: rgba(255, 255, 255, 0.88);
+      color: #1f3f33;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(35, 61, 48, 0.08);
+    }
+
+    .outcome-color-arrow-btn:hover {
+      background: rgba(240, 253, 244, 0.95);
+      border-color: rgba(31, 122, 90, 0.35);
+    }
+
+    .outcome-color-swatch {
+      width: 100%;
+      max-width: 36px;
+      height: 9px;
+      border-radius: 4px;
+      border: 1px solid rgba(17, 24, 39, 0.18);
+      box-sizing: border-box;
+    }
+
     #successFlowBody,
     #failureFlowBody {
       display: flex;
@@ -1694,10 +1772,12 @@
           <div class="mini">Fautes signalées : <strong id="successErrorCount">0</strong></div>
           <div id="successErrorPad" class="numeric-pad" aria-label="Pavé numérique fautes"></div>
           <div class="outcome-pick-block">
-            <div class="outcome-pick-label">Nouveau parcours</div>
-            <div class="input-row">
-              <label class="mini">Filtre couleur</label>
-              <select id="successPickColorFilter"></select>
+            <div class="outcome-pick-toolbar">
+              <div class="outcome-pick-head">
+                <span class="outcome-pick-label">Nouveau parcours</span>
+                <select id="successPickColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
+              </div>
+              <div id="successPickColorArrows" class="outcome-color-arrows" aria-label="Sens de tri par couleur"></div>
             </div>
             <div class="course-grid outcome-pick-grid" id="successPickCourseGrid"></div>
           </div>
@@ -1723,10 +1803,12 @@
           <div class="mini">Balises trouvées : <strong id="failureBeaconCount">0</strong> <span class="mini" id="failureBeaconTotal">/ 0</span></div>
           <div id="failureBeaconPad" class="numeric-pad" aria-label="Pavé numérique balises"></div>
           <div class="outcome-pick-block">
-            <div class="outcome-pick-label">Nouveau parcours</div>
-            <div class="input-row">
-              <label class="mini">Filtre couleur</label>
-              <select id="failurePickColorFilter"></select>
+            <div class="outcome-pick-toolbar">
+              <div class="outcome-pick-head">
+                <span class="outcome-pick-label">Nouveau parcours</span>
+                <select id="failurePickColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
+              </div>
+              <div id="failurePickColorArrows" class="outcome-color-arrows" aria-label="Sens de tri par couleur"></div>
             </div>
             <div class="course-grid outcome-pick-grid" id="failurePickCourseGrid"></div>
           </div>
@@ -1741,7 +1823,7 @@
     "use strict";
 
     const STORAGE_KEY = "eps_orienteering_app_v1";
-    const OUTCOME_ERR_MAX = 10;
+    const OUTCOME_ERR_MAX = 15;
     const COLORS = [
       { key: "vert", label: "Vert", hex: "#22c55e" },
       { key: "bleu", label: "Bleu", hex: "#60a5fa" },
@@ -1782,12 +1864,14 @@
         successErrorCount: 0,
         successFaultPadTouched: false,
         successPickColorFilter: "all",
+        successPickColorArrowRight: Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1])),
         successSelectedCourseId: null,
         failureErrorCount: 0,
         failureBeaconCount: 0,
         failureErrorPadTouched: false,
         failureBeaconPadTouched: false,
         failurePickColorFilter: "all",
+        failurePickColorArrowRight: Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1])),
         failureSelectedCourseId: null,
         modalColorFilter: "all",
         activeMenu: "seance",
@@ -1895,6 +1979,7 @@
       successErrorCount: document.getElementById("successErrorCount"),
       successValidateBtn: document.getElementById("successValidateBtn"),
       successPickColorFilter: document.getElementById("successPickColorFilter"),
+      successPickColorArrows: document.getElementById("successPickColorArrows"),
       successPickCourseGrid: document.getElementById("successPickCourseGrid"),
       failureDialog: document.getElementById("failureDialog"),
       failureTitle: document.getElementById("failureTitle"),
@@ -1907,6 +1992,7 @@
       failureBeaconCount: document.getElementById("failureBeaconCount"),
       failureBeaconTotal: document.getElementById("failureBeaconTotal"),
       failurePickColorFilter: document.getElementById("failurePickColorFilter"),
+      failurePickColorArrows: document.getElementById("failurePickColorArrows"),
       failurePickCourseGrid: document.getElementById("failurePickCourseGrid"),
       summaryList: document.getElementById("summaryList"),
       summaryBackBtn: document.getElementById("summaryBackBtn"),
@@ -2438,6 +2524,16 @@
       if (!Array.isArray(state.ui.absentDraftIds)) {
         state.ui.absentDraftIds = [];
       }
+      if (!state.ui.successPickColorArrowRight || typeof state.ui.successPickColorArrowRight !== "object") {
+        state.ui.successPickColorArrowRight = defaultColorArrowMap();
+      }
+      if (!state.ui.failurePickColorArrowRight || typeof state.ui.failurePickColorArrowRight !== "object") {
+        state.ui.failurePickColorArrowRight = defaultColorArrowMap();
+      }
+    }
+
+    function defaultColorArrowMap() {
+      return Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1]));
     }
 
     function saveState() {
@@ -2962,11 +3058,22 @@
     }
 
     function pauseGlobalTimer() {
-      if (!state.session.running) return;
-      state.session.elapsedMs += Date.now() - state.session.lastStartTs;
-      state.session.lastStartTs = null;
-      state.session.running = false;
+      const wasRunning = state.session.running;
+      const pausedStudents = pauseAllStudentRunTimers();
+      if (!wasRunning && pausedStudents === 0) return;
+      if (wasRunning) {
+        state.session.elapsedMs += Date.now() - state.session.lastStartTs;
+        state.session.lastStartTs = null;
+        state.session.running = false;
+      }
       saveState();
+      if (wasRunning && pausedStudents > 0) {
+        notify(`Chrono général en pause · ${pausedStudents} élève(s) en pause sur le parcours.`, "info");
+      } else if (wasRunning) {
+        notify("Chrono général en pause.", "info");
+      } else if (pausedStudents > 0) {
+        notify(`${pausedStudents} élève(s) en pause sur le parcours.`, "info");
+      }
       render();
     }
 
@@ -3419,6 +3526,48 @@
       selectEl.value = ok ? currentValue : "all";
     }
 
+    function renderOutcomeColorArrows(which) {
+      const wrap = which === "success" ? refs.successPickColorArrows : refs.failurePickColorArrows;
+      if (!wrap) return;
+      const map = which === "success" ? state.ui.successPickColorArrowRight : state.ui.failurePickColorArrowRight;
+      wrap.innerHTML = "";
+      for (const key of VISUAL_COLOR_ORDER) {
+        const col = document.createElement("div");
+        col.className = "outcome-color-arrow-col";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "outcome-color-arrow-btn";
+        const pointsRight = Boolean(map[key]);
+        btn.textContent = pointsRight ? "→" : "←";
+        btn.setAttribute(
+          "aria-label",
+          `${getColorByKey(key)?.label || key} : ${pointsRight ? "ordre décroissant des numéros" : "ordre croissant des numéros"}`
+        );
+        btn.title = pointsRight
+          ? "Ordre décroissant (grands numéros en premier). Clic : alterner et réaligner les autres couleurs."
+          : "Ordre croissant (petits numéros en premier). Clic : alterner et réaligner les autres couleurs.";
+        btn.addEventListener("click", () => {
+          const order = VISUAL_COLOR_ORDER;
+          const idx = order.indexOf(key);
+          if (idx < 0) return;
+          const newVal = !map[key];
+          for (let i = 0; i < order.length; i += 1) {
+            map[order[i]] = i % 2 === idx % 2 ? newVal : !newVal;
+          }
+          if (which === "success") renderSuccessDialog();
+          else renderFailureDialog();
+        });
+        const sw = document.createElement("span");
+        sw.className = "outcome-color-swatch";
+        const meta = getColorByKey(key);
+        sw.style.background = meta ? meta.hex : "#cbd5e1";
+        sw.title = meta ? meta.label : key;
+        col.appendChild(btn);
+        col.appendChild(sw);
+        wrap.appendChild(col);
+      }
+    }
+
     function fillNumericPad(container, opts) {
       if (!container) return;
       const { min, max, value, onSelect, highlightSelection = false } = opts;
@@ -3437,15 +3586,20 @@
 
     function renderOutcomeCoursePickerGrid(gridEl, studentId, colorFilterKey, selectedCourseId, onPickCourseId, options = {}) {
       const pickWhileCurrentRun = Boolean(options.pickWhileCurrentRun);
+      const sortNumberDesc = Boolean(options.sortNumberDesc);
       if (!gridEl) return;
       const student = getStudentById(studentId);
       gridEl.innerHTML = "";
       if (!student) return;
       const prepForThisStudent = pickWhileCurrentRun ? false : shouldUsePrepModeForStudent(student);
       const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
-      const filtered = sortCoursesByNumberThenColor(
-        getSessionCourses().filter((c) => colorFilterKey === "all" || c.color === colorFilterKey)
-      );
+      let filtered = getSessionCourses().filter((c) => colorFilterKey === "all" || c.color === colorFilterKey);
+      if (colorFilterKey === "all") {
+        filtered = sortCoursesByNumberThenColor(filtered);
+      } else {
+        filtered.sort((a, b) => a.number - b.number);
+        if (sortNumberDesc) filtered.reverse();
+      }
       for (const course of filtered) {
         const blockedByNumber =
           hasDoneNumber(student, course.number) ||
@@ -3489,6 +3643,7 @@
           onSelect: () => {}
         });
         refs.successPickCourseGrid.innerHTML = "";
+        if (refs.successPickColorArrows) refs.successPickColorArrows.innerHTML = "";
         return;
       }
       refs.successTitle.textContent = `Parcours réussi : ${getStudentDisplayName(student)} (${student.currentRun.number} ${student.currentRun.colorLabel})`;
@@ -3510,6 +3665,10 @@
       });
       populateOutcomeColorSelect(refs.successPickColorFilter, state.ui.successPickColorFilter);
       state.ui.successPickColorFilter = refs.successPickColorFilter.value;
+      renderOutcomeColorArrows("success");
+      const successSortDesc =
+        state.ui.successPickColorFilter !== "all" &&
+        Boolean(state.ui.successPickColorArrowRight[state.ui.successPickColorFilter]);
       renderOutcomeCoursePickerGrid(
         refs.successPickCourseGrid,
         studentId,
@@ -3520,7 +3679,7 @@
           if (state.ui.successFaultPadTouched) tryAutoSuccessWithFollowCourse();
           else renderSuccessDialog();
         },
-        { pickWhileCurrentRun: true }
+        { pickWhileCurrentRun: true, sortNumberDesc: successSortDesc }
       );
     }
 
@@ -3561,6 +3720,7 @@
       state.ui.successFaultPadTouched = false;
       state.ui.successSelectedCourseId = null;
       state.ui.successPickColorFilter = state.ui.groupLaunchColor === "all" ? "all" : state.ui.groupLaunchColor;
+      state.ui.successPickColorArrowRight = defaultColorArrowMap();
       renderSuccessDialog();
       refs.successDialog.showModal();
     }
@@ -3777,6 +3937,7 @@
           onSelect: () => {}
         });
         refs.failurePickCourseGrid.innerHTML = "";
+        if (refs.failurePickColorArrows) refs.failurePickColorArrows.innerHTML = "";
         return;
       }
       refs.failureTitle.textContent = `Échec : ${getStudentDisplayName(student)} (${student.currentRun.number} ${student.currentRun.colorLabel})`;
@@ -3815,6 +3976,10 @@
       });
       populateOutcomeColorSelect(refs.failurePickColorFilter, state.ui.failurePickColorFilter);
       state.ui.failurePickColorFilter = refs.failurePickColorFilter.value;
+      renderOutcomeColorArrows("failure");
+      const failureSortDesc =
+        state.ui.failurePickColorFilter !== "all" &&
+        Boolean(state.ui.failurePickColorArrowRight[state.ui.failurePickColorFilter]);
       renderOutcomeCoursePickerGrid(
         refs.failurePickCourseGrid,
         studentId,
@@ -3825,7 +3990,7 @@
           if (state.ui.failureErrorPadTouched && state.ui.failureBeaconPadTouched) tryAutoFailureWithFollowCourse();
           else renderFailureDialog();
         },
-        { pickWhileCurrentRun: true }
+        { pickWhileCurrentRun: true, sortNumberDesc: failureSortDesc }
       );
     }
 
@@ -3880,6 +4045,7 @@
       state.ui.failureBeaconPadTouched = false;
       state.ui.failureSelectedCourseId = null;
       state.ui.failurePickColorFilter = state.ui.groupLaunchColor === "all" ? "all" : state.ui.groupLaunchColor;
+      state.ui.failurePickColorArrowRight = defaultColorArrowMap();
       renderFailureDialog();
       refs.failureDialog.showModal();
     }
