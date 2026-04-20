@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EPS — Course d'orientation</title>
+  <title>CO</title>
   <link rel="icon" type="image/png" href="logo-co.png" sizes="512x512" />
   <link rel="apple-touch-icon" href="logo-co.png" />
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#1a3a63" />
-  <meta name="application-name" content="CO EPS" />
+  <meta name="application-name" content="CO" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="CO EPS" />
+  <meta name="apple-mobile-web-app-title" content="CO" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <style>
     :root {
@@ -1130,6 +1130,242 @@
       background: rgba(255, 255, 255, 0.95);
     }
 
+    #sessionAutoCorrectionSelect {
+      min-width: 130px;
+      font-weight: 700;
+      border: 1px solid rgba(31, 122, 90, 0.3);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    #sessionAutoCorrectionHint {
+      text-align: center;
+      margin-top: 2px;
+      color: #3f5f51;
+    }
+
+    #studentAutoCodesGrid {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 122, 90, 0.16);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .student-auto-code-row {
+      flex: 0 0 96px;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 6px;
+    }
+
+    .student-auto-code-label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #1f3f33;
+      text-align: center;
+    }
+
+    .student-auto-code-input {
+      width: 100%;
+      min-height: 36px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(31, 122, 90, 0.22);
+      background: #fff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .student-auto-code-input.is-ok {
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      color: #fff;
+      border-color: #15803d;
+    }
+
+    .student-auto-code-input.is-ok[readonly] {
+      opacity: 1;
+      cursor: not-allowed;
+    }
+
+    .student-auto-code-input.is-ko {
+      background: #fee2e2;
+      color: #7f1d1d;
+      border-color: #ef4444;
+    }
+
+    #autoAssignSuccessDialog .modal {
+      max-width: min(560px, 94vw);
+    }
+
+    #autoAssignSuccessMessage {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f3f33;
+    }
+
+    #autoAssignSuccessBadge {
+      margin: 2px auto 0;
+      text-align: center;
+      font-size: 1.28rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      color: #0f172a;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 122, 90, 0.2);
+      background: linear-gradient(180deg, #ffffff, #f0fdf4);
+      box-shadow: var(--shadow-soft);
+    }
+
+    #autoCorrectionConfigTableWrap {
+      max-height: 54vh;
+      overflow: auto;
+      border: 1px solid rgba(31, 122, 90, 0.22);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #autoCorrectionConfigTable {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+      table-layout: fixed;
+    }
+
+    #autoCorrectionConfigTable th,
+    #autoCorrectionConfigTable td {
+      border: 1px solid rgba(31, 122, 90, 0.18);
+      padding: 6px;
+      vertical-align: top;
+    }
+
+    #autoCorrectionConfigTable thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f0f2f5;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    #autoCorrectionConfigTable thead th.auto-config-col-vert {
+      background: rgba(34, 197, 94, 0.35);
+    }
+    #autoCorrectionConfigTable thead th.auto-config-col-bleu {
+      background: rgba(59, 130, 246, 0.35);
+    }
+    #autoCorrectionConfigTable thead th.auto-config-col-jaune {
+      background: rgba(250, 204, 21, 0.5);
+    }
+    #autoCorrectionConfigTable thead th.auto-config-col-rose {
+      background: rgba(236, 72, 153, 0.35);
+    }
+    #autoCorrectionConfigTable thead th.auto-config-col-noir {
+      background: rgba(23, 23, 23, 0.92);
+      color: #fff;
+    }
+    #autoCorrectionConfigTable thead th.auto-config-col-rouge {
+      background: rgba(220, 38, 38, 0.72);
+      color: #fff;
+    }
+
+    #autoCorrectionConfigTable tbody th {
+      background: rgba(235, 237, 240, 0.96);
+      font-size: 0.82rem;
+      font-weight: 800;
+      white-space: nowrap;
+      text-align: center;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    #autoCorrectionConfigTable tr.auto-config-course-divider th {
+      background: rgba(229, 231, 235, 0.98);
+      font-size: 1.02rem;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+
+    #autoCorrectionConfigTable tr.auto-config-course-divider td {
+      background: rgba(229, 231, 235, 0.98);
+      padding: 6px 10px;
+      font-weight: 800;
+      color: #374151;
+      text-align: center;
+    }
+
+    #autoCorrectionConfigTable td.auto-config-col-vert {
+      background: rgba(34, 197, 94, 0.16);
+    }
+    #autoCorrectionConfigTable td.auto-config-col-bleu {
+      background: rgba(59, 130, 246, 0.16);
+    }
+    #autoCorrectionConfigTable td.auto-config-col-jaune {
+      background: rgba(250, 204, 21, 0.2);
+    }
+    #autoCorrectionConfigTable td.auto-config-col-rose {
+      background: rgba(236, 72, 153, 0.14);
+    }
+    #autoCorrectionConfigTable td.auto-config-col-noir {
+      background: rgba(23, 23, 23, 0.9);
+    }
+    #autoCorrectionConfigTable td.auto-config-col-rouge {
+      background: rgba(220, 38, 38, 0.28);
+    }
+
+    .auto-config-code-input {
+      width: 100%;
+      min-height: 34px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92rem;
+      border-radius: 8px;
+      border: 1px solid rgba(31, 122, 90, 0.2);
+      background: #fff;
+      padding: 6px 8px;
+      color: #111827;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    #autoCorrectionConfigTable td.auto-config-col-noir .auto-config-code-input {
+      background: rgba(255, 255, 255, 0.98);
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+
+    #studentAutoCorrectionResults {
+      display: grid;
+      gap: 4px;
+      max-height: 24vh;
+      overflow: auto;
+      padding: 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(31, 122, 90, 0.16);
+      align-content: start;
+    }
+
+    .auto-check-ok {
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .auto-check-ko {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
     /* Zone manuelle : texte à gauche (flex), bouton à droite, même hauteur que le textarea. */
     #sessionSetupMainRow {
       display: flex;
@@ -1694,7 +1930,14 @@
           <select id="sessionCourseCountSelect" title="Nombre de parcours pour la séance"></select>
           <label class="mini" for="sessionBeaconCountSelect">Balises / parcours :</label>
           <select id="sessionBeaconCountSelect" title="Nombre de balises par parcours"></select>
+          <label class="mini" for="sessionAutoCorrectionSelect">Auto-correction élèves :</label>
+          <select id="sessionAutoCorrectionSelect" title="Activer la saisie élève des codes balises">
+            <option value="no">Non</option>
+            <option value="yes">Oui</option>
+          </select>
+          <button class="btn btn-compact view-hidden" id="configureAutoCorrectionBtn" type="button">Configurer les réponses</button>
         </div>
+        <p class="mini" id="sessionAutoCorrectionHint"></p>
         <div class="input-row" id="sessionValidateRow">
           <button class="btn btn-primary" id="goToCoreBtn">Valider le paramétrage</button>
         </div>
@@ -1722,7 +1965,7 @@
             <span class="muted" id="corePresentCount"></span>
           </div>
           <div class="input-row" id="coreActionsRow">
-            <button class="btn btn-primary" id="corePrepModeBtn">Mode préparation : OFF</button>
+            <button class="btn btn-primary view-hidden" id="corePrepModeBtn">Mode préparation : ON</button>
             <select id="coreGroupColorSelect" title="Couleur du départ groupé">
               <option value="all">Toutes couleurs</option>
               <option value="noir">Noir</option>
@@ -1826,6 +2069,63 @@
     </div>
   </dialog>
 
+  <dialog id="autoCorrectionConfigDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3>Configuration auto-correction</h3>
+        <button class="btn" id="closeAutoCorrectionConfigBtn">Fermer</button>
+      </div>
+      <p class="note">Tableau des réponses attendues : 1 ligne = 1 balise (B1, B2, etc.), et chaque cellule correspond au code de cette balise pour la couleur du parcours.</p>
+      <div id="autoCorrectionConfigTableWrap">
+        <table id="autoCorrectionConfigTable">
+          <thead>
+            <tr>
+              <th>Parcours</th>
+              <th class="auto-config-col-vert">Vert</th>
+              <th class="auto-config-col-bleu">Bleu</th>
+              <th class="auto-config-col-jaune">Jaune</th>
+              <th class="auto-config-col-rose">Rose</th>
+              <th class="auto-config-col-noir">Noir</th>
+              <th class="auto-config-col-rouge">Rouge</th>
+            </tr>
+          </thead>
+          <tbody id="autoCorrectionConfigTableBody"></tbody>
+        </table>
+      </div>
+      <div class="mini" id="autoCorrectionConfigMeta"></div>
+      <div class="input-row">
+        <button class="btn btn-primary" id="saveAutoCorrectionAllBtn" type="button">Enregistrer tout le tableau</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="studentAutoCorrectionDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3 id="studentAutoCorrectionTitle">Auto-correction élève</h3>
+        <button class="btn" id="closeStudentAutoCorrectionBtn">Fermer</button>
+      </div>
+      <p class="note" id="studentAutoCorrectionInfo">Saisissez les codes de balises dans l'ordre : une case par balise.</p>
+      <div id="studentAutoCodesGrid"></div>
+      <div class="input-row">
+        <button class="btn btn-primary" id="checkStudentAutoCodesBtn" type="button">Vérifier mes codes</button>
+      </div>
+      <div id="studentAutoCorrectionResults" class="mini"></div>
+    </div>
+  </dialog>
+
+  <dialog id="autoAssignSuccessDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3>Nouveau parcours</h3>
+        <button class="btn" id="closeAutoAssignSuccessBtn">Fermer</button>
+      </div>
+      <p class="note">Parcours validé avec succès.</p>
+      <div class="mini" id="autoAssignSuccessMessage"></div>
+      <div id="autoAssignSuccessBadge"></div>
+    </div>
+  </dialog>
+
   <div class="toast-wrap" id="toastWrap"></div>
 
   <script>
@@ -1853,6 +2153,7 @@
       students: [],
       classes: [],
       classSessions: {},
+      slotConfigs: {},
       soundEnabled: false,
       ui: {
         appView: "setup",
@@ -1884,10 +2185,12 @@
         failureSelectedCourseId: null,
         modalColorFilter: "all",
         modalPickColorArrowRight: Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1])),
+        sessionAutoCorrectionEnabled: false,
+        selectedStudentForAutoCorrectionDialog: null,
         activeMenu: "seance",
         studentSearch: "",
         resultSort: "name",
-        prepMode: false,
+        prepMode: true,
         sessionCourseCount: 35,
         sessionBeaconCount: 12,
         groupLaunchColor: "all"
@@ -1959,6 +2262,9 @@
       courseGrid: document.getElementById("courseGrid"),
       sessionCourseCountSelect: document.getElementById("sessionCourseCountSelect"),
       sessionBeaconCountSelect: document.getElementById("sessionBeaconCountSelect"),
+      sessionAutoCorrectionSelect: document.getElementById("sessionAutoCorrectionSelect"),
+      sessionAutoCorrectionHint: document.getElementById("sessionAutoCorrectionHint"),
+      configureAutoCorrectionBtn: document.getElementById("configureAutoCorrectionBtn"),
       colorFilter: document.getElementById("colorFilter"),
       courseStats: document.getElementById("courseStats"),
       activeList: document.getElementById("activeList"),
@@ -2004,6 +2310,22 @@
       failurePickColorFilter: document.getElementById("failurePickColorFilter"),
       failurePickColorArrows: document.getElementById("failurePickColorArrows"),
       failurePickCourseGrid: document.getElementById("failurePickCourseGrid"),
+      autoCorrectionConfigDialog: document.getElementById("autoCorrectionConfigDialog"),
+      autoCorrectionConfigTableBody: document.getElementById("autoCorrectionConfigTableBody"),
+      autoCorrectionConfigMeta: document.getElementById("autoCorrectionConfigMeta"),
+      saveAutoCorrectionAllBtn: document.getElementById("saveAutoCorrectionAllBtn"),
+      closeAutoCorrectionConfigBtn: document.getElementById("closeAutoCorrectionConfigBtn"),
+      studentAutoCorrectionDialog: document.getElementById("studentAutoCorrectionDialog"),
+      studentAutoCorrectionTitle: document.getElementById("studentAutoCorrectionTitle"),
+      studentAutoCorrectionInfo: document.getElementById("studentAutoCorrectionInfo"),
+      studentAutoCodesGrid: document.getElementById("studentAutoCodesGrid"),
+      checkStudentAutoCodesBtn: document.getElementById("checkStudentAutoCodesBtn"),
+      closeStudentAutoCorrectionBtn: document.getElementById("closeStudentAutoCorrectionBtn"),
+      studentAutoCorrectionResults: document.getElementById("studentAutoCorrectionResults"),
+      autoAssignSuccessDialog: document.getElementById("autoAssignSuccessDialog"),
+      closeAutoAssignSuccessBtn: document.getElementById("closeAutoAssignSuccessBtn"),
+      autoAssignSuccessMessage: document.getElementById("autoAssignSuccessMessage"),
+      autoAssignSuccessBadge: document.getElementById("autoAssignSuccessBadge"),
       summaryList: document.getElementById("summaryList"),
       summaryBackBtn: document.getElementById("summaryBackBtn"),
       printSummaryBtn: document.getElementById("printSummaryBtn")
@@ -2270,6 +2592,55 @@
       return `${classId}__S${sessionNumber}`;
     }
 
+    function getActiveSlotKey() {
+      if (!state.ui.selectedClassId || !state.ui.selectedSessionNumber) return null;
+      return getSessionSlotKey(state.ui.selectedClassId, state.ui.selectedSessionNumber);
+    }
+
+    function ensureSlotConfig(slotKey) {
+      if (!slotKey) return null;
+      if (!state.slotConfigs || typeof state.slotConfigs !== "object") {
+        state.slotConfigs = {};
+      }
+      const existing = state.slotConfigs[slotKey];
+      if (existing && typeof existing === "object") {
+        if (!existing.answerKeys || typeof existing.answerKeys !== "object") existing.answerKeys = {};
+        if (typeof existing.autoCorrectionEnabled !== "boolean") existing.autoCorrectionEnabled = false;
+        return existing;
+      }
+      const created = { autoCorrectionEnabled: false, answerKeys: {} };
+      state.slotConfigs[slotKey] = created;
+      return created;
+    }
+
+    function getActiveSlotConfig(createIfMissing = true) {
+      const slotKey = getActiveSlotKey();
+      if (!slotKey) return null;
+      if (createIfMissing) return ensureSlotConfig(slotKey);
+      const cfg = state.slotConfigs && state.slotConfigs[slotKey];
+      return cfg && typeof cfg === "object" ? cfg : null;
+    }
+
+    function normalizeCode(value) {
+      return String(value || "").trim().replace(/\s+/g, "").toUpperCase();
+    }
+
+    function parseCodesByLine(textValue, expectedCount) {
+      const lines = String(textValue || "").split(/\r?\n/).map((line) => line.trim());
+      const out = [];
+      for (let i = 0; i < expectedCount; i += 1) {
+        out.push(lines[i] || "");
+      }
+      return out;
+    }
+
+    function getCourseAnswerKey(courseId) {
+      const cfg = getActiveSlotConfig(false);
+      if (!cfg || !cfg.answerKeys || !Array.isArray(cfg.answerKeys[courseId])) return null;
+      const expectedCount = Math.max(0, Number(state.ui.sessionBeaconCount) || 0);
+      return parseCodesByLine(cfg.answerKeys[courseId].join("\n"), expectedCount);
+    }
+
     function createEmptySessionData() {
       return { running: false, elapsedMs: 0, lastStartTs: null };
     }
@@ -2280,6 +2651,18 @@
 
     function sortStudentsByName(students) {
       students.sort((a, b) => (a.lastName + a.firstName).localeCompare(b.lastName + b.firstName, "fr"));
+    }
+
+    function sortStudentsPresentFirstByName(students) {
+      students.sort((a, b) => {
+        const aAbsent = Boolean(a && a.isAbsent);
+        const bAbsent = Boolean(b && b.isAbsent);
+        if (aAbsent !== bAbsent) return aAbsent ? 1 : -1;
+        return (String(a.lastName || "") + String(a.firstName || "")).localeCompare(
+          String(b.lastName || "") + String(b.firstName || ""),
+          "fr"
+        );
+      });
     }
 
     function getClassRosterTemplate(classId) {
@@ -2425,6 +2808,8 @@
       const sessionNumber = state.ui.selectedSessionNumber;
       if (!classId || !sessionNumber) return;
       const key = getSessionSlotKey(classId, sessionNumber);
+      const slotConfig = ensureSlotConfig(key);
+      state.ui.sessionAutoCorrectionEnabled = Boolean(slotConfig && slotConfig.autoCorrectionEnabled);
       const slot = state.classSessions[key];
       if (slot) {
         state.session = slot.session || { running: false, elapsedMs: 0, lastStartTs: null };
@@ -2462,6 +2847,9 @@
       for (const key of Object.keys(state.classSessions)) {
         if (key.startsWith(`${classId}__`)) delete state.classSessions[key];
       }
+      for (const key of Object.keys(state.slotConfigs || {})) {
+        if (key.startsWith(`${classId}__`)) delete state.slotConfigs[key];
+      }
 
       if (state.ui.selectedClassId === classId) {
         state.ui.selectedClassId = state.classes.length ? state.classes[0].id : null;
@@ -2469,6 +2857,7 @@
 
       if (!state.classes.length) {
         state.classSessions = {};
+        state.slotConfigs = {};
         state.students = [];
         state.session = createEmptySessionData();
         state.ui.appView = "setup";
@@ -2484,16 +2873,20 @@
         state.ui.selectedStudentForModal = null;
         state.ui.selectedStudentForSuccessDialog = null;
         state.ui.selectedStudentForFailureDialog = null;
+        state.ui.selectedStudentForAutoCorrectionDialog = null;
         state.ui.studentSearch = "";
         state.ui.colorFilter = "all";
         state.ui.modalColorFilter = "all";
-        state.ui.prepMode = false;
+        state.ui.prepMode = true;
         state.ui.groupLaunchColor = "all";
         state.ui.sessionCourseCount = 35;
         state.ui.sessionBeaconCount = 12;
+        state.ui.sessionAutoCorrectionEnabled = false;
         if (refs.assignDialog.open) refs.assignDialog.close();
         if (refs.successDialog.open) refs.successDialog.close();
         if (refs.failureDialog.open) refs.failureDialog.close();
+        if (refs.autoCorrectionConfigDialog.open) refs.autoCorrectionConfigDialog.close();
+        if (refs.studentAutoCorrectionDialog.open) refs.studentAutoCorrectionDialog.close();
       } else {
         loadActiveSlotFromStore({ createIfMissing: false });
       }
@@ -2504,6 +2897,9 @@
     }
 
     function ensureDefaultData() {
+      if (!state.slotConfigs || typeof state.slotConfigs !== "object") {
+        state.slotConfigs = {};
+      }
       if (!state.ui.selectedClassId && state.classes.length) {
         state.ui.selectedClassId = state.classes[0].id;
       }
@@ -2524,6 +2920,10 @@
       }
       if (!Number.isInteger(state.ui.sessionBeaconCount) || state.ui.sessionBeaconCount < MIN_BEACONS || state.ui.sessionBeaconCount > MAX_BEACONS) {
         state.ui.sessionBeaconCount = 12;
+      }
+      state.ui.prepMode = true;
+      if (typeof state.ui.sessionAutoCorrectionEnabled !== "boolean") {
+        state.ui.sessionAutoCorrectionEnabled = false;
       }
       if (!Array.isArray(state.ui.sessionDeleteTargets)) {
         state.ui.sessionDeleteTargets = [];
@@ -2554,6 +2954,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         classes: state.classes,
         classSessions: state.classSessions,
+        slotConfigs: state.slotConfigs,
         soundEnabled: state.soundEnabled,
         ui: {
           appView: state.ui.appView,
@@ -2573,6 +2974,7 @@
           prepMode: state.ui.prepMode,
           sessionCourseCount: state.ui.sessionCourseCount,
           sessionBeaconCount: state.ui.sessionBeaconCount,
+          sessionAutoCorrectionEnabled: state.ui.sessionAutoCorrectionEnabled,
           groupLaunchColor: state.ui.groupLaunchColor
         }
       }));
@@ -2585,6 +2987,7 @@
         const parsed = JSON.parse(raw);
         state.classes = Array.isArray(parsed.classes) ? parsed.classes : [];
         state.classSessions = parsed.classSessions && typeof parsed.classSessions === "object" ? parsed.classSessions : {};
+        state.slotConfigs = parsed.slotConfigs && typeof parsed.slotConfigs === "object" ? parsed.slotConfigs : {};
         state.soundEnabled = Boolean(parsed.soundEnabled);
         if (parsed.ui && parsed.ui.appView) state.ui.appView = parsed.ui.appView;
         if (parsed.ui && parsed.ui.setupStep) state.ui.setupStep = parsed.ui.setupStep;
@@ -2618,14 +3021,17 @@
         if (parsed.ui && ["name", "count", "timeAsc", "timeDesc"].includes(parsed.ui.resultSort)) {
           state.ui.resultSort = parsed.ui.resultSort;
         }
-        if (parsed.ui && typeof parsed.ui.prepMode === "boolean") {
-          state.ui.prepMode = parsed.ui.prepMode;
-        }
+      if (parsed.ui && typeof parsed.ui.prepMode === "boolean") {
+        state.ui.prepMode = true;
+      }
         if (parsed.ui && Number.isInteger(parsed.ui.sessionCourseCount)) {
           state.ui.sessionCourseCount = Math.min(MAX_NUMBERS, Math.max(MIN_NUMBERS, parsed.ui.sessionCourseCount));
         }
         if (parsed.ui && Number.isInteger(parsed.ui.sessionBeaconCount)) {
           state.ui.sessionBeaconCount = Math.min(MAX_BEACONS, Math.max(MIN_BEACONS, parsed.ui.sessionBeaconCount));
+        }
+        if (parsed.ui && typeof parsed.ui.sessionAutoCorrectionEnabled === "boolean") {
+          state.ui.sessionAutoCorrectionEnabled = parsed.ui.sessionAutoCorrectionEnabled;
         }
         if (parsed.ui && (parsed.ui.groupLaunchColor === "all" || COLORS.some((c) => c.key === parsed.ui.groupLaunchColor))) {
           state.ui.groupLaunchColor = parsed.ui.groupLaunchColor;
@@ -2835,6 +3241,7 @@
       for (const sessionNumber of targets) {
         const key = getSessionSlotKey(selectedClass.id, sessionNumber);
         delete state.classSessions[key];
+        if (state.slotConfigs && state.slotConfigs[key]) delete state.slotConfigs[key];
         if (state.ui.selectedSessionNumber === sessionNumber) {
           state.session = { running: false, elapsedMs: 0, lastStartTs: null };
           state.students = [];
@@ -2858,6 +3265,9 @@
       if (!ok) return;
       state.session = { running: false, elapsedMs: 0, lastStartTs: null };
       state.students = [];
+      const activeSlotKey = getSessionSlotKey(selectedClass.id, state.ui.selectedSessionNumber);
+      state.slotConfigs[activeSlotKey] = { autoCorrectionEnabled: false, answerKeys: {} };
+      state.ui.sessionAutoCorrectionEnabled = false;
       saveActiveSlotToStore();
       saveState();
       notify("Nouvelle séance créée.", "success");
@@ -2953,6 +3363,13 @@
       refs.sessionSetupSummary.textContent = selectedClass
         ? `Résumé : Classe ${selectedClass.name} - Séance ${state.ui.selectedSessionNumber} et élèves prêts : ${presentCount}`
         : `Résumé : Séance ${state.ui.selectedSessionNumber} et élèves prêts : ${presentCount}`;
+      refs.sessionAutoCorrectionSelect.value = state.ui.sessionAutoCorrectionEnabled ? "yes" : "no";
+      refs.configureAutoCorrectionBtn.classList.toggle("view-hidden", !state.ui.sessionAutoCorrectionEnabled);
+      const slotConfig = getActiveSlotConfig(false);
+      const answerCount = slotConfig && slotConfig.answerKeys ? Object.keys(slotConfig.answerKeys).length : 0;
+      refs.sessionAutoCorrectionHint.textContent = state.ui.sessionAutoCorrectionEnabled
+        ? `Auto-correction active : ${answerCount} parcours avec réponses enregistrées.`
+        : "Auto-correction désactivée : comportement standard (boutons Réussi / Échec).";
 
       const isDeleteMode = state.ui.studentDeleteMode;
       const isAbsenceMode = state.ui.absenceMode;
@@ -3044,7 +3461,7 @@
           notify(`${launched} élève(s) lancé(s) sur le parcours préparé.`, "success");
         } else if (idleStudents.length) {
           notify(
-            "Mode préparation actif : aucun élève avec parcours préparé. Préparez les parcours puis redémarrez, ou passez le mode préparation sur OFF pour un lancement aléatoire.",
+            "Mode préparation : aucun élève avec parcours préparé. Préparez les parcours puis redémarrez.",
             "warn"
           );
         }
@@ -3068,6 +3485,13 @@
       }
       saveState();
       render();
+    }
+
+    /** Démarre uniquement le chrono séance (sans lancer d'autres élèves). */
+    function ensureGlobalTimerRunningForManualLaunch(startTs) {
+      if (state.session.running) return;
+      state.session.running = true;
+      state.session.lastStartTs = Number.isFinite(startTs) ? startTs : Date.now();
     }
 
     function pauseGlobalTimer() {
@@ -3393,6 +3817,7 @@
         pausedElapsedMs: 0
       };
       student.hasStartedOnce = true;
+      ensureGlobalTimerRunningForManualLaunch(student.currentRun.startTs);
       saveState();
       playSound();
       if (!options.silent) notify(`${getStudentDisplayName(student)} -> ${course.number} ${course.colorLabel}`, "info");
@@ -3795,7 +4220,7 @@
     function renderSummaryPanel() {
       refs.summaryList.innerHTML = "";
       const students = [...state.students];
-      sortStudentsByName(students);
+      sortStudentsPresentFirstByName(students);
       if (!students.length) {
         refs.summaryList.innerHTML = '<div class="mini">Aucun élève inscrit pour cette séance.</div>';
         return;
@@ -3887,7 +4312,7 @@
 
     function printSummaryResults() {
       const students = [...state.students];
-      sortStudentsByName(students);
+      sortStudentsPresentFirstByName(students);
       const selectedClass = getSelectedClass();
       const title = selectedClass
         ? `${selectedClass.name} - Séance ${state.ui.selectedSessionNumber}`
@@ -4131,6 +4556,316 @@
       if (refs.failureDialog.open) refs.failureDialog.close();
     }
 
+    function getAnswerKeyForCourseOrNull(courseId) {
+      const answerKey = getCourseAnswerKey(courseId);
+      if (!answerKey || !answerKey.length) return null;
+      return answerKey;
+    }
+
+    function hasValidAnswerKeyForCourse(courseId) {
+      const expected = getAnswerKeyForCourseOrNull(courseId);
+      return Boolean(expected && expected.length && expected.every((code) => normalizeCode(code)));
+    }
+
+    function renderAutoCorrectionConfigDialog() {
+      const sessionCourses = getSessionCourses();
+      refs.autoCorrectionConfigTableBody.innerHTML = "";
+      if (!sessionCourses.length) {
+        refs.autoCorrectionConfigMeta.textContent = "Aucun parcours disponible avec les paramètres actuels.";
+        return;
+      }
+
+      const configuredCourseIds = new Set();
+      for (let number = 1; number <= state.ui.sessionCourseCount; number += 1) {
+        const dividerRow = document.createElement("tr");
+        dividerRow.className = "auto-config-course-divider";
+        const rowHeader = document.createElement("th");
+        rowHeader.textContent = `Parcours ${number}`;
+        dividerRow.appendChild(rowHeader);
+        const dividerRight = document.createElement("td");
+        dividerRight.colSpan = VISUAL_COLOR_ORDER.length;
+        dividerRight.textContent = `${state.ui.sessionBeaconCount} balise(s)`;
+        dividerRow.appendChild(dividerRight);
+        refs.autoCorrectionConfigTableBody.appendChild(dividerRow);
+
+        for (let beaconIndex = 0; beaconIndex < state.ui.sessionBeaconCount; beaconIndex += 1) {
+          const beaconRow = document.createElement("tr");
+          const beaconLabel = document.createElement("th");
+          beaconLabel.textContent = `B${beaconIndex + 1}`;
+          beaconRow.appendChild(beaconLabel);
+
+          for (const colorKey of VISUAL_COLOR_ORDER) {
+            const courseId = `${number}-${colorKey}`;
+            const expectedCodes = getCourseAnswerKey(courseId) || Array.from({ length: state.ui.sessionBeaconCount }, () => "");
+            const cell = document.createElement("td");
+            cell.classList.add(`auto-config-col-${colorKey}`);
+            const input = document.createElement("input");
+            input.type = "text";
+            input.className = "auto-config-code-input";
+            input.setAttribute("data-auto-course-id", courseId);
+            input.setAttribute("data-auto-beacon-index", String(beaconIndex));
+            input.placeholder = `B${beaconIndex + 1}`;
+            input.value = expectedCodes[beaconIndex] || "";
+            cell.appendChild(input);
+            beaconRow.appendChild(cell);
+          }
+
+          refs.autoCorrectionConfigTableBody.appendChild(beaconRow);
+        }
+      }
+
+      for (const course of sessionCourses) {
+        const expectedCodes = getCourseAnswerKey(course.id) || [];
+        const isFull = expectedCodes.length === state.ui.sessionBeaconCount &&
+          expectedCodes.every((code) => normalizeCode(code));
+        if (isFull) configuredCourseIds.add(course.id);
+      }
+
+      const totalCourses = sessionCourses.length;
+      refs.autoCorrectionConfigMeta.textContent =
+        `${configuredCourseIds.size}/${totalCourses} parcours entièrement configurés (${state.ui.sessionBeaconCount} balises attendues par parcours).`;
+    }
+
+    function saveAutoCorrectionTableConfig() {
+      const cfg = getActiveSlotConfig(true);
+      const inputs = refs.autoCorrectionConfigTableBody.querySelectorAll("[data-auto-course-id]");
+      if (!inputs.length) {
+        notify("Aucun parcours à enregistrer.", "warn");
+        return;
+      }
+      const courseCodeMap = new Map();
+      for (const input of inputs) {
+        const courseId = input.getAttribute("data-auto-course-id");
+        const beaconIndex = Number(input.getAttribute("data-auto-beacon-index"));
+        if (!courseId) continue;
+        if (!Number.isInteger(beaconIndex) || beaconIndex < 0 || beaconIndex >= state.ui.sessionBeaconCount) continue;
+        if (!courseCodeMap.has(courseId)) {
+          courseCodeMap.set(courseId, Array.from({ length: state.ui.sessionBeaconCount }, () => ""));
+        }
+        courseCodeMap.get(courseId)[beaconIndex] = String(input.value || "").trim();
+      }
+      for (const [courseId, codes] of courseCodeMap.entries()) {
+        cfg.answerKeys[courseId] = codes;
+      }
+      saveState();
+      renderAutoCorrectionConfigDialog();
+      notify("Tableau d'auto-correction enregistré.", "success");
+      renderSessionSetupPanel();
+    }
+
+    function openAutoCorrectionConfigDialog() {
+      if (!state.ui.sessionAutoCorrectionEnabled) {
+        notify("Activez d'abord l'auto-correction pour cette séance.", "warn");
+        return;
+      }
+      const cfg = getActiveSlotConfig(true);
+      cfg.autoCorrectionEnabled = true;
+      renderAutoCorrectionConfigDialog();
+      refs.autoCorrectionConfigDialog.showModal();
+    }
+
+    function closeAutoCorrectionConfigDialog() {
+      if (refs.autoCorrectionConfigDialog.open) refs.autoCorrectionConfigDialog.close();
+    }
+
+    function getStudentAutoCorrectionDraft(student) {
+      if (!student || !student.currentRun) return null;
+      const run = student.currentRun;
+      if (!run.autoCorrectionDraft || typeof run.autoCorrectionDraft !== "object") {
+        run.autoCorrectionDraft = {
+          values: Array.from({ length: state.ui.sessionBeaconCount }, () => ""),
+          locked: Array.from({ length: state.ui.sessionBeaconCount }, () => false),
+          errorCount: 0
+        };
+      }
+      if (!Array.isArray(run.autoCorrectionDraft.values)) {
+        run.autoCorrectionDraft.values = Array.from({ length: state.ui.sessionBeaconCount }, () => "");
+      }
+      if (!Array.isArray(run.autoCorrectionDraft.locked)) {
+        run.autoCorrectionDraft.locked = Array.from({ length: state.ui.sessionBeaconCount }, () => false);
+      }
+      if (!Number.isFinite(Number(run.autoCorrectionDraft.errorCount)) || Number(run.autoCorrectionDraft.errorCount) < 0) {
+        run.autoCorrectionDraft.errorCount = 0;
+      }
+      if (run.autoCorrectionDraft.values.length !== state.ui.sessionBeaconCount) {
+        const next = Array.from({ length: state.ui.sessionBeaconCount }, (_, i) => run.autoCorrectionDraft.values[i] || "");
+        run.autoCorrectionDraft.values = next;
+      }
+      if (run.autoCorrectionDraft.locked.length !== state.ui.sessionBeaconCount) {
+        const next = Array.from({ length: state.ui.sessionBeaconCount }, (_, i) => Boolean(run.autoCorrectionDraft.locked[i]));
+        run.autoCorrectionDraft.locked = next;
+      }
+      return run.autoCorrectionDraft;
+    }
+
+    function renderStudentAutoCodeInputs(initialValues = [], lockedFlags = []) {
+      refs.studentAutoCodesGrid.innerHTML = "";
+      for (let i = 0; i < state.ui.sessionBeaconCount; i += 1) {
+        const row = document.createElement("div");
+        row.className = "student-auto-code-row";
+        const label = document.createElement("span");
+        label.className = "student-auto-code-label";
+        label.textContent = `B${i + 1}`;
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "student-auto-code-input";
+        input.setAttribute("data-student-auto-beacon-index", String(i));
+        input.placeholder = `Code B${i + 1}`;
+        input.value = initialValues[i] || "";
+        input.autocapitalize = "characters";
+        const isLocked = Boolean(lockedFlags[i]);
+        if (isLocked) {
+          input.classList.add("is-ok");
+          input.readOnly = true;
+        }
+        input.addEventListener("input", () => {
+          if (input.readOnly) return;
+          input.classList.remove("is-ko");
+        });
+        row.appendChild(label);
+        row.appendChild(input);
+        refs.studentAutoCodesGrid.appendChild(row);
+      }
+    }
+
+    function openStudentAutoCorrectionDialog(studentId) {
+      if (!state.ui.sessionAutoCorrectionEnabled) return;
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) return;
+      const courseLabel = `${student.currentRun.number} ${student.currentRun.colorLabel}`;
+      if (!hasValidAnswerKeyForCourse(student.currentRun.courseId)) {
+        notify(`Aucune correction complète enregistrée pour ${courseLabel}.`, "warn");
+        return;
+      }
+      const draft = getStudentAutoCorrectionDraft(student);
+      state.ui.selectedStudentForAutoCorrectionDialog = student.id;
+      refs.studentAutoCorrectionTitle.textContent = `Auto-correction : ${getStudentDisplayName(student)}`;
+      refs.studentAutoCorrectionInfo.textContent = `Parcours ${courseLabel} - ${state.ui.sessionBeaconCount} balises attendues (dans l'ordre).`;
+      renderStudentAutoCodeInputs(draft ? draft.values : [], draft ? draft.locked : []);
+      refs.studentAutoCorrectionResults.innerHTML = "";
+      refs.studentAutoCorrectionDialog.showModal();
+    }
+
+    function closeStudentAutoCorrectionDialog() {
+      state.ui.selectedStudentForAutoCorrectionDialog = null;
+      refs.studentAutoCodesGrid.innerHTML = "";
+      refs.studentAutoCorrectionResults.innerHTML = "";
+      if (refs.studentAutoCorrectionDialog.open) refs.studentAutoCorrectionDialog.close();
+    }
+
+    function getArrowForCourseColor(colorKey) {
+      const map = state.ui.modalPickColorArrowRight || defaultColorArrowMap();
+      return map[colorKey] ? "→" : "←";
+    }
+
+    function openAutoAssignSuccessDialog(student, course) {
+      if (!student || !course) return;
+      const arrow = getArrowForCourseColor(course.color);
+      const colorMeta = getColorByKey(course.color);
+      const bg = colorMeta ? colorMeta.hex : "#f0fdf4";
+      const darkText = course.color === "jaune";
+      refs.autoAssignSuccessMessage.textContent =
+        `${getStudentDisplayName(student)} - nouveau parcours attribué :`;
+      refs.autoAssignSuccessBadge.textContent = `${course.number} ${course.colorLabel} ${arrow}`;
+      refs.autoAssignSuccessBadge.style.background = bg;
+      refs.autoAssignSuccessBadge.style.color = darkText ? "#111827" : "#ffffff";
+      refs.autoAssignSuccessBadge.style.borderColor = darkText ? "rgba(17, 24, 39, 0.35)" : "rgba(255, 255, 255, 0.7)";
+      refs.autoAssignSuccessDialog.showModal();
+    }
+
+    function tryAutoAssignNextCourseForStudent(studentId) {
+      const student = getStudentById(studentId);
+      if (!student || student.currentRun) return false;
+      const preferredColor = getGroupLaunchPreferredColor();
+      const nextCourse = getNextCourseForStudent(student, preferredColor);
+      if (!nextCourse) {
+        notify(`Plus aucun parcours disponible pour ${getStudentDisplayName(student)}.`, "warn");
+        return false;
+      }
+      const ok = sendStudentOnCourse(student.id, nextCourse.id, { silent: true, skipRender: true });
+      if (!ok) {
+        notify(`Impossible d'assigner automatiquement le parcours suivant à ${getStudentDisplayName(student)}.`, "warn");
+        return false;
+      }
+      notify(`${getStudentDisplayName(student)} -> nouveau parcours ${nextCourse.number} ${nextCourse.colorLabel}`, "success");
+      render();
+      openAutoAssignSuccessDialog(student, nextCourse);
+      return true;
+    }
+
+    function checkStudentAutoCorrectionCodes() {
+      const studentId = state.ui.selectedStudentForAutoCorrectionDialog;
+      const student = getStudentById(studentId);
+      if (!student || !student.currentRun) {
+        closeStudentAutoCorrectionDialog();
+        return;
+      }
+      const expectedCodes = getAnswerKeyForCourseOrNull(student.currentRun.courseId);
+      if (!expectedCodes) {
+        notify("Correction introuvable pour ce parcours.", "warn");
+        return;
+      }
+      const enteredCodes = Array.from({ length: state.ui.sessionBeaconCount }, () => "");
+      const inputs = refs.studentAutoCodesGrid.querySelectorAll("[data-student-auto-beacon-index]");
+      const inputByIndex = new Map();
+      for (const input of inputs) {
+        const idx = Number(input.getAttribute("data-student-auto-beacon-index"));
+        if (!Number.isInteger(idx) || idx < 0 || idx >= enteredCodes.length) continue;
+        inputByIndex.set(idx, input);
+        enteredCodes[idx] = String(input.value || "").trim();
+      }
+      const draft = getStudentAutoCorrectionDraft(student);
+      refs.studentAutoCorrectionResults.innerHTML = "";
+      let okCount = 0;
+      let errorsOnThisCheck = 0;
+      for (let i = 0; i < state.ui.sessionBeaconCount; i += 1) {
+        const expectedNorm = normalizeCode(expectedCodes[i]);
+        const enteredNorm = normalizeCode(enteredCodes[i]);
+        const isOk = expectedNorm && enteredNorm === expectedNorm;
+        if (isOk) okCount += 1;
+        else errorsOnThisCheck += 1;
+        const targetInput = inputByIndex.get(i);
+        if (targetInput) {
+          if (isOk) {
+            targetInput.value = expectedNorm;
+            targetInput.classList.remove("is-ko");
+            targetInput.classList.add("is-ok");
+            targetInput.readOnly = true;
+          } else {
+            targetInput.value = "";
+            targetInput.classList.remove("is-ok");
+            targetInput.classList.add("is-ko");
+            targetInput.readOnly = false;
+          }
+        }
+        if (draft) {
+          draft.values[i] = isOk ? expectedNorm : "";
+          draft.locked[i] = Boolean(isOk);
+        }
+        const line = document.createElement("div");
+        line.className = isOk ? "auto-check-ok" : "auto-check-ko";
+        line.textContent = `Balise ${i + 1} : ${isOk ? "OK" : "faux"}`;
+        refs.studentAutoCorrectionResults.appendChild(line);
+      }
+      if (draft) {
+        draft.errorCount = (Number(draft.errorCount) || 0) + errorsOnThisCheck;
+      }
+      saveState();
+      if (okCount !== state.ui.sessionBeaconCount) {
+        notify(`${okCount}/${state.ui.sessionBeaconCount} balises correctes.`, "warn");
+        return;
+      }
+      const autoEvalErrors = draft ? Math.max(0, Number(draft.errorCount) || 0) : 0;
+      validateRun(student.id, {
+        proposeNext: false,
+        outcome: "success",
+        errorCount: autoEvalErrors,
+        beaconFoundCount: state.ui.sessionBeaconCount
+      });
+      closeStudentAutoCorrectionDialog();
+      tryAutoAssignNextCourseForStudent(student.id);
+    }
+
     function exportResultsCSV() {
       const rows = [["Nom", "Prenom", "Parcours", "Temps", "Statut", "Erreurs", "Balises trouvées", "Balises prévues"]];
       for (const s of state.students) {
@@ -4173,8 +4908,6 @@
       if (refs.coreGroupColorSelect.value !== state.ui.groupLaunchColor) {
         refs.coreGroupColorSelect.value = state.ui.groupLaunchColor;
       }
-      refs.corePrepModeBtn.textContent = `Mode préparation : ${state.ui.prepMode ? "ON" : "OFF"}`;
-      refs.corePrepModeBtn.classList.toggle("btn-primary", state.ui.prepMode);
       const hasPreparedChoices = state.students.some((student) => Boolean(student.pendingRun));
       refs.coreResetChoicesBtn.disabled = !hasPreparedChoices;
       applyCoreGroupColorSelectStyle();
@@ -4205,31 +4938,49 @@
         <div class="mini" data-core-timer="${student.id}">${isActive ? formatMs(getCurrentRunElapsedMs(student.currentRun)) : (isPrepared ? "En attente départ groupé" : "--:--:--")}</div>
         <div class="mini">${detailText}</div>
       `;
+      if (isActive && state.ui.sessionAutoCorrectionEnabled) {
+        const nameNode = card.querySelector(".name");
+        if (nameNode) {
+          nameNode.style.cursor = "pointer";
+          nameNode.title = "Ouvrir l'auto-correction";
+          nameNode.addEventListener("click", () => openStudentAutoCorrectionDialog(student.id));
+        }
+      }
 
       const actions = document.createElement("div");
       actions.className = "actions";
 
       if (isActive) {
-        const pauseBtn = document.createElement("button");
-        pauseBtn.className = "btn";
-        pauseBtn.type = "button";
-        pauseBtn.textContent = isPaused ? "Play" : "Pause";
-        pauseBtn.addEventListener("click", () => toggleStudentRunPause(student.id));
-        actions.appendChild(pauseBtn);
+        if (!state.ui.sessionAutoCorrectionEnabled) {
+          const pauseBtn = document.createElement("button");
+          pauseBtn.className = "btn";
+          pauseBtn.type = "button";
+          pauseBtn.textContent = isPaused ? "Play" : "Pause";
+          pauseBtn.addEventListener("click", () => toggleStudentRunPause(student.id));
+          actions.appendChild(pauseBtn);
+        }
+        if (state.ui.sessionAutoCorrectionEnabled) {
+          const autoBtn = document.createElement("button");
+          autoBtn.className = "btn btn-primary";
+          autoBtn.type = "button";
+          autoBtn.textContent = "Auto-corriger";
+          autoBtn.addEventListener("click", () => openStudentAutoCorrectionDialog(student.id));
+          actions.appendChild(autoBtn);
+        } else {
+          const successBtn = document.createElement("button");
+          successBtn.className = "btn btn-primary";
+          successBtn.type = "button";
+          successBtn.textContent = "Réussi";
+          successBtn.addEventListener("click", () => openSuccessDialog(student.id));
+          actions.appendChild(successBtn);
 
-        const successBtn = document.createElement("button");
-        successBtn.className = "btn btn-primary";
-        successBtn.type = "button";
-        successBtn.textContent = "Réussi";
-        successBtn.addEventListener("click", () => openSuccessDialog(student.id));
-        actions.appendChild(successBtn);
-
-        const nextBtn = document.createElement("button");
-        nextBtn.className = "btn btn-danger";
-        nextBtn.type = "button";
-        nextBtn.textContent = "Échec";
-        nextBtn.addEventListener("click", () => openFailureDialog(student.id));
-        actions.appendChild(nextBtn);
+          const nextBtn = document.createElement("button");
+          nextBtn.className = "btn btn-danger";
+          nextBtn.type = "button";
+          nextBtn.textContent = "Échec";
+          nextBtn.addEventListener("click", () => openFailureDialog(student.id));
+          actions.appendChild(nextBtn);
+        }
       } else {
         const chooseBtn = document.createElement("button");
         chooseBtn.className = "btn btn-primary";
@@ -4711,11 +5462,6 @@
       saveState();
       applyCoreGroupColorSelectStyle();
     });
-    refs.corePrepModeBtn.addEventListener("click", () => {
-      state.ui.prepMode = !state.ui.prepMode;
-      saveState();
-      render();
-    });
     refs.coreSummaryBtn.addEventListener("click", openSummaryView);
     refs.coreResetChoicesBtn.addEventListener("click", resetPreparedChoices);
     refs.coreResetSessionBtn.addEventListener("click", resetApplicationData);
@@ -4805,6 +5551,7 @@
       state.ui.sessionCourseCount = Math.min(MAX_NUMBERS, Math.max(MIN_NUMBERS, Number.isFinite(nextValue) ? nextValue : 35));
       saveState();
       render();
+      if (refs.autoCorrectionConfigDialog.open) renderAutoCorrectionConfigDialog();
       notify(`Nombre de parcours configuré: ${state.ui.sessionCourseCount}`, "info");
     });
 
@@ -4813,7 +5560,35 @@
       state.ui.sessionBeaconCount = Math.min(MAX_BEACONS, Math.max(MIN_BEACONS, Number.isFinite(nextValue) ? nextValue : 12));
       saveState();
       render();
+      if (refs.autoCorrectionConfigDialog.open) renderAutoCorrectionConfigDialog();
       notify(`Balises par parcours: ${state.ui.sessionBeaconCount}`, "info");
+    });
+
+    refs.sessionAutoCorrectionSelect.addEventListener("change", (e) => {
+      const enabled = e.target.value === "yes";
+      const slotConfig = getActiveSlotConfig(true);
+      slotConfig.autoCorrectionEnabled = enabled;
+      state.ui.sessionAutoCorrectionEnabled = enabled;
+      saveState();
+      renderSessionSetupPanel();
+      if (!enabled) {
+        closeAutoCorrectionConfigDialog();
+        closeStudentAutoCorrectionDialog();
+      }
+      notify(enabled ? "Auto-correction activée pour cette séance." : "Auto-correction désactivée pour cette séance.", "info");
+    });
+    refs.configureAutoCorrectionBtn.addEventListener("click", openAutoCorrectionConfigDialog);
+    refs.saveAutoCorrectionAllBtn.addEventListener("click", saveAutoCorrectionTableConfig);
+    refs.closeAutoCorrectionConfigBtn.addEventListener("click", closeAutoCorrectionConfigDialog);
+    refs.checkStudentAutoCodesBtn.addEventListener("click", checkStudentAutoCorrectionCodes);
+    refs.closeStudentAutoCorrectionBtn.addEventListener("click", closeStudentAutoCorrectionDialog);
+    refs.closeAutoAssignSuccessBtn.addEventListener("click", () => {
+      if (refs.autoAssignSuccessDialog.open) refs.autoAssignSuccessDialog.close();
+    });
+    refs.studentAutoCorrectionDialog.addEventListener("close", () => {
+      state.ui.selectedStudentForAutoCorrectionDialog = null;
+      refs.studentAutoCodesGrid.innerHTML = "";
+      refs.studentAutoCorrectionResults.innerHTML = "";
     });
 
     refs.modalColorFilter.addEventListener("change", (e) => {
