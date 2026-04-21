@@ -84,6 +84,38 @@
       background: rgba(255, 255, 255, 0.98);
     }
 
+    #teacherLockBtn {
+      position: fixed;
+      top: calc(22px + max(12px, env(safe-area-inset-top, 0px) + 8px) + 52px);
+      left: calc(22px + max(12px, env(safe-area-inset-left, 0px) + 8px));
+      z-index: 21;
+      min-height: 36px;
+      min-width: 120px;
+      padding: 6px 10px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      border-radius: 12px;
+      letter-spacing: 0.01em;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(42, 78, 60, 0.22);
+      box-shadow: 0 8px 22px rgba(35, 61, 48, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    #teacherLockBtn.is-locked {
+      color: #ffffff;
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      border-color: rgba(127, 29, 29, 0.95);
+      box-shadow: 0 10px 24px rgba(127, 29, 29, 0.35);
+    }
+
+    #teacherLockBtn.is-unlocked {
+      color: #ffffff;
+      background: linear-gradient(135deg, #16a34a, #166534);
+      border-color: rgba(21, 128, 61, 0.95);
+      box-shadow: 0 10px 24px rgba(21, 128, 61, 0.35);
+    }
+
     #fullscreenToggleBtn {
       position: fixed;
       top: max(10px, env(safe-area-inset-top, 0px) + 6px);
@@ -191,6 +223,9 @@
     #coreGroupColorSelect,
     #corePrepModeBtn,
     #coreResetChoicesBtn,
+    #coreApplyResetChoicesBtn,
+    #coreSelectAllResetChoicesBtn,
+    #coreCancelResetChoicesBtn,
     #coreSummaryBtn {
       min-height: 40px;
       padding: 8px 12px;
@@ -198,11 +233,17 @@
       border-radius: 13px;
     }
 
-    #coreSummaryBtn {
-      opacity: 0.9;
+    .core-topbar-right-actions {
       position: absolute;
       right: 10px;
       bottom: 10px;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    #coreSummaryBtn {
+      opacity: 0.9;
       min-height: 32px;
       padding: 5px 10px;
       font-size: 0.78rem;
@@ -215,26 +256,22 @@
       align-items: center;
     }
 
+    #coreActionsRow.core-actions-reset-mode {
+      justify-content: flex-end;
+    }
+
     #coreResetChoicesBtn {
       margin-left: auto;
     }
 
-    #coreSecondaryActionsRow {
-      width: 100%;
-      justify-content: flex-end;
-      margin-top: -4px;
-    }
-
     #coreResetSessionBtn {
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 18;
+      position: static;
       min-height: 30px;
       padding: 4px 9px;
       font-size: 0.72rem;
       border-radius: 9px;
-      opacity: 0.82;
+      opacity: 0.9;
+      white-space: nowrap;
     }
 
     #coreStudentsGrid {
@@ -249,6 +286,19 @@
       min-height: 90px;
       gap: 2px;
       padding: 7px 8px;
+    }
+
+    #coreStudentsGrid .student-card.core-reset-choice-selectable {
+      cursor: pointer;
+      border-style: dashed;
+      border-color: rgba(180, 60, 52, 0.45);
+      background: rgba(255, 252, 252, 0.92);
+    }
+
+    #coreStudentsGrid .student-card.core-reset-choice-selected {
+      outline: 2px solid rgba(180, 60, 52, 0.85);
+      background: rgba(255, 239, 238, 0.96);
+      border-style: solid;
     }
 
     #coreStudentsGrid .student-card .row {
@@ -283,9 +333,11 @@
       flex: 1 1 0;
       min-width: 0;
       min-height: 28px;
-      padding: 4px 6px;
-      font-size: 0.74rem;
+      padding: 3px 5px;
+      font-size: 0.72rem;
       border-radius: 9px;
+      white-space: nowrap;
+      line-height: 1;
     }
 
     #coreStudentsGrid .actions .btn.btn-danger {
@@ -293,12 +345,16 @@
     }
 
     #coreStudentsGrid .actions {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      justify-content: stretch;
+      align-items: stretch;
+      gap: 3px;
       width: 100%;
+    }
+
+    #coreStudentsGrid .actions .btn:only-child {
+      grid-column: 1 / -1;
     }
 
     .success-counter-row {
@@ -729,7 +785,7 @@
       filter: drop-shadow(0 14px 32px rgba(35, 61, 48, 0.18));
     }
 
-    /* Menu d'accueil : centrage vertical (colonne) + horizontal (bloc centré). */
+    /* Menu d'accueil : en-tête en haut, étapes (classes / séances) centrées verticalement dans l'espace restant. */
     #setupView > .setup-content-column {
       flex: 1;
       min-width: 0;
@@ -737,9 +793,10 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: clamp(16px, 2.4vw, 22px);
-      padding: clamp(22px, 3.8vw, 40px) clamp(18px, 4vw, 40px);
-      justify-content: center;
+      gap: clamp(10px, 1.6vw, 16px);
+      padding: clamp(10px, 2vw, 18px) clamp(18px, 4vw, 40px) clamp(22px, 3.8vw, 40px);
+      justify-content: flex-start;
+      min-height: 0;
       background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(242, 249, 240, 0.78)),
         radial-gradient(circle at 100% 0%, rgba(183, 216, 141, 0.35), transparent 30%);
@@ -748,11 +805,11 @@
     #setupView .setup-content-column > .panel-header {
       width: 100%;
       max-width: min(720px, 100%);
-      margin: 0 auto 2px;
+      margin: 0 auto 4px;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      gap: clamp(10px, 2vw, 16px);
+      gap: 4px;
     }
 
     #setupView .setup-content-column .setup-header-right {
@@ -774,8 +831,9 @@
       width: 100%;
       max-width: min(720px, 100%);
       margin: 0 auto;
-      font-size: clamp(1.5rem, 3vw, 2.05rem);
+      font-size: clamp(1.45rem, 2.85vw, 1.95rem);
       letter-spacing: -0.03em;
+      line-height: 1.12;
     }
 
     /* :not(.view-hidden) évite d'écraser display:none de .view-hidden (spécificité plus haute avec 2 #id). */
@@ -786,49 +844,97 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
+      justify-content: center;
+      flex: 1;
+      min-height: 0;
       gap: clamp(12px, 2vw, 18px);
     }
 
     #setupView .setup-content-column .input-row {
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       width: 100%;
       gap: 12px;
     }
 
-    #setupView .setup-content-column #setupClassesStep .input-row:has(#newClassInput) {
-      max-width: 540px;
+    /*
+      Grille classes : pas 4× 1fr fixe (trop étroit : classe + Suppr. dépassent et se chevauchent).
+      auto-fill + largeur mini raisonnable : au moins ~12rem par case, retour à la ligne si besoin.
+      Le 1er item reste en haut à gauche comme « Séance 1 ».
+    */
+    #setupView #setupClassesStep > .input-row#classButtonsRow {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+      gap: 12px 14px;
+      margin-bottom: 12px;
+      width: 100%;
+      max-width: min(720px, 100%);
       margin-inline: auto;
+      justify-items: stretch;
     }
 
-    #setupView #setupClassesStep > .input-row:first-child {
-      justify-content: center;
-    }
-
-    #setupView #classButtonsRow {
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-inline: auto;
-      width: fit-content;
+    #setupView #setupClassesStep > .input-row#classButtonsRow .class-choice-item {
+      width: 100%;
+      min-width: 0;
       max-width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
     }
 
-    #setupView #classButtonsRow .mini {
+    #setupView #setupClassesStep > .input-row#classButtonsRow .class-choice-btn {
+      min-width: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #setupView #setupClassesStep > .input-row#classButtonsRow .class-delete-btn {
+      flex-shrink: 0;
+      padding: 8px 10px;
+      white-space: nowrap;
+    }
+
+    #setupView #setupClassesStep > .input-row.setup-classes-create-row {
+      width: 100%;
+      max-width: 100%;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 10px;
+    }
+
+    #setupView #setupClassesStep .setup-classes-create-row #newClassInput {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+      max-width: none;
+    }
+
+    #setupView #setupClassesStep .setup-classes-create-row #createClassBtn {
+      flex-shrink: 0;
+    }
+
+    #setupView #setupClassesStep > .input-row#classButtonsRow > .mini {
+      grid-column: 1 / -1;
       display: block;
-      text-align: center;
-      width: min(100%, 30rem);
-      margin-inline: auto;
+      text-align: start;
+      width: 100%;
+      max-width: 30rem;
     }
 
     /* 7 séances : 4 boutons sur la 1re ligne, 3 sur la 2e (grille 4 colonnes). */
-    #setupView #sessionButtonsRow {
+    #setupView #setupSessionsStep > .input-row#sessionButtonsRow {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px 14px;
       width: 100%;
       max-width: min(720px, 100%);
-      margin-inline: auto;
+      margin-top: 2px;
+      margin-bottom: 16px;
       justify-items: stretch;
     }
 
@@ -842,13 +948,29 @@
       min-width: 0;
     }
 
-    #setupView #setupSummary,
+    #setupView #setupSummary {
+      text-align: center;
+      width: 100%;
+      max-width: min(36rem, 94vw);
+      margin-inline: 0;
+      padding: 0 6px;
+    }
+
+    /* Contexte classe : même bandeau que l’ancien sous-titre, plus discret. */
     #setupView #selectedSessionLabel {
       text-align: center;
       width: 100%;
       max-width: min(36rem, 94vw);
       margin-inline: auto;
-      padding: 0 6px;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 0 10px;
+      min-height: 1.35em;
+      font-size: clamp(1.02rem, 2.1vw, 1.18rem);
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--muted);
+      letter-spacing: 0.01em;
     }
 
     /* « Créer une nouvelle séance » et « Supprimer des séances » sur une même ligne (les boutons du mode suppression suivent sur la ligne suivante si besoin). */
@@ -856,11 +978,10 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       gap: 10px 12px;
       max-width: min(720px, 100%);
-      margin-inline: auto;
       width: 100%;
     }
 
@@ -883,13 +1004,14 @@
     }
 
     #setupView #newClassInput {
-      flex: 1 1 200px;
+      flex: 0 1 320px;
+      width: min(100%, 320px);
       max-width: min(340px, 100%);
       min-width: min(100%, 180px);
     }
 
     #setupView .setup-content-column .class-choice-item {
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     #setupView .setup-content-column .btn {
@@ -936,7 +1058,7 @@
       }
 
       #setupView > .setup-content-column {
-        padding: 22px clamp(16px, 5vw, 40px) 28px;
+        padding: 12px clamp(16px, 5vw, 40px) 24px;
       }
     }
 
@@ -947,12 +1069,11 @@
     }
 
     #setupView .panel-header {
-      margin-bottom: 10px;
+      margin-bottom: 4px;
     }
 
-    #setupView #sessionButtonsRow,
-    #setupView #classButtonsRow {
-      gap: 14px;
+    #setupView .setup-content-column .setup-header-right .muted {
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
     }
 
     .session-choice-item {
@@ -962,7 +1083,7 @@
     }
 
     #setupView .setup-content-column .session-choice-item {
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .session-actions-row {
@@ -987,18 +1108,6 @@
       background: linear-gradient(135deg, #c1443c, #9f302d);
       color: #fff;
       border-color: rgba(90, 15, 12, 0.2);
-    }
-
-    #setupClassesStep #classButtonsRow {
-      margin-bottom: 14px;
-    }
-
-    #setupSessionsStep #sessionButtonsRow {
-      margin-bottom: 22px;
-    }
-
-    #selectedSessionLabel {
-      margin-bottom: 14px;
     }
 
     .muted { color: var(--muted); font-size: 0.92rem; }
@@ -1101,6 +1210,8 @@
     #sessionSetupCourseRow {
       justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 6px 8px;
       margin-top: 6px;
       padding: 12px;
       border-radius: 16px;
@@ -1109,7 +1220,7 @@
       box-shadow: var(--shadow-soft);
     }
 
-    #sessionSetupCourseLabel {
+    #sessionSetupCourseRow .setup-course-label {
       font-size: 0.95rem;
       font-weight: 800;
       color: #1f5c45;
@@ -1117,24 +1228,36 @@
     }
 
     #sessionCourseCountSelect {
-      min-width: 170px;
+      min-width: 128px;
+      margin-right: 14px;
       font-weight: 800;
       border: 2px solid rgba(31, 122, 90, 0.35);
       background: rgba(255, 255, 255, 0.95);
     }
 
     #sessionBeaconCountSelect {
-      min-width: 170px;
+      min-width: 128px;
       font-weight: 800;
       border: 2px solid rgba(31, 122, 90, 0.35);
       background: rgba(255, 255, 255, 0.95);
     }
 
     #sessionAutoCorrectionSelect {
-      min-width: 130px;
+      min-width: 92px;
       font-weight: 700;
       border: 1px solid rgba(31, 122, 90, 0.3);
       background: rgba(255, 255, 255, 0.95);
+    }
+
+    #changeTeacherCodeBtn {
+      margin-left: clamp(24px, 4vw, 56px);
+    }
+
+    .session-auto-correction-line {
+      flex: 0 0 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
 
     #sessionAutoCorrectionHint {
@@ -1146,6 +1269,7 @@
     #studentAutoCodesGrid {
       display: flex;
       flex-wrap: nowrap;
+      justify-content: center;
       gap: 8px;
       overflow-x: auto;
       overflow-y: hidden;
@@ -1156,7 +1280,7 @@
     }
 
     .student-auto-code-row {
-      flex: 0 0 96px;
+      flex: 0 0 112px;
       display: grid;
       grid-template-columns: 1fr;
       align-items: start;
@@ -1172,16 +1296,21 @@
 
     .student-auto-code-input {
       width: 100%;
-      min-height: 36px;
-      padding: 6px 8px;
+      min-height: 42px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid rgba(31, 122, 90, 0.22);
       background: #fff;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 0.92rem;
+      font-size: 1rem;
       font-weight: 700;
       text-transform: uppercase;
       text-align: center;
+    }
+
+    .student-auto-code-input.is-active {
+      outline: 3px solid rgba(31, 122, 90, 0.4);
+      border-color: #1f7a5a;
     }
 
     .student-auto-code-input.is-ok {
@@ -1199,6 +1328,49 @@
       background: #fee2e2;
       color: #7f1d1d;
       border-color: #ef4444;
+    }
+
+    #studentAutoKeypad {
+      display: grid;
+      gap: 7px;
+      margin-top: 6px;
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 122, 90, 0.16);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .student-auto-keypad-row {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .student-auto-key {
+      min-width: 46px;
+      min-height: 46px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(31, 122, 90, 0.2);
+      background: linear-gradient(180deg, #fff, #f0fdf4);
+      font-weight: 800;
+      font-size: 1.02rem;
+      cursor: pointer;
+    }
+
+    .student-auto-key.student-auto-key-action {
+      background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+      color: #1e293b;
+      min-width: 112px;
+    }
+
+    .student-auto-key.student-auto-key-side {
+      min-width: 86px;
+    }
+
+    #studentAutoCheckRow {
+      justify-content: center;
     }
 
     #autoAssignSuccessDialog .modal {
@@ -1224,6 +1396,25 @@
       border: 1px solid rgba(31, 122, 90, 0.2);
       background: linear-gradient(180deg, #ffffff, #f0fdf4);
       box-shadow: var(--shadow-soft);
+    }
+
+    .auto-correction-copy-block {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .auto-correction-copy-targets {
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      justify-content: flex-start;
+    }
+
+    .auto-correction-copy-targets select {
+      min-width: min(100%, 11rem);
+      max-width: 100%;
     }
 
     #autoCorrectionConfigTableWrap {
@@ -1303,6 +1494,20 @@
       font-weight: 800;
       color: #374151;
       text-align: center;
+    }
+
+    .auto-config-beacon-label-input {
+      width: 100%;
+      min-height: 34px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(31, 122, 90, 0.2);
+      background: #fff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.86rem;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
     }
 
     #autoCorrectionConfigTable td.auto-config-col-vert {
@@ -1842,6 +2047,7 @@
   <button type="button" class="btn nav-floating-corner view-hidden" id="backFromSessionSetupBtn">Précédent</button>
   <button type="button" class="btn nav-floating-corner view-hidden" id="coreBackToSessionsBtn">Précédent</button>
   <button type="button" class="btn nav-floating-corner view-hidden" id="summaryBackBtn">Précédent</button>
+  <button type="button" class="btn view-hidden" id="teacherLockBtn" title="Verrouillage enseignant">🔒</button>
   <button class="btn" id="fullscreenToggleBtn" title="Basculer en plein écran">Plein écran</button>
   <main class="container">
     <section class="panel" id="setupView">
@@ -1859,17 +2065,15 @@
       <div class="setup-content-column">
         <div class="panel-header">
           <h2 id="setupTitle">Menu des séances</h2>
+          <p id="selectedSessionLabel" class="view-hidden"></p>
           <div class="setup-header-right">
             <span class="muted" id="setupSubtitle">Choisir votre séance</span>
           </div>
         </div>
-        <p class="muted">Application de pilotage EPS pour la course d'orientation, pensee pour une utilisation tactile rapide sur tablette.</p>
 
         <div id="setupClassesStep">
-          <div class="input-row">
-            <div class="input-row" id="classButtonsRow"></div>
-          </div>
-          <div class="input-row">
+          <div class="input-row" id="classButtonsRow"></div>
+          <div class="input-row setup-classes-create-row">
             <input type="text" id="newClassInput" placeholder="Nom de classe (ex: 5eA)" />
             <button class="btn btn-create" id="createClassBtn">Créer classe</button>
           </div>
@@ -1877,7 +2081,6 @@
         </div>
 
         <div id="setupSessionsStep" class="view-hidden">
-          <p class="mini" id="selectedSessionLabel"></p>
           <div class="input-row" id="sessionButtonsRow"></div>
           <p class="muted view-hidden" id="deleteSessionsHint">Mode suppression actif : appuyez sur une ou plusieurs séances à supprimer, puis confirmez.</p>
           <div class="input-row session-actions-row">
@@ -1926,16 +2129,19 @@
         <p class="muted view-hidden" id="setupStudentsActionHint"></p>
         <div class="student-list" id="setupStudentsPreview"></div>
         <div class="input-row" id="sessionSetupCourseRow">
-          <label class="mini" id="sessionSetupCourseLabel" for="sessionCourseCountSelect">Nombre de parcours :</label>
+          <label class="mini setup-course-label" id="sessionSetupCourseLabel" for="sessionCourseCountSelect">Nombre de parcours :</label>
           <select id="sessionCourseCountSelect" title="Nombre de parcours pour la séance"></select>
-          <label class="mini" for="sessionBeaconCountSelect">Balises / parcours :</label>
+          <label class="mini setup-course-label" for="sessionBeaconCountSelect">Balises / parcours :</label>
           <select id="sessionBeaconCountSelect" title="Nombre de balises par parcours"></select>
-          <label class="mini" for="sessionAutoCorrectionSelect">Auto-correction élèves :</label>
-          <select id="sessionAutoCorrectionSelect" title="Activer la saisie élève des codes balises">
-            <option value="no">Non</option>
-            <option value="yes">Oui</option>
-          </select>
-          <button class="btn btn-compact view-hidden" id="configureAutoCorrectionBtn" type="button">Configurer les réponses</button>
+          <div class="input-row session-auto-correction-line">
+            <label class="mini setup-course-label" for="sessionAutoCorrectionSelect">Auto-correction élèves :</label>
+            <select id="sessionAutoCorrectionSelect" title="Activer la saisie élève des codes balises">
+              <option value="no">Non</option>
+              <option value="yes">Oui</option>
+            </select>
+            <button class="btn btn-compact view-hidden" id="configureAutoCorrectionBtn" type="button">Configurer les réponses</button>
+            <button class="btn btn-compact view-hidden" id="changeTeacherCodeBtn" type="button" title="Modifier le code enseignant des actions sensibles">&#9881; Code enseignant</button>
+          </div>
         </div>
         <p class="mini" id="sessionAutoCorrectionHint"></p>
         <div class="input-row" id="sessionValidateRow">
@@ -1944,9 +2150,9 @@
       </section>
 
       <section id="sessionCoreView" class="view-hidden">
-        <section class="topbar session-core-topbar">
-          <div class="session-global-timer-wrap">
-            <div class="timer-box">
+        <section class="topbar session-core-topbar" id="sessionCoreTopbar">
+          <div class="session-global-timer-wrap" id="sessionGlobalTimerWrap">
+            <div class="timer-box" id="sessionGlobalTimerBox">
               <span>Chrono séance :</span>
               <span id="globalTimer">00:00:00</span>
             </div>
@@ -1957,7 +2163,10 @@
             <button type="button" class="btn" id="pauseGlobalBtn">Pause</button>
             <button type="button" class="btn btn-danger" id="endSessionFinBtn">Fin de séance</button>
           </div>
-          <button class="btn" id="coreSummaryBtn">Résumé élèves</button>
+          <div class="core-topbar-right-actions">
+            <button class="btn" id="coreSummaryBtn">Résumé élèves</button>
+            <button class="btn btn-danger" id="coreResetSessionBtn" title="Remise à zéro complète de la séance">Reset séance</button>
+          </div>
         </section>
         <section class="panel" id="coreStudentsSection">
           <div class="panel-header">
@@ -1976,9 +2185,9 @@
               <option value="jaune">Jaune</option>
             </select>
             <button class="btn btn-danger" id="coreResetChoicesBtn">Reset choix</button>
-          </div>
-          <div class="input-row" id="coreSecondaryActionsRow">
-            <button class="btn btn-danger" id="coreResetSessionBtn" title="Remise à zéro complète de la séance">Reset séance</button>
+            <button class="btn btn-delete view-hidden" id="coreApplyResetChoicesBtn" type="button">Valider reset choix</button>
+            <button class="btn view-hidden" id="coreSelectAllResetChoicesBtn" type="button">Tout cocher</button>
+            <button class="btn view-hidden" id="coreCancelResetChoicesBtn" type="button">Annuler</button>
           </div>
           <div class="student-list" id="coreStudentsGrid"></div>
         </section>
@@ -2023,19 +2232,9 @@
       </div>
       <div id="successFlowBody">
         <div id="successErrInteractive">
-          <p class="note">Indiquez les fautes sur le pavé, puis choisissez le nouveau parcours : l’envoi part automatiquement dès que les deux sont saisis.</p>
+          <p class="note">Indiquez les fautes : l’application valide puis attribue automatiquement le nouveau parcours selon la logique de continuité.</p>
           <div class="mini">Fautes signalées : <strong id="successErrorCount">0</strong></div>
           <div id="successErrorPad" class="numeric-pad" aria-label="Pavé numérique fautes"></div>
-          <div class="outcome-pick-block">
-            <div class="outcome-pick-toolbar">
-              <div class="outcome-pick-head">
-                <span class="outcome-pick-label">Nouveau parcours</span>
-                <select id="successPickColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
-              </div>
-              <div id="successPickColorArrows" class="outcome-color-arrows" aria-label="Repères par couleur (numéros toujours croissants)"></div>
-            </div>
-            <div class="course-grid outcome-pick-grid" id="successPickCourseGrid"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -2049,21 +2248,11 @@
       </div>
       <div id="failureFlowBody">
         <div id="failureErrInteractive">
-          <p class="note">Fautes, balises (pavés) puis nouveau parcours : l’envoi part automatiquement dès que les trois sont saisis (un clic sur chaque pavé concerné, puis la case du parcours).</p>
+          <p class="note">Indiquez fautes + balises trouvées : l’application valide puis attribue automatiquement le nouveau parcours selon la logique de continuité.</p>
           <div class="mini">Fautes : <strong id="failureErrorCount">0</strong></div>
           <div id="failureErrorPad" class="numeric-pad" aria-label="Pavé numérique fautes"></div>
           <div class="mini">Balises trouvées : <strong id="failureBeaconCount">0</strong> <span class="mini" id="failureBeaconTotal">/ 0</span></div>
           <div id="failureBeaconPad" class="numeric-pad" aria-label="Pavé numérique balises"></div>
-          <div class="outcome-pick-block">
-            <div class="outcome-pick-toolbar">
-              <div class="outcome-pick-head">
-                <span class="outcome-pick-label">Nouveau parcours</span>
-                <select id="failurePickColorFilter" class="outcome-color-select" aria-label="Filtre couleur"></select>
-              </div>
-              <div id="failurePickColorArrows" class="outcome-color-arrows" aria-label="Repères par couleur (numéros toujours croissants)"></div>
-            </div>
-            <div class="course-grid outcome-pick-grid" id="failurePickCourseGrid"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -2093,6 +2282,16 @@
         </table>
       </div>
       <div class="mini" id="autoCorrectionConfigMeta"></div>
+      <div class="auto-correction-copy-block" id="autoCorrectionCopyBlock">
+        <p class="note">Copier ce tableau (y compris les champs non encore enregistrés avec le bouton ci-dessous) vers une autre séance :</p>
+        <div class="input-row auto-correction-copy-targets">
+          <label class="mini" for="autoCorrectionCopyTargetClass">Classe cible</label>
+          <select id="autoCorrectionCopyTargetClass" aria-label="Classe cible"></select>
+          <label class="mini" for="autoCorrectionCopyTargetSession">Séance cible</label>
+          <select id="autoCorrectionCopyTargetSession" aria-label="Séance cible"></select>
+          <button type="button" class="btn btn-create" id="autoCorrectionCopyApplyBtn">Copier vers cette séance</button>
+        </div>
+      </div>
       <div class="input-row">
         <button class="btn btn-primary" id="saveAutoCorrectionAllBtn" type="button">Enregistrer tout le tableau</button>
       </div>
@@ -2107,7 +2306,8 @@
       </div>
       <p class="note" id="studentAutoCorrectionInfo">Saisissez les codes de balises dans l'ordre : une case par balise.</p>
       <div id="studentAutoCodesGrid"></div>
-      <div class="input-row">
+      <div id="studentAutoKeypad"></div>
+      <div class="input-row" id="studentAutoCheckRow">
         <button class="btn btn-primary" id="checkStudentAutoCodesBtn" type="button">Vérifier mes codes</button>
       </div>
       <div id="studentAutoCorrectionResults" class="mini"></div>
@@ -2123,6 +2323,41 @@
       <p class="note">Parcours validé avec succès.</p>
       <div class="mini" id="autoAssignSuccessMessage"></div>
       <div id="autoAssignSuccessBadge"></div>
+    </div>
+  </dialog>
+
+  <dialog id="teacherCodeDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3>Code enseignant</h3>
+        <button class="btn" id="closeTeacherCodeDialogBtn" type="button">Fermer</button>
+      </div>
+      <p class="note">Définissez un code de 4 chiffres pour protéger les actions sensibles en auto-correction.</p>
+      <div class="input-row">
+        <label class="mini" for="teacherCodeInput">Code (4 chiffres, visible)</label>
+        <input id="teacherCodeInput" type="tel" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" />
+      </div>
+      <div class="input-row">
+        <button class="btn btn-primary" id="saveTeacherCodeBtn" type="button">Enregistrer le code</button>
+        <button class="btn btn-danger" id="disableTeacherCodeBtn" type="button">Désactiver le code</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="teacherAuthDialog">
+    <div class="modal">
+      <div class="modal-top">
+        <h3>Code enseignant requis</h3>
+        <button class="btn" id="closeTeacherAuthDialogBtn" type="button">Fermer</button>
+      </div>
+      <p class="note" id="teacherAuthDialogInfo">Entrez le code enseignant pour continuer.</p>
+      <div class="input-row">
+        <label class="mini" for="teacherAuthCodeInput">Code (4 chiffres)</label>
+        <input id="teacherAuthCodeInput" type="password" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" />
+      </div>
+      <div class="input-row">
+        <button class="btn btn-primary" id="confirmTeacherAuthBtn" type="button">Valider le code</button>
+      </div>
     </div>
   </dialog>
 
@@ -2142,17 +2377,19 @@
       { key: "noir", label: "Noir", hex: "#a3a3a3" }
     ];
     const VISUAL_COLOR_ORDER = ["vert", "bleu", "jaune", "rose", "noir", "rouge"];
+    const LEGACY_DEFAULT_TEACHER_ACTION_CODE = "2580";
+    const DEFAULT_TEACHER_ACTION_CODE = "";
     const MAX_NUMBERS = 35;
     const MIN_NUMBERS = 5;
     const MIN_BEACONS = 1;
     const MAX_BEACONS = 50;
-    const MAX_SESSIONS = 7;
 
     const state = {
       session: { running: false, elapsedMs: 0, lastStartTs: null },
       students: [],
       classes: [],
       classSessions: {},
+      hiddenSessionsByClass: {},
       slotConfigs: {},
       soundEnabled: false,
       ui: {
@@ -2187,13 +2424,20 @@
         modalPickColorArrowRight: Object.fromEntries(VISUAL_COLOR_ORDER.map((k, i) => [k, i % 2 === 1])),
         sessionAutoCorrectionEnabled: false,
         selectedStudentForAutoCorrectionDialog: null,
+        selectedStudentAutoInputIndex: 0,
+        teacherActionCode: DEFAULT_TEACHER_ACTION_CODE,
+        teacherPageUnlocked: false,
         activeMenu: "seance",
         studentSearch: "",
         resultSort: "name",
         prepMode: true,
         sessionCourseCount: 35,
         sessionBeaconCount: 12,
-        groupLaunchColor: "all"
+        groupLaunchColor: "all",
+        coreResetChoicesMode: false,
+        coreResetChoiceTargets: [],
+        pendingTeacherActionLabel: "",
+        pendingTeacherContinuation: ""
       }
     };
 
@@ -2203,6 +2447,9 @@
       workspaceView: document.getElementById("workspaceView"),
       sessionSetupView: document.getElementById("sessionSetupView"),
       sessionCoreView: document.getElementById("sessionCoreView"),
+      sessionCoreTopbar: document.getElementById("sessionCoreTopbar"),
+      sessionGlobalTimerWrap: document.getElementById("sessionGlobalTimerWrap"),
+      sessionGlobalTimerBox: document.getElementById("sessionGlobalTimerBox"),
       sessionSummaryView: document.getElementById("sessionSummaryView"),
       setupTitle: document.getElementById("setupTitle"),
       setupSubtitle: document.getElementById("setupSubtitle"),
@@ -2210,6 +2457,7 @@
       setupClassesStep: document.getElementById("setupClassesStep"),
       selectedSessionLabel: document.getElementById("selectedSessionLabel"),
       changeClassTopBtn: document.getElementById("changeClassTopBtn"),
+      teacherLockBtn: document.getElementById("teacherLockBtn"),
       sessionButtonsRow: document.getElementById("sessionButtonsRow"),
       classButtonsRow: document.getElementById("classButtonsRow"),
       newClassInput: document.getElementById("newClassInput"),
@@ -2225,11 +2473,16 @@
       backFromSessionSetupBtn: document.getElementById("backFromSessionSetupBtn"),
       globalTimer: document.getElementById("globalTimer"),
       corePresentCount: document.getElementById("corePresentCount"),
+      coreActionsRow: document.getElementById("coreActionsRow"),
       coreGroupColorSelect: document.getElementById("coreGroupColorSelect"),
       corePrepModeBtn: document.getElementById("corePrepModeBtn"),
       coreSummaryBtn: document.getElementById("coreSummaryBtn"),
       coreResetChoicesBtn: document.getElementById("coreResetChoicesBtn"),
+      coreApplyResetChoicesBtn: document.getElementById("coreApplyResetChoicesBtn"),
+      coreSelectAllResetChoicesBtn: document.getElementById("coreSelectAllResetChoicesBtn"),
+      coreCancelResetChoicesBtn: document.getElementById("coreCancelResetChoicesBtn"),
       coreResetSessionBtn: document.getElementById("coreResetSessionBtn"),
+      changeTeacherCodeBtn: document.getElementById("changeTeacherCodeBtn"),
       coreStudentsGrid: document.getElementById("coreStudentsGrid"),
       goToCoreBtn: document.getElementById("goToCoreBtn"),
       backToSessionSetupBtn: document.getElementById("backToSessionSetupBtn"),
@@ -2294,9 +2547,6 @@
       successErrInteractive: document.getElementById("successErrInteractive"),
       successErrorPad: document.getElementById("successErrorPad"),
       successErrorCount: document.getElementById("successErrorCount"),
-      successPickColorFilter: document.getElementById("successPickColorFilter"),
-      successPickColorArrows: document.getElementById("successPickColorArrows"),
-      successPickCourseGrid: document.getElementById("successPickCourseGrid"),
       failureDialog: document.getElementById("failureDialog"),
       failureTitle: document.getElementById("failureTitle"),
       closeFailureDialogBtn: document.getElementById("closeFailureDialogBtn"),
@@ -2307,18 +2557,19 @@
       failureErrorCount: document.getElementById("failureErrorCount"),
       failureBeaconCount: document.getElementById("failureBeaconCount"),
       failureBeaconTotal: document.getElementById("failureBeaconTotal"),
-      failurePickColorFilter: document.getElementById("failurePickColorFilter"),
-      failurePickColorArrows: document.getElementById("failurePickColorArrows"),
-      failurePickCourseGrid: document.getElementById("failurePickCourseGrid"),
       autoCorrectionConfigDialog: document.getElementById("autoCorrectionConfigDialog"),
       autoCorrectionConfigTableBody: document.getElementById("autoCorrectionConfigTableBody"),
       autoCorrectionConfigMeta: document.getElementById("autoCorrectionConfigMeta"),
+      autoCorrectionCopyTargetClass: document.getElementById("autoCorrectionCopyTargetClass"),
+      autoCorrectionCopyTargetSession: document.getElementById("autoCorrectionCopyTargetSession"),
+      autoCorrectionCopyApplyBtn: document.getElementById("autoCorrectionCopyApplyBtn"),
       saveAutoCorrectionAllBtn: document.getElementById("saveAutoCorrectionAllBtn"),
       closeAutoCorrectionConfigBtn: document.getElementById("closeAutoCorrectionConfigBtn"),
       studentAutoCorrectionDialog: document.getElementById("studentAutoCorrectionDialog"),
       studentAutoCorrectionTitle: document.getElementById("studentAutoCorrectionTitle"),
       studentAutoCorrectionInfo: document.getElementById("studentAutoCorrectionInfo"),
       studentAutoCodesGrid: document.getElementById("studentAutoCodesGrid"),
+      studentAutoKeypad: document.getElementById("studentAutoKeypad"),
       checkStudentAutoCodesBtn: document.getElementById("checkStudentAutoCodesBtn"),
       closeStudentAutoCorrectionBtn: document.getElementById("closeStudentAutoCorrectionBtn"),
       studentAutoCorrectionResults: document.getElementById("studentAutoCorrectionResults"),
@@ -2326,6 +2577,16 @@
       closeAutoAssignSuccessBtn: document.getElementById("closeAutoAssignSuccessBtn"),
       autoAssignSuccessMessage: document.getElementById("autoAssignSuccessMessage"),
       autoAssignSuccessBadge: document.getElementById("autoAssignSuccessBadge"),
+      teacherCodeDialog: document.getElementById("teacherCodeDialog"),
+      closeTeacherCodeDialogBtn: document.getElementById("closeTeacherCodeDialogBtn"),
+      teacherCodeInput: document.getElementById("teacherCodeInput"),
+      saveTeacherCodeBtn: document.getElementById("saveTeacherCodeBtn"),
+      disableTeacherCodeBtn: document.getElementById("disableTeacherCodeBtn"),
+      teacherAuthDialog: document.getElementById("teacherAuthDialog"),
+      closeTeacherAuthDialogBtn: document.getElementById("closeTeacherAuthDialogBtn"),
+      teacherAuthDialogInfo: document.getElementById("teacherAuthDialogInfo"),
+      teacherAuthCodeInput: document.getElementById("teacherAuthCodeInput"),
+      confirmTeacherAuthBtn: document.getElementById("confirmTeacherAuthBtn"),
       summaryList: document.getElementById("summaryList"),
       summaryBackBtn: document.getElementById("summaryBackBtn"),
       printSummaryBtn: document.getElementById("printSummaryBtn")
@@ -2449,6 +2710,18 @@
       return state.students.filter((s) => !s.isAbsent);
     }
 
+    function hasAssignedCourseForStart(student) {
+      if (!student || student.isAbsent) return true;
+      if (student.currentRun) return true;
+      if (!student.pendingRun) return false;
+      const pendingCourse = ALL_COURSES.find((course) => course.id === student.pendingRun.courseId);
+      return Boolean(pendingCourse && pendingCourse.number <= state.ui.sessionCourseCount);
+    }
+
+    function getStudentsMissingAssignedCourseForStart() {
+      return getPresentStudents().filter((student) => !hasAssignedCourseForStart(student));
+    }
+
     function getOccupiedCourseIds(options = {}) {
       const { includePending = true, ignoreStudentId = null } = options;
       const set = new Set();
@@ -2464,10 +2737,21 @@
       return student.history.some((h) => h.number === number);
     }
 
+    /** Un parcours précis (numéro + couleur) validé une fois est verrouillé pour toute la classe. */
+    function isCourseDoneByClass(courseId) {
+      if (!courseId) return false;
+      for (const student of state.students) {
+        if (!student || !Array.isArray(student.history)) continue;
+        if (student.history.some((h) => h.courseId === courseId)) return true;
+      }
+      return false;
+    }
+
     function canAssignCourse(student, course) {
       if (student.currentRun) return false;
       if (student.isAbsent) return false;
       if (hasDoneNumber(student, course.number)) return false;
+      if (isCourseDoneByClass(course.id)) return false;
       const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
       if (occupied.has(course.id)) return false;
       return true;
@@ -2478,6 +2762,7 @@
       if (!student || !course || student.isAbsent) return false;
       if (course.number > state.ui.sessionCourseCount) return false;
       if (hasDoneNumber(student, course.number)) return false;
+      if (isCourseDoneByClass(course.id)) return false;
       if (student.currentRun) {
         if (student.currentRun.courseId === course.id) return false;
         if (student.currentRun.number === course.number) return false;
@@ -2519,10 +2804,168 @@
       }, 2600);
     }
 
+    function isTeacherProtectionEnabled() {
+      const configured = String(state.ui.teacherActionCode || "").trim();
+      return state.ui.sessionAutoCorrectionEnabled && /^\d{4}$/.test(configured);
+    }
+
+    function isTeacherPageLocked() {
+      return isTeacherProtectionEnabled() && !state.ui.teacherPageUnlocked;
+    }
+
+    function renderTeacherLockButtonState() {
+      const isCoreView = state.ui.appView === "workspace" && state.ui.sessionWorkspaceStep === "core";
+      const visible = isCoreView && isTeacherProtectionEnabled();
+      refs.teacherLockBtn.classList.toggle("view-hidden", !visible);
+      if (!visible) return;
+      const locked = isTeacherPageLocked();
+      refs.teacherLockBtn.textContent = locked ? "🔒 VERROUILLÉ" : "🔓 DÉVERROUILLÉ";
+      refs.teacherLockBtn.title = locked
+        ? "Page verrouillée - cliquer pour déverrouiller"
+        : "Page déverrouillée - cliquer pour verrouiller";
+      refs.teacherLockBtn.setAttribute("aria-label", refs.teacherLockBtn.title);
+      refs.teacherLockBtn.classList.toggle("is-locked", locked);
+      refs.teacherLockBtn.classList.toggle("is-unlocked", !locked);
+    }
+
+    function toggleTeacherPageLock() {
+      if (!isTeacherProtectionEnabled()) {
+        notify("Activez l'auto-correction et définissez un code enseignant à 4 chiffres.", "warn");
+        return;
+      }
+      if (state.ui.teacherPageUnlocked) {
+        state.ui.teacherPageUnlocked = false;
+        saveState();
+        renderTeacherLockButtonState();
+        notify("Page verrouillée.", "info");
+        return;
+      }
+      state.ui.pendingTeacherContinuation = "";
+      openTeacherAuthDialog("déverrouiller la page");
+    }
+
+    function openTeacherAuthDialog(actionLabel) {
+      state.ui.pendingTeacherActionLabel = actionLabel || "action sensible";
+      refs.teacherAuthDialogInfo.textContent = `Entrez le code enseignant pour ${state.ui.pendingTeacherActionLabel}.`;
+      refs.teacherAuthCodeInput.value = "";
+      refs.teacherAuthDialog.showModal();
+      window.setTimeout(() => {
+        refs.teacherAuthCodeInput.focus();
+        refs.teacherAuthCodeInput.select();
+      }, 0);
+    }
+
+    function closeTeacherAuthDialog() {
+      if (refs.teacherAuthDialog.open) refs.teacherAuthDialog.close();
+      refs.teacherAuthCodeInput.value = "";
+      state.ui.pendingTeacherActionLabel = "";
+      state.ui.pendingTeacherContinuation = "";
+    }
+
+    function confirmTeacherAuthCode() {
+      const configured = String(state.ui.teacherActionCode || "").trim();
+      if (!/^\d{4}$/.test(configured)) {
+        closeTeacherAuthDialog();
+        return;
+      }
+      const entered = String(refs.teacherAuthCodeInput.value || "").trim();
+      if (entered !== configured) {
+        notify("Code enseignant incorrect.", "warn");
+        refs.teacherAuthCodeInput.select();
+        return;
+      }
+      const continuation = state.ui.pendingTeacherContinuation || "";
+      state.ui.pendingTeacherContinuation = "";
+      state.ui.teacherPageUnlocked = true;
+      saveState();
+      closeTeacherAuthDialog();
+      renderTeacherLockButtonState();
+      notify("Page déverrouillée.", "success");
+      if (continuation) runPendingTeacherContinuation(continuation);
+    }
+
+    function ensureTeacherActionAuthorized(actionLabel, continuationKey) {
+      if (!isTeacherProtectionEnabled()) return true;
+      if (state.ui.teacherPageUnlocked) return true;
+      state.ui.pendingTeacherContinuation = continuationKey || "";
+      openTeacherAuthDialog(actionLabel);
+      return false;
+    }
+
+    function runPendingTeacherContinuation(key) {
+      switch (key) {
+        case "backToSessions":
+          backToSessions();
+          break;
+        case "backFromCoreToSessionSetup":
+          backFromCoreToSessionSetup();
+          break;
+        case "pauseGlobalTimer":
+          pauseGlobalTimer();
+          break;
+        case "endSessionFin":
+          endSessionFin();
+          break;
+        case "resetGlobalTimer":
+          resetGlobalTimer();
+          break;
+        case "resetApplicationData":
+          resetApplicationData();
+          break;
+        case "resetPreparedChoices":
+          resetPreparedChoices();
+          break;
+        case "openSummaryView":
+          openSummaryView();
+          break;
+        case "backToCoreFromSummary":
+          backToCoreFromSummary();
+          break;
+        default:
+          break;
+      }
+    }
+
+    function changeTeacherActionCode() {
+      const current = String(state.ui.teacherActionCode || "").trim();
+      refs.teacherCodeInput.value = current;
+      refs.teacherCodeDialog.showModal();
+      window.setTimeout(() => {
+        refs.teacherCodeInput.focus();
+        refs.teacherCodeInput.select();
+      }, 0);
+    }
+
+    function closeTeacherCodeDialog() {
+      if (refs.teacherCodeDialog.open) refs.teacherCodeDialog.close();
+    }
+
+    function saveTeacherCodeFromDialog() {
+      const normalized = String(refs.teacherCodeInput.value || "").trim();
+      if (!/^\d{4}$/.test(normalized)) {
+        notify("Code invalide : 4 chiffres exactement.", "warn");
+        return;
+      }
+      state.ui.teacherActionCode = normalized;
+      state.ui.teacherPageUnlocked = false;
+      saveState();
+      notify("Code enseignant mis à jour.", "success");
+      closeTeacherCodeDialog();
+      renderTeacherLockButtonState();
+    }
+
+    function disableTeacherCodeFromDialog() {
+      state.ui.teacherActionCode = "";
+      state.ui.teacherPageUnlocked = false;
+      saveState();
+      notify("Code enseignant désactivé.", "success");
+      closeTeacherCodeDialog();
+      renderTeacherLockButtonState();
+    }
+
     function getAvailableCoursesForStudent(student) {
       if (!student || student.currentRun) return [];
-      const occupied = getOccupiedCourseIds({ includePending: true, ignoreStudentId: student.id });
-      return getSessionCourses().filter((course) => !occupied.has(course.id) && !hasDoneNumber(student, course.number));
+      return getSessionCourses().filter((course) => canAssignCourse(student, course));
     }
 
     function getColorByKey(colorKey) {
@@ -2542,6 +2985,40 @@
     function getGroupLaunchPreferredColor() {
       if (state.ui.groupLaunchColor === "all") return null;
       return state.ui.groupLaunchColor;
+    }
+
+    function getOrderedColorPriority(preferredColor) {
+      const base = [...VISUAL_COLOR_ORDER];
+      const first = preferredColor && base.includes(preferredColor)
+        ? preferredColor
+        : (state.ui.groupLaunchColor !== "all" && base.includes(state.ui.groupLaunchColor)
+          ? state.ui.groupLaunchColor
+          : base[0]);
+      return [first, ...base.filter((c) => c !== first)];
+    }
+
+    function getRemainingClassCoursesByColor() {
+      const remaining = {};
+      for (const colorKey of VISUAL_COLOR_ORDER) remaining[colorKey] = [];
+      for (const course of getSessionCourses()) {
+        if (!remaining[course.color]) remaining[course.color] = [];
+        if (isCourseDoneByClass(course.id)) continue;
+        remaining[course.color].push(course);
+      }
+      for (const colorKey of Object.keys(remaining)) {
+        remaining[colorKey].sort((a, b) => a.number - b.number);
+      }
+      return remaining;
+    }
+
+    /** Couleur focus : tant qu'il reste des parcours de cette couleur dans la classe, on la privilégie. */
+    function getColorProgressionOrder(preferredColor) {
+      const baseOrder = getOrderedColorPriority(preferredColor);
+      const remainingByColor = getRemainingClassCoursesByColor();
+      const unfinishedColors = baseOrder.filter((colorKey) => (remainingByColor[colorKey] || []).length > 0);
+      if (!unfinishedColors.length) return baseOrder;
+      const focusColor = unfinishedColors[0];
+      return [focusColor, ...baseOrder.filter((colorKey) => colorKey !== focusColor)];
     }
 
     function shouldUsePrepModeForStudent(student) {
@@ -2565,23 +3042,18 @@
     function getNextCourseForStudent(student, preferredColor) {
       const available = getAvailableCoursesForStudent(student);
       if (!available.length) return null;
-      const byPreferredColor = available
-        .filter((c) => c.color === preferredColor)
-        .sort((a, b) => a.number - b.number);
-      if (byPreferredColor.length) return byPreferredColor[0];
-      return available.sort((a, b) => a.number - b.number)[0];
+      const colorOrder = getColorProgressionOrder(preferredColor);
+      for (const colorKey of colorOrder) {
+        const sameColor = available
+          .filter((c) => c.color === colorKey)
+          .sort((a, b) => a.number - b.number);
+        if (sameColor.length) return sameColor[0];
+      }
+      return sortCoursesByNumberThenColor(available)[0];
     }
 
     function getRandomCourseForStudent(student, preferredColor) {
-      const available = getAvailableCoursesForStudent(student);
-      if (!available.length) return null;
-      if (preferredColor) {
-        const preferred = available.filter((course) => course.color === preferredColor);
-        if (preferred.length) {
-          return preferred[Math.floor(Math.random() * preferred.length)];
-        }
-      }
-      return available[Math.floor(Math.random() * available.length)];
+      return getNextCourseForStudent(student, preferredColor);
     }
 
     function getSessionCourses() {
@@ -2590,6 +3062,118 @@
 
     function getSessionSlotKey(classId, sessionNumber) {
       return `${classId}__S${sessionNumber}`;
+    }
+
+    function escapeRegExp(str) {
+      return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function getSessionNumberFromSlotKey(slotKey, classId) {
+      if (!slotKey || !classId) return null;
+      const match = String(slotKey).match(new RegExp(`^${escapeRegExp(classId)}__S(\\d+)$`));
+      if (!match) return null;
+      const num = Number(match[1]);
+      return Number.isInteger(num) && num >= 1 ? num : null;
+    }
+
+    /** Numéros de séances réellement stockés pour la classe (aucune entrée fictive). */
+    function getAllSessionNumbersForClass(classId) {
+      if (!classId) return [];
+      const out = new Set();
+      for (const key of Object.keys(state.classSessions || {})) {
+        const num = getSessionNumberFromSlotKey(key, classId);
+        if (num != null) out.add(num);
+      }
+      return [...out].sort((a, b) => a - b);
+    }
+
+    function syncSelectedSessionNumberToClass(classId) {
+      if (!classId) return;
+      const vs = getVisibleSessionNumbersForClass(classId);
+      if (!vs.length) state.ui.selectedSessionNumber = 1;
+      else if (!vs.includes(state.ui.selectedSessionNumber)) state.ui.selectedSessionNumber = vs[0];
+    }
+
+    function getHiddenSessionsForClass(classId) {
+      if (!classId) return [];
+      const raw = state.hiddenSessionsByClass && Array.isArray(state.hiddenSessionsByClass[classId])
+        ? state.hiddenSessionsByClass[classId]
+        : [];
+      return raw
+        .filter((n) => Number.isInteger(n) && n >= 1)
+        .sort((a, b) => a - b);
+    }
+
+    function setHiddenSessionsForClass(classId, sessionNumbers) {
+      if (!classId) return;
+      if (!state.hiddenSessionsByClass || typeof state.hiddenSessionsByClass !== "object") {
+        state.hiddenSessionsByClass = {};
+      }
+      const normalized = [...new Set(
+        (Array.isArray(sessionNumbers) ? sessionNumbers : [])
+          .filter((n) => Number.isInteger(n) && n >= 1)
+      )].sort((a, b) => a - b);
+      state.hiddenSessionsByClass[classId] = normalized;
+    }
+
+    function getVisibleSessionNumbersForClass(classId) {
+      return getAllSessionNumbersForClass(classId);
+    }
+
+    function compactClassSessionsForClass(classId) {
+      if (!classId) return new Map();
+      const numbers = getAllSessionNumbersForClass(classId);
+      if (!numbers.length) {
+        if (state.hiddenSessionsByClass && state.hiddenSessionsByClass[classId]) {
+          delete state.hiddenSessionsByClass[classId];
+        }
+        return new Map();
+      }
+      const mapping = new Map();
+      numbers.forEach((oldNumber, index) => {
+        mapping.set(oldNumber, index + 1);
+      });
+
+      const nextClassSessions = {};
+      for (const [key, slot] of Object.entries(state.classSessions || {})) {
+        const oldNumber = getSessionNumberFromSlotKey(key, classId);
+        if (oldNumber == null) {
+          nextClassSessions[key] = slot;
+          continue;
+        }
+        const newNumber = mapping.get(oldNumber);
+        if (!newNumber) continue;
+        const newKey = getSessionSlotKey(classId, newNumber);
+        nextClassSessions[newKey] = slot;
+      }
+      state.classSessions = nextClassSessions;
+
+      const nextSlotConfigs = {};
+      for (const [key, cfg] of Object.entries(state.slotConfigs || {})) {
+        const oldNumber = getSessionNumberFromSlotKey(key, classId);
+        if (oldNumber == null) {
+          nextSlotConfigs[key] = cfg;
+          continue;
+        }
+        const newNumber = mapping.get(oldNumber);
+        if (!newNumber) continue;
+        const newKey = getSessionSlotKey(classId, newNumber);
+        nextSlotConfigs[newKey] = cfg;
+      }
+      state.slotConfigs = nextSlotConfigs;
+
+      if (state.hiddenSessionsByClass && state.hiddenSessionsByClass[classId]) {
+        delete state.hiddenSessionsByClass[classId];
+      }
+      return mapping;
+    }
+
+    function getNextSessionNumberForClass(classId) {
+      const visibleSessions = getVisibleSessionNumbersForClass(classId);
+      const allSessions = new Set(visibleSessions);
+      let next = visibleSessions.length ? Math.max(...visibleSessions) + 1 : 1;
+      while (allSessions.has(next)) next += 1;
+      return next;
     }
 
     function getActiveSlotKey() {
@@ -2605,10 +3189,13 @@
       const existing = state.slotConfigs[slotKey];
       if (existing && typeof existing === "object") {
         if (!existing.answerKeys || typeof existing.answerKeys !== "object") existing.answerKeys = {};
+        if (!existing.beaconLabelsByNumber || typeof existing.beaconLabelsByNumber !== "object") {
+          existing.beaconLabelsByNumber = {};
+        }
         if (typeof existing.autoCorrectionEnabled !== "boolean") existing.autoCorrectionEnabled = false;
         return existing;
       }
-      const created = { autoCorrectionEnabled: false, answerKeys: {} };
+      const created = { autoCorrectionEnabled: false, answerKeys: {}, beaconLabelsByNumber: {} };
       state.slotConfigs[slotKey] = created;
       return created;
     }
@@ -2641,6 +3228,20 @@
       return parseCodesByLine(cfg.answerKeys[courseId].join("\n"), expectedCount);
     }
 
+    function getBeaconLabelsForCourseNumber(number) {
+      const expectedCount = Math.max(0, Number(state.ui.sessionBeaconCount) || 0);
+      const defaults = Array.from({ length: expectedCount }, (_, i) => String(i + 1));
+      const cfg = getActiveSlotConfig(false);
+      if (!cfg || !cfg.beaconLabelsByNumber) return defaults;
+      const stored = cfg.beaconLabelsByNumber[String(number)];
+      if (!Array.isArray(stored)) return defaults;
+      const out = [];
+      for (let i = 0; i < expectedCount; i += 1) {
+        out.push(String(stored[i] || "").trim() || String(i + 1));
+      }
+      return out;
+    }
+
     function createEmptySessionData() {
       return { running: false, elapsedMs: 0, lastStartTs: null };
     }
@@ -2668,7 +3269,8 @@
     function getClassRosterTemplate(classId) {
       if (!classId) return [];
       const byKey = new Map();
-      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+      const sessionNumbers = getAllSessionNumbersForClass(classId);
+      for (const sessionNumber of sessionNumbers) {
         const key = getSessionSlotKey(classId, sessionNumber);
         const slot = state.classSessions[key];
         if (!slot || !Array.isArray(slot.students)) continue;
@@ -2700,20 +3302,16 @@
 
     function ensureClassSessionSlots(classId) {
       if (!classId) return;
-      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+      const numbers = getAllSessionNumbersForClass(classId);
+      if (!numbers.length) return;
+      for (const sessionNumber of numbers) {
         const key = getSessionSlotKey(classId, sessionNumber);
-        if (!state.classSessions[key]) {
-          state.classSessions[key] = {
-            session: createEmptySessionData(),
-            students: []
-          };
-        } else {
-          if (!state.classSessions[key].session) {
-            state.classSessions[key].session = createEmptySessionData();
-          }
-          if (!Array.isArray(state.classSessions[key].students)) {
-            state.classSessions[key].students = [];
-          }
+        if (!state.classSessions[key]) continue;
+        if (!state.classSessions[key].session) {
+          state.classSessions[key].session = createEmptySessionData();
+        }
+        if (!Array.isArray(state.classSessions[key].students)) {
+          state.classSessions[key].students = [];
         }
       }
     }
@@ -2723,7 +3321,8 @@
       if (!classId || !addedStudent) return;
       ensureClassSessionSlots(classId);
       const addedKey = getStudentRosterKey(addedStudent.lastName, addedStudent.firstName);
-      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+      const sessionNumbers = getAllSessionNumbersForClass(classId);
+      for (const sessionNumber of sessionNumbers) {
         const key = getSessionSlotKey(classId, sessionNumber);
         const slot = state.classSessions[key];
         if (!slot || !Array.isArray(slot.students)) continue;
@@ -2752,7 +3351,8 @@
       if (!classId || !Array.isArray(removedStudents) || !removedStudents.length) return;
       ensureClassSessionSlots(classId);
       const removedIds = new Set(removedStudents.map((student) => student.id));
-      for (let sessionNumber = 1; sessionNumber <= MAX_SESSIONS; sessionNumber += 1) {
+      const sessionNumbers = getAllSessionNumbersForClass(classId);
+      for (const sessionNumber of sessionNumbers) {
         const key = getSessionSlotKey(classId, sessionNumber);
         const slot = state.classSessions[key];
         if (!slot || !Array.isArray(slot.students)) continue;
@@ -2850,6 +3450,9 @@
       for (const key of Object.keys(state.slotConfigs || {})) {
         if (key.startsWith(`${classId}__`)) delete state.slotConfigs[key];
       }
+      if (state.hiddenSessionsByClass && state.hiddenSessionsByClass[classId]) {
+        delete state.hiddenSessionsByClass[classId];
+      }
 
       if (state.ui.selectedClassId === classId) {
         state.ui.selectedClassId = state.classes.length ? state.classes[0].id : null;
@@ -2857,6 +3460,7 @@
 
       if (!state.classes.length) {
         state.classSessions = {};
+        state.hiddenSessionsByClass = {};
         state.slotConfigs = {};
         state.students = [];
         state.session = createEmptySessionData();
@@ -2888,6 +3492,7 @@
         if (refs.autoCorrectionConfigDialog.open) refs.autoCorrectionConfigDialog.close();
         if (refs.studentAutoCorrectionDialog.open) refs.studentAutoCorrectionDialog.close();
       } else {
+        syncSelectedSessionNumberToClass(state.ui.selectedClassId);
         loadActiveSlotFromStore({ createIfMissing: false });
       }
 
@@ -2897,6 +3502,9 @@
     }
 
     function ensureDefaultData() {
+      if (!state.hiddenSessionsByClass || typeof state.hiddenSessionsByClass !== "object") {
+        state.hiddenSessionsByClass = {};
+      }
       if (!state.slotConfigs || typeof state.slotConfigs !== "object") {
         state.slotConfigs = {};
       }
@@ -2906,8 +3514,11 @@
       if (state.ui.selectedClassId && !state.classes.some((c) => c.id === state.ui.selectedClassId)) {
         state.ui.selectedClassId = state.classes.length ? state.classes[0].id : null;
       }
-      if (!Number.isInteger(state.ui.selectedSessionNumber) || state.ui.selectedSessionNumber < 1 || state.ui.selectedSessionNumber > MAX_SESSIONS) {
+      if (!Number.isInteger(state.ui.selectedSessionNumber) || state.ui.selectedSessionNumber < 1) {
         state.ui.selectedSessionNumber = 1;
+      }
+      if (state.ui.selectedClassId) {
+        syncSelectedSessionNumberToClass(state.ui.selectedClassId);
       }
       if (!["setup", "workspace"].includes(state.ui.appView)) {
         state.ui.appView = "setup";
@@ -2925,6 +3536,21 @@
       if (typeof state.ui.sessionAutoCorrectionEnabled !== "boolean") {
         state.ui.sessionAutoCorrectionEnabled = false;
       }
+      if (!Number.isInteger(state.ui.selectedStudentAutoInputIndex) || state.ui.selectedStudentAutoInputIndex < 0) {
+        state.ui.selectedStudentAutoInputIndex = 0;
+      }
+      if (typeof state.ui.teacherActionCode !== "string") {
+        state.ui.teacherActionCode = DEFAULT_TEACHER_ACTION_CODE;
+      }
+      if (String(state.ui.teacherActionCode).trim() === LEGACY_DEFAULT_TEACHER_ACTION_CODE) {
+        state.ui.teacherActionCode = "";
+      }
+      if (!/^\d{4}$/.test(String(state.ui.teacherActionCode).trim()) && String(state.ui.teacherActionCode).trim()) {
+        state.ui.teacherActionCode = "";
+      }
+      if (typeof state.ui.teacherPageUnlocked !== "boolean") {
+        state.ui.teacherPageUnlocked = false;
+      }
       if (!Array.isArray(state.ui.sessionDeleteTargets)) {
         state.ui.sessionDeleteTargets = [];
       }
@@ -2933,6 +3559,18 @@
       }
       if (!Array.isArray(state.ui.absentDraftIds)) {
         state.ui.absentDraftIds = [];
+      }
+      if (!Array.isArray(state.ui.coreResetChoiceTargets)) {
+        state.ui.coreResetChoiceTargets = [];
+      }
+      if (typeof state.ui.coreResetChoicesMode !== "boolean") {
+        state.ui.coreResetChoicesMode = false;
+      }
+      if (typeof state.ui.pendingTeacherActionLabel !== "string") {
+        state.ui.pendingTeacherActionLabel = "";
+      }
+      if (typeof state.ui.pendingTeacherContinuation !== "string") {
+        state.ui.pendingTeacherContinuation = "";
       }
       if (!state.ui.successPickColorArrowRight || typeof state.ui.successPickColorArrowRight !== "object") {
         state.ui.successPickColorArrowRight = defaultColorArrowMap();
@@ -2954,6 +3592,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         classes: state.classes,
         classSessions: state.classSessions,
+        hiddenSessionsByClass: state.hiddenSessionsByClass,
         slotConfigs: state.slotConfigs,
         soundEnabled: state.soundEnabled,
         ui: {
@@ -2975,6 +3614,7 @@
           sessionCourseCount: state.ui.sessionCourseCount,
           sessionBeaconCount: state.ui.sessionBeaconCount,
           sessionAutoCorrectionEnabled: state.ui.sessionAutoCorrectionEnabled,
+          teacherActionCode: state.ui.teacherActionCode,
           groupLaunchColor: state.ui.groupLaunchColor
         }
       }));
@@ -2987,13 +3627,16 @@
         const parsed = JSON.parse(raw);
         state.classes = Array.isArray(parsed.classes) ? parsed.classes : [];
         state.classSessions = parsed.classSessions && typeof parsed.classSessions === "object" ? parsed.classSessions : {};
+        state.hiddenSessionsByClass = parsed.hiddenSessionsByClass && typeof parsed.hiddenSessionsByClass === "object"
+          ? parsed.hiddenSessionsByClass
+          : {};
         state.slotConfigs = parsed.slotConfigs && typeof parsed.slotConfigs === "object" ? parsed.slotConfigs : {};
         state.soundEnabled = Boolean(parsed.soundEnabled);
         if (parsed.ui && parsed.ui.appView) state.ui.appView = parsed.ui.appView;
         if (parsed.ui && parsed.ui.setupStep) state.ui.setupStep = parsed.ui.setupStep;
         if (parsed.ui && parsed.ui.sessionWorkspaceStep) state.ui.sessionWorkspaceStep = parsed.ui.sessionWorkspaceStep;
         if (parsed.ui && Number.isInteger(parsed.ui.selectedSessionNumber)) {
-          state.ui.selectedSessionNumber = Math.min(MAX_SESSIONS, Math.max(1, parsed.ui.selectedSessionNumber));
+          state.ui.selectedSessionNumber = Math.max(1, parsed.ui.selectedSessionNumber);
         }
         if (parsed.ui && typeof parsed.ui.selectedClassId === "string") {
           state.ui.selectedClassId = parsed.ui.selectedClassId;
@@ -3033,6 +3676,11 @@
         if (parsed.ui && typeof parsed.ui.sessionAutoCorrectionEnabled === "boolean") {
           state.ui.sessionAutoCorrectionEnabled = parsed.ui.sessionAutoCorrectionEnabled;
         }
+        if (parsed.ui && typeof parsed.ui.teacherActionCode === "string") {
+          const loadedCode = parsed.ui.teacherActionCode.trim();
+          const normalizedCode = loadedCode === LEGACY_DEFAULT_TEACHER_ACTION_CODE ? "" : loadedCode;
+          state.ui.teacherActionCode = /^\d{4}$/.test(normalizedCode) ? normalizedCode : "";
+        }
         if (parsed.ui && (parsed.ui.groupLaunchColor === "all" || COLORS.some((c) => c.key === parsed.ui.groupLaunchColor))) {
           state.ui.groupLaunchColor = parsed.ui.groupLaunchColor;
         }
@@ -3064,14 +3712,24 @@
     function renderSetupView() {
       const isClassStep = state.ui.setupStep === "classes";
       const isDeleteMode = state.ui.sessionDeleteMode && !isClassStep;
+      if (state.classes.length && (!state.ui.selectedClassId || !state.classes.some((c) => c.id === state.ui.selectedClassId))) {
+        state.ui.selectedClassId = state.classes[0].id;
+      }
+      syncSelectedSessionNumberToClass(state.ui.selectedClassId);
+      const selectedClassForSessions = getSelectedClass();
+      const visibleSessions = selectedClassForSessions ? getVisibleSessionNumbersForClass(selectedClassForSessions.id) : [];
+      state.ui.sessionDeleteTargets = state.ui.sessionDeleteTargets.filter((n) => visibleSessions.includes(n));
       refs.setupClassesStep.classList.toggle("view-hidden", !isClassStep);
       refs.setupSessionsStep.classList.toggle("view-hidden", isClassStep);
       refs.changeClassTopBtn.classList.toggle("view-hidden", isClassStep || state.ui.appView !== "setup");
-      refs.setupSubtitle.classList.toggle("view-hidden", isClassStep);
       refs.setupTitle.textContent = isClassStep ? "Choix de la classe" : "Choix de la séance";
       refs.setupSubtitle.textContent = isClassStep
         ? ""
-        : (isDeleteMode ? "Sélectionnez une ou plusieurs séances à supprimer" : "Touchez une séance pour ouvrir directement l'interface");
+        : (isDeleteMode ? "Sélectionnez une ou plusieurs séances à supprimer" : "");
+      refs.setupSubtitle.classList.toggle(
+        "view-hidden",
+        isClassStep || !String(refs.setupSubtitle.textContent || "").trim()
+      );
 
       refs.toggleDeleteSessionsBtn.classList.toggle("view-hidden", isClassStep || isDeleteMode);
       refs.createFreshSessionBtn.classList.toggle("view-hidden", isClassStep || isDeleteMode);
@@ -3079,41 +3737,51 @@
       refs.selectAllSessionsBtn.classList.toggle("view-hidden", !(isDeleteMode));
       refs.cancelDeleteSessionsBtn.classList.toggle("view-hidden", !(isDeleteMode));
       refs.deleteSessionsHint.classList.toggle("view-hidden", !(isDeleteMode));
-      const allSessionsCount = MAX_SESSIONS;
-      refs.selectAllSessionsBtn.textContent = state.ui.sessionDeleteTargets.length === allSessionsCount ? "Tout décocher" : "Tout cocher";
+      const targetsWithinVisible = state.ui.sessionDeleteTargets.filter((n) => visibleSessions.includes(n));
+      refs.selectAllSessionsBtn.textContent =
+        visibleSessions.length > 0 && targetsWithinVisible.length === visibleSessions.length
+          ? "Tout décocher"
+          : "Tout cocher";
+      refs.selectAllSessionsBtn.disabled = visibleSessions.length === 0;
+      refs.confirmDeleteSessionsBtn.disabled = targetsWithinVisible.length === 0;
 
       refs.sessionButtonsRow.innerHTML = "";
-      for (let i = 1; i <= MAX_SESSIONS; i += 1) {
-        const item = document.createElement("div");
-        item.className = "session-choice-item";
+      if (!isClassStep) {
+        if (visibleSessions.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "muted";
+          empty.textContent = "Aucune séance affichée. Cliquez sur Créer une nouvelle séance pour en recréer une.";
+          refs.sessionButtonsRow.appendChild(empty);
+        }
+        for (const i of visibleSessions) {
+          const item = document.createElement("div");
+          item.className = "session-choice-item";
 
-        const btn = document.createElement("button");
-        btn.type = "button";
-        const isSelectedForDelete = state.ui.sessionDeleteTargets.includes(i);
-        btn.className = `btn session-choice-btn ${state.ui.selectedSessionNumber === i ? "active" : ""} ${isSelectedForDelete ? "delete-selected" : ""}`;
-        btn.textContent = `Séance ${i}`;
-        btn.addEventListener("click", () => {
-          if (state.ui.sessionDeleteMode) {
-            toggleSessionDeleteTarget(i);
-            return;
-          }
-          saveActiveSlotToStore();
-          state.ui.selectedSessionNumber = i;
-          loadActiveSlotFromStore({ createIfMissing: false });
-          openSelectedSession();
-        });
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const isSelectedForDelete = state.ui.sessionDeleteTargets.includes(i);
+          btn.className = `btn session-choice-btn ${state.ui.selectedSessionNumber === i ? "active" : ""} ${isSelectedForDelete ? "delete-selected" : ""}`;
+          btn.textContent = `Séance ${i}`;
+          btn.addEventListener("click", () => {
+            if (state.ui.sessionDeleteMode) {
+              toggleSessionDeleteTarget(i);
+              return;
+            }
+            saveActiveSlotToStore();
+            state.ui.selectedSessionNumber = i;
+            loadActiveSlotFromStore({ createIfMissing: false });
+            openSelectedSession();
+          });
 
-        item.appendChild(btn);
-        refs.sessionButtonsRow.appendChild(item);
+          item.appendChild(btn);
+          refs.sessionButtonsRow.appendChild(item);
+        }
       }
 
       refs.classButtonsRow.innerHTML = "";
       if (!state.classes.length) {
         refs.classButtonsRow.innerHTML = '<span class="mini">Aucune classe créée pour le moment.</span>';
       } else {
-        if (!state.ui.selectedClassId || !state.classes.some((c) => c.id === state.ui.selectedClassId)) {
-          state.ui.selectedClassId = state.classes[0].id;
-        }
         for (const classe of state.classes) {
           const item = document.createElement("div");
           item.className = "class-choice-item";
@@ -3125,6 +3793,7 @@
           btn.addEventListener("click", () => {
             saveActiveSlotToStore();
             state.ui.selectedClassId = classe.id;
+            syncSelectedSessionNumberToClass(classe.id);
             state.ui.setupStep = "sessions";
             state.ui.sessionDeleteMode = false;
             state.ui.sessionDeleteTargets = [];
@@ -3158,9 +3827,13 @@
       const key = selectedClass ? getSessionSlotKey(selectedClass.id, state.ui.selectedSessionNumber) : null;
       const slot = key ? state.classSessions[key] : null;
       const count = slot && Array.isArray(slot.students) ? slot.students.length : 0;
-      refs.selectedSessionLabel.textContent = selectedClass
-        ? `Classe : ${selectedClass.name} - Séance sélectionnée : ${state.ui.selectedSessionNumber}`
-        : `Séance sélectionnée : ${state.ui.selectedSessionNumber}`;
+      if (!isClassStep && selectedClass) {
+        refs.selectedSessionLabel.textContent = `Classe : ${selectedClass.name}`;
+        refs.selectedSessionLabel.classList.remove("view-hidden");
+      } else {
+        refs.selectedSessionLabel.textContent = "";
+        refs.selectedSessionLabel.classList.add("view-hidden");
+      }
       if (isClassStep) {
         if (selectedClass) {
           refs.setupSummary.textContent = "";
@@ -3188,6 +3861,16 @@
     }
 
     function enableSessionDeleteMode() {
+      const selectedClass = getSelectedClass();
+      if (!selectedClass) {
+        notify("Choisissez une classe d'abord.", "warn");
+        return;
+      }
+      const visibleSessions = getVisibleSessionNumbersForClass(selectedClass.id);
+      if (!visibleSessions.length) {
+        notify("Aucune séance affichée à supprimer.", "warn");
+        return;
+      }
       const ok = window.confirm(
         "Activer le mode suppression des séances ?\n\n" +
         "Vous pourrez ensuite sélectionner les séances à supprimer."
@@ -3200,9 +3883,12 @@
 
     function toggleSelectAllSessionsForDelete() {
       if (!state.ui.sessionDeleteMode) return;
-      const allSessions = Array.from({ length: MAX_SESSIONS }, (_, index) => index + 1);
-      const hasAllSelected = state.ui.sessionDeleteTargets.length === allSessions.length;
-      state.ui.sessionDeleteTargets = hasAllSelected ? [] : [...allSessions];
+      const selectedClass = getSelectedClass();
+      if (!selectedClass) return;
+      const visibleSessions = getVisibleSessionNumbersForClass(selectedClass.id);
+      const hasAllSelected = visibleSessions.length > 0
+        && visibleSessions.every((n) => state.ui.sessionDeleteTargets.includes(n));
+      state.ui.sessionDeleteTargets = hasAllSelected ? [] : [...visibleSessions];
       renderSetupView();
     }
 
@@ -3219,7 +3905,9 @@
         return;
       }
 
-      const targets = Array.isArray(sessionNumbers) ? sessionNumbers : [sessionNumbers];
+      const visibleSessions = getVisibleSessionNumbersForClass(selectedClass.id);
+      const targets = (Array.isArray(sessionNumbers) ? sessionNumbers : [sessionNumbers])
+        .filter((n) => visibleSessions.includes(n));
       if (!targets.length) {
         notify("Sélectionnez au moins une séance à supprimer.", "warn");
         return;
@@ -3242,10 +3930,19 @@
         const key = getSessionSlotKey(selectedClass.id, sessionNumber);
         delete state.classSessions[key];
         if (state.slotConfigs && state.slotConfigs[key]) delete state.slotConfigs[key];
-        if (state.ui.selectedSessionNumber === sessionNumber) {
-          state.session = { running: false, elapsedMs: 0, lastStartTs: null };
-          state.students = [];
-        }
+      }
+
+      compactClassSessionsForClass(selectedClass.id);
+
+      const remainingVisible = getVisibleSessionNumbersForClass(selectedClass.id);
+      if (!remainingVisible.length) {
+        state.ui.selectedSessionNumber = 1;
+        state.session = createEmptySessionData();
+        state.students = [];
+      } else {
+        const maxVisible = remainingVisible[remainingVisible.length - 1];
+        state.ui.selectedSessionNumber = Math.min(state.ui.selectedSessionNumber, maxVisible);
+        loadActiveSlotFromStore({ createIfMissing: false });
       }
       if (refs.assignDialog.open) refs.assignDialog.close();
       state.ui.sessionDeleteMode = false;
@@ -3261,16 +3958,22 @@
         notify("Choisissez une classe d'abord.", "warn");
         return;
       }
-      const ok = window.confirm(`Créer une nouvelle séance vide pour ${selectedClass.name} - Séance ${state.ui.selectedSessionNumber} ?`);
-      if (!ok) return;
-      state.session = { running: false, elapsedMs: 0, lastStartTs: null };
+      compactClassSessionsForClass(selectedClass.id);
+      const existing = getVisibleSessionNumbersForClass(selectedClass.id);
+      const nextSessionNumber = existing.length ? Math.max(...existing) + 1 : 1;
+      state.ui.selectedSessionNumber = nextSessionNumber;
+      const key = getSessionSlotKey(selectedClass.id, nextSessionNumber);
+      state.classSessions[key] = {
+        session: createEmptySessionData(),
+        students: []
+      };
+      state.session = createEmptySessionData();
       state.students = [];
-      const activeSlotKey = getSessionSlotKey(selectedClass.id, state.ui.selectedSessionNumber);
-      state.slotConfigs[activeSlotKey] = { autoCorrectionEnabled: false, answerKeys: {} };
+      state.slotConfigs[key] = { autoCorrectionEnabled: false, answerKeys: {}, beaconLabelsByNumber: {} };
       state.ui.sessionAutoCorrectionEnabled = false;
       saveActiveSlotToStore();
       saveState();
-      notify("Nouvelle séance créée.", "success");
+      notify(`Nouvelle séance ${nextSessionNumber} créée.`, "success");
       renderSetupView();
     }
 
@@ -3306,6 +4009,7 @@
     }
 
     function backToSessions() {
+      if (!ensureTeacherActionAuthorized("revenir au menu des séances", "backToSessions")) return;
       saveActiveSlotToStore();
       state.ui.appView = "setup";
       state.ui.setupStep = "sessions";
@@ -3322,6 +4026,7 @@
 
     /** Depuis le cœur de séance : retour au paramétrage (pas au menu choix de séances). */
     function backFromCoreToSessionSetup() {
+      if (!ensureTeacherActionAuthorized("revenir au paramétrage de la séance", "backFromCoreToSessionSetup")) return;
       saveActiveSlotToStore();
       state.ui.appView = "workspace";
       state.ui.sessionWorkspaceStep = "setup";
@@ -3365,6 +4070,7 @@
         : `Résumé : Séance ${state.ui.selectedSessionNumber} et élèves prêts : ${presentCount}`;
       refs.sessionAutoCorrectionSelect.value = state.ui.sessionAutoCorrectionEnabled ? "yes" : "no";
       refs.configureAutoCorrectionBtn.classList.toggle("view-hidden", !state.ui.sessionAutoCorrectionEnabled);
+      refs.changeTeacherCodeBtn.classList.toggle("view-hidden", !state.ui.sessionAutoCorrectionEnabled);
       const slotConfig = getActiveSlotConfig(false);
       const answerCount = slotConfig && slotConfig.answerKeys ? Object.keys(slotConfig.answerKeys).length : 0;
       refs.sessionAutoCorrectionHint.textContent = state.ui.sessionAutoCorrectionEnabled
@@ -3435,6 +4141,26 @@
 
     function startGlobalTimer() {
       if (state.session.running) return;
+      const resumedStudents = resumePausedStudentRunTimers();
+      if (resumedStudents > 0) {
+        state.session.running = true;
+        state.session.lastStartTs = Date.now();
+        saveState();
+        notify(`${resumedStudents} élève(s) relancé(s) depuis la pause.`, "success");
+        render();
+        return;
+      }
+      const studentsMissingAssignment = getStudentsMissingAssignedCourseForStart();
+      if (studentsMissingAssignment.length) {
+        const names = studentsMissingAssignment.map((student) => getStudentDisplayName(student));
+        const preview = names.slice(0, 4).join(", ");
+        const suffix = names.length > 4 ? ` (+${names.length - 4})` : "";
+        notify(
+          `Impossible de démarrer : attribuez un parcours à tous les élèves présents. Manquant(s) : ${preview}${suffix}.`,
+          "warn"
+        );
+        return;
+      }
       state.session.running = true;
       state.session.lastStartTs = Date.now();
       const preferredColor = getGroupLaunchPreferredColor();
@@ -3495,6 +4221,7 @@
     }
 
     function pauseGlobalTimer() {
+      if (!ensureTeacherActionAuthorized("mettre en pause le chrono", "pauseGlobalTimer")) return;
       const wasRunning = state.session.running;
       const pausedStudents = pauseAllStudentRunTimers();
       if (!wasRunning && pausedStudents === 0) return;
@@ -3526,8 +4253,23 @@
       return pausedCount;
     }
 
+    function resumePausedStudentRunTimers() {
+      let resumedCount = 0;
+      for (const student of state.students) {
+        if (!student.currentRun || !student.currentRun.isPaused) continue;
+        const run = student.currentRun;
+        const elapsed = Math.max(0, Number(run.pausedElapsedMs) || 0);
+        run.startTs = Date.now() - elapsed;
+        run.pausedElapsedMs = 0;
+        run.isPaused = false;
+        resumedCount += 1;
+      }
+      return resumedCount;
+    }
+
     /** Arrête le chrono séance et tous les chronos élèves en parcours ; ne valide ni n’annule les parcours en cours. */
     function endSessionFin() {
+      if (!ensureTeacherActionAuthorized("mettre fin à la chronométrie de la séance", "endSessionFin")) return;
       const ok = window.confirm(
         "Mettre fin à la chronométrie de la séance ?\n\n" +
         "Le chrono général et les chronos des élèves en parcours seront mis en pause. " +
@@ -3551,6 +4293,7 @@
     }
 
     function resetGlobalTimer() {
+      if (!ensureTeacherActionAuthorized("remettre à zéro le chrono général", "resetGlobalTimer")) return;
       const ok = window.confirm("Confirmer la remise à zéro du chrono général ?");
       if (!ok) return;
       let stoppedRuns = 0;
@@ -3628,6 +4371,7 @@
     }
 
     function resetApplicationData() {
+      if (!ensureTeacherActionAuthorized("réinitialiser la séance", "resetApplicationData")) return;
       const totalStudents = state.students.length;
       const totalResults = state.students.reduce((acc, s) => acc + s.history.length, 0);
       const ok = window.confirm(
@@ -3770,22 +4514,77 @@
       render();
     }
 
+    function getPreparedStudents() {
+      return state.students
+        .filter((student) => Boolean(student.pendingRun))
+        .sort((a, b) => getStudentDisplayName(a).localeCompare(getStudentDisplayName(b), "fr", { sensitivity: "base" }));
+    }
+
     function resetPreparedChoices() {
-      const preparedCount = state.students.filter((student) => Boolean(student.pendingRun)).length;
-      const ok = window.confirm(
-        `Réinitialiser ${preparedCount} choix préparé(s) ?\n\n` +
-        `Les parcours en cours ne seront pas arrêtés.`
-      );
-      if (!ok) return;
+      if (!ensureTeacherActionAuthorized("réinitialiser les choix préparés", "resetPreparedChoices")) return;
+      const preparedCount = getPreparedStudents().length;
       if (!preparedCount) {
         notify("Aucun choix préparé à réinitialiser.", "warn");
         return;
       }
-      for (const student of state.students) {
+      state.ui.coreResetChoicesMode = true;
+      state.ui.coreResetChoiceTargets = [];
+      saveState();
+      notify("Mode reset choix actif : cliquez sur les blocs à réinitialiser.", "info");
+      render();
+    }
+
+    function cancelCoreResetChoicesMode(options = {}) {
+      const { silent = false } = options;
+      if (!state.ui.coreResetChoicesMode && !state.ui.coreResetChoiceTargets.length) return;
+      state.ui.coreResetChoicesMode = false;
+      state.ui.coreResetChoiceTargets = [];
+      saveState();
+      if (!silent) notify("Reset choix annulé.", "info");
+      render();
+    }
+
+    function toggleCoreResetChoiceTarget(studentId) {
+      if (!state.ui.coreResetChoicesMode) return;
+      const student = getStudentById(studentId);
+      if (!student || !student.pendingRun) return;
+      const targets = new Set(state.ui.coreResetChoiceTargets);
+      if (targets.has(studentId)) targets.delete(studentId);
+      else targets.add(studentId);
+      state.ui.coreResetChoiceTargets = [...targets];
+      renderTop();
+      renderCoreStudentsPanel();
+    }
+
+    function selectAllCoreResetChoiceTargets() {
+      if (!state.ui.coreResetChoicesMode) return;
+      state.ui.coreResetChoiceTargets = getPreparedStudents().map((student) => student.id);
+      renderTop();
+      renderCoreStudentsPanel();
+    }
+
+    function applyCoreResetChoiceTargets() {
+      if (!state.ui.coreResetChoicesMode) return;
+      if (!state.ui.coreResetChoiceTargets.length) {
+        notify("Sélectionnez au moins un élève.", "warn");
+        return;
+      }
+      let cleared = 0;
+      for (const studentId of state.ui.coreResetChoiceTargets) {
+        const student = getStudentById(studentId);
+        if (!student || !student.pendingRun) continue;
         student.pendingRun = null;
+        cleared += 1;
+      }
+      if (!cleared) {
+        notify("Aucun choix préparé à réinitialiser.", "warn");
+        cancelCoreResetChoicesMode({ silent: true });
+        return;
       }
       saveState();
-      notify("Choix préparés remis à zéro.", "warn");
+      notify(`${cleared} choix préparé(s) réinitialisé(s).`, "warn");
+      state.ui.coreResetChoicesMode = false;
+      state.ui.coreResetChoiceTargets = [];
       render();
     }
 
@@ -4052,6 +4851,7 @@
           hasDoneNumber(student, course.number) ||
           (pickWhileCurrentRun && student.currentRun && student.currentRun.number === course.number);
         const busy = occupied.has(course.id);
+        const classDone = isCourseDoneByClass(course.id);
         const allowed = pickWhileCurrentRun ? canPickFollowUpCourse(student, course) : canAssignCourse(student, course);
         const tile = createCourseTile(course, {
           busy,
@@ -4062,6 +4862,8 @@
           ? "Numéro déjà réalisé ou identique au parcours en cours."
           : busy
             ? "Parcours déjà réservé par un autre élève."
+            : classDone
+              ? "Parcours déjà validé dans cette classe (verrouillé)."
             : prepForThisStudent
               ? "Cliquer pour préparer ce parcours"
               : pickWhileCurrentRun
@@ -4089,8 +4891,6 @@
           highlightSelection: false,
           onSelect: () => {}
         });
-        refs.successPickCourseGrid.innerHTML = "";
-        if (refs.successPickColorArrows) refs.successPickColorArrows.innerHTML = "";
         return;
       }
       refs.successTitle.textContent = `Parcours réussi : ${getStudentDisplayName(student)} (${student.currentRun.number} ${student.currentRun.colorLabel})`;
@@ -4106,40 +4906,16 @@
           state.ui.successFaultPadTouched = true;
           state.ui.successErrorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, n));
           refs.successErrorCount.textContent = String(state.ui.successErrorCount);
-          if (state.ui.successSelectedCourseId) tryAutoSuccessWithFollowCourse();
-          else renderSuccessDialog();
+          tryAutoSuccessWithFollowCourse();
         }
       });
-      populateOutcomeColorSelect(refs.successPickColorFilter, state.ui.successPickColorFilter);
-      state.ui.successPickColorFilter = refs.successPickColorFilter.value;
-      renderOutcomeColorArrows("success");
-      renderOutcomeCoursePickerGrid(
-        refs.successPickCourseGrid,
-        studentId,
-        state.ui.successPickColorFilter,
-        state.ui.successSelectedCourseId,
-        (courseId) => {
-          state.ui.successSelectedCourseId = courseId;
-          if (state.ui.successFaultPadTouched) tryAutoSuccessWithFollowCourse();
-          else renderSuccessDialog();
-        },
-        { pickWhileCurrentRun: true }
-      );
     }
 
     function tryAutoSuccessWithFollowCourse() {
-      if (!state.ui.successFaultPadTouched || !state.ui.successSelectedCourseId) return;
+      if (!state.ui.successFaultPadTouched) return;
       const studentId = state.ui.selectedStudentForSuccessDialog;
       const student = getStudentById(studentId);
       if (!student || !student.currentRun) return;
-      const courseId = state.ui.successSelectedCourseId;
-      const course = ALL_COURSES.find((c) => c.id === courseId);
-      if (!course || !canPickFollowUpCourse(student, course)) {
-        notify("Ce parcours n'est pas disponible. Choisissez-en un autre dans la grille.", "warn");
-        state.ui.successSelectedCourseId = null;
-        renderSuccessDialog();
-        return;
-      }
       const errorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.successErrorCount) || 0));
       state.ui.successErrorCount = errorCount;
       validateRun(studentId, { proposeNext: false, outcome: "success", errorCount });
@@ -4148,11 +4924,7 @@
         closeSuccessDialog();
         return;
       }
-      const prep = shouldUsePrepModeForStudent(refreshed);
-      const ok = sendStudentOnCourse(studentId, courseId, { prepareOnly: prep });
-      if (!ok) {
-        notify("Impossible d'envoyer sur ce parcours après validation. Utilisez « Choisir parcours » sur la fiche élève.", "warn");
-      }
+      tryAutoAssignNextCourseForStudent(studentId);
       closeSuccessDialog();
     }
 
@@ -4300,12 +5072,14 @@
     }
 
     function openSummaryView() {
+      if (!ensureTeacherActionAuthorized("afficher le résumé des élèves", "openSummaryView")) return;
       state.ui.sessionWorkspaceStep = "summary";
       render();
       renderSummaryPanel();
     }
 
     function backToCoreFromSummary() {
+      if (!ensureTeacherActionAuthorized("revenir au cœur de séance", "backToCoreFromSummary")) return;
       state.ui.sessionWorkspaceStep = "core";
       render();
     }
@@ -4434,8 +5208,6 @@
           highlightSelection: false,
           onSelect: () => {}
         });
-        refs.failurePickCourseGrid.innerHTML = "";
-        if (refs.failurePickColorArrows) refs.failurePickColorArrows.innerHTML = "";
         return;
       }
       refs.failureTitle.textContent = `Échec : ${getStudentDisplayName(student)} (${student.currentRun.number} ${student.currentRun.colorLabel})`;
@@ -4455,7 +5227,7 @@
           state.ui.failureErrorPadTouched = true;
           state.ui.failureErrorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, n));
           refs.failureErrorCount.textContent = String(state.ui.failureErrorCount);
-          if (state.ui.failureBeaconPadTouched && state.ui.failureSelectedCourseId) tryAutoFailureWithFollowCourse();
+          if (state.ui.failureBeaconPadTouched) tryAutoFailureWithFollowCourse();
           else renderFailureDialog();
         }
       });
@@ -4468,42 +5240,19 @@
           state.ui.failureBeaconPadTouched = true;
           state.ui.failureBeaconCount = Math.max(0, Math.min(beaconMax, n));
           refs.failureBeaconCount.textContent = String(state.ui.failureBeaconCount);
-          if (state.ui.failureErrorPadTouched && state.ui.failureSelectedCourseId) tryAutoFailureWithFollowCourse();
+          if (state.ui.failureErrorPadTouched) tryAutoFailureWithFollowCourse();
           else renderFailureDialog();
         }
       });
-      populateOutcomeColorSelect(refs.failurePickColorFilter, state.ui.failurePickColorFilter);
-      state.ui.failurePickColorFilter = refs.failurePickColorFilter.value;
-      renderOutcomeColorArrows("failure");
-      renderOutcomeCoursePickerGrid(
-        refs.failurePickCourseGrid,
-        studentId,
-        state.ui.failurePickColorFilter,
-        state.ui.failureSelectedCourseId,
-        (courseId) => {
-          state.ui.failureSelectedCourseId = courseId;
-          if (state.ui.failureErrorPadTouched && state.ui.failureBeaconPadTouched) tryAutoFailureWithFollowCourse();
-          else renderFailureDialog();
-        },
-        { pickWhileCurrentRun: true }
-      );
     }
 
     function tryAutoFailureWithFollowCourse() {
-      if (!state.ui.failureErrorPadTouched || !state.ui.failureBeaconPadTouched || !state.ui.failureSelectedCourseId) {
+      if (!state.ui.failureErrorPadTouched || !state.ui.failureBeaconPadTouched) {
         return;
       }
       const studentId = state.ui.selectedStudentForFailureDialog;
       const student = getStudentById(studentId);
       if (!student || !student.currentRun) return;
-      const courseId = state.ui.failureSelectedCourseId;
-      const course = ALL_COURSES.find((c) => c.id === courseId);
-      if (!course || !canPickFollowUpCourse(student, course)) {
-        notify("Ce parcours n'est pas disponible. Choisissez-en un autre dans la grille.", "warn");
-        state.ui.failureSelectedCourseId = null;
-        renderFailureDialog();
-        return;
-      }
       const errorCount = Math.min(OUTCOME_ERR_MAX, Math.max(0, Number(state.ui.failureErrorCount) || 0));
       const beaconFoundCount = Math.max(
         0,
@@ -4522,11 +5271,7 @@
         closeFailureDialog();
         return;
       }
-      const prep = shouldUsePrepModeForStudent(refreshed);
-      const ok = sendStudentOnCourse(studentId, courseId, { prepareOnly: prep });
-      if (!ok) {
-        notify("Impossible d'envoyer sur ce parcours après validation. Utilisez « Choisir parcours » sur la fiche élève.", "warn");
-      }
+      tryAutoAssignNextCourseForStudent(studentId);
       closeFailureDialog();
     }
 
@@ -4567,6 +5312,163 @@
       return Boolean(expected && expected.length && expected.every((code) => normalizeCode(code)));
     }
 
+    function readAutoCorrectionDomMaps() {
+      const inputs = refs.autoCorrectionConfigTableBody.querySelectorAll("[data-auto-course-id]");
+      if (!inputs.length) return null;
+      const courseCodeMap = new Map();
+      const numberLabelMap = new Map();
+      for (const input of inputs) {
+        const courseId = input.getAttribute("data-auto-course-id");
+        const beaconIndex = Number(input.getAttribute("data-auto-beacon-index"));
+        if (!courseId) continue;
+        if (!Number.isInteger(beaconIndex) || beaconIndex < 0 || beaconIndex >= state.ui.sessionBeaconCount) continue;
+        if (!courseCodeMap.has(courseId)) {
+          courseCodeMap.set(courseId, Array.from({ length: state.ui.sessionBeaconCount }, () => ""));
+        }
+        courseCodeMap.get(courseId)[beaconIndex] = String(input.value || "").trim();
+      }
+      const labelInputs = refs.autoCorrectionConfigTableBody.querySelectorAll("[data-auto-course-number]");
+      for (const input of labelInputs) {
+        const number = Number(input.getAttribute("data-auto-course-number"));
+        const beaconIndex = Number(input.getAttribute("data-auto-beacon-index"));
+        if (!Number.isInteger(number) || number < 1 || number > state.ui.sessionCourseCount) continue;
+        if (!Number.isInteger(beaconIndex) || beaconIndex < 0 || beaconIndex >= state.ui.sessionBeaconCount) continue;
+        if (!numberLabelMap.has(number)) {
+          numberLabelMap.set(number, Array.from({ length: state.ui.sessionBeaconCount }, (_, i) => String(i + 1)));
+        }
+        const label = String(input.value || "").trim();
+        numberLabelMap.get(number)[beaconIndex] = label || String(beaconIndex + 1);
+      }
+      return { courseCodeMap, numberLabelMap };
+    }
+
+    function applyAutoCorrectionMapsToCfg(cfg, maps) {
+      if (!cfg || !maps) return;
+      for (const [courseId, codes] of maps.courseCodeMap.entries()) {
+        cfg.answerKeys[courseId] = [...codes];
+      }
+      for (const [number, labels] of maps.numberLabelMap.entries()) {
+        cfg.beaconLabelsByNumber[String(number)] = [...labels];
+      }
+    }
+
+    function slotConfigHasAnswerOrLabelData(cfg) {
+      if (!cfg || typeof cfg !== "object") return false;
+      const keys = cfg.answerKeys && typeof cfg.answerKeys === "object" ? Object.keys(cfg.answerKeys) : [];
+      for (const courseId of keys) {
+        const arr = cfg.answerKeys[courseId];
+        if (Array.isArray(arr) && arr.some((c) => String(c || "").trim())) return true;
+      }
+      const bl = cfg.beaconLabelsByNumber && typeof cfg.beaconLabelsByNumber === "object"
+        ? Object.values(cfg.beaconLabelsByNumber)
+        : [];
+      for (const labels of bl) {
+        if (!Array.isArray(labels)) continue;
+        const defaults = (i) => String(i + 1);
+        if (labels.some((lab, i) => String(lab || "").trim() && String(lab || "").trim() !== defaults(i))) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function fillAutoCorrectionCopySessionSelect(classId) {
+      const sessSel = refs.autoCorrectionCopyTargetSession;
+      sessSel.innerHTML = "";
+      const activeKey = getActiveSlotKey();
+      const nums = getVisibleSessionNumbersForClass(classId);
+      for (const n of nums) {
+        const key = getSessionSlotKey(classId, n);
+        if (key === activeKey) continue;
+        const opt = document.createElement("option");
+        opt.value = String(n);
+        opt.textContent = `Séance ${n}`;
+        sessSel.appendChild(opt);
+      }
+      if (!sessSel.options.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Aucune autre séance (créez-en une dans le menu)";
+        opt.disabled = true;
+        sessSel.appendChild(opt);
+      }
+    }
+
+    function populateAutoCorrectionCopyTargets() {
+      const classSel = refs.autoCorrectionCopyTargetClass;
+      const sessSel = refs.autoCorrectionCopyTargetSession;
+      if (!classSel || !sessSel) return;
+      classSel.innerHTML = "";
+      for (const c of state.classes) {
+        const opt = document.createElement("option");
+        opt.value = c.id;
+        opt.textContent = c.name;
+        classSel.appendChild(opt);
+      }
+      if (!state.classes.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Aucune classe";
+        classSel.appendChild(opt);
+        sessSel.innerHTML = "";
+        return;
+      }
+
+      const curClassId = state.ui.selectedClassId;
+      const curSession = state.ui.selectedSessionNumber;
+      let pickClassId = curClassId;
+      if (pickClassId && state.classes.some((c) => c.id === pickClassId)) {
+        const othersSame = getVisibleSessionNumbersForClass(pickClassId).filter((n) => n !== curSession);
+        if (!othersSame.length) {
+          const alt = state.classes.find((c) => c.id !== pickClassId);
+          if (alt) pickClassId = alt.id;
+        }
+      } else {
+        pickClassId = state.classes[0].id;
+      }
+      classSel.value = pickClassId;
+      fillAutoCorrectionCopySessionSelect(pickClassId);
+      if (sessSel.options.length && !sessSel.options[0].disabled) {
+        sessSel.selectedIndex = 0;
+      }
+    }
+
+    function applyAutoCorrectionCopyToSelectedSlot() {
+      const maps = readAutoCorrectionDomMaps();
+      if (!maps) {
+        notify("Rien à copier : ouvrez le tableau (parcours / balises) ou vérifiez les paramètres.", "warn");
+        return;
+      }
+      const classId = refs.autoCorrectionCopyTargetClass && refs.autoCorrectionCopyTargetClass.value;
+      const sessionRaw = refs.autoCorrectionCopyTargetSession && refs.autoCorrectionCopyTargetSession.value;
+      const sessionNumber = Number(sessionRaw);
+      if (!classId || !Number.isInteger(sessionNumber) || sessionNumber < 1) {
+        notify("Choisissez une séance cible valide.", "warn");
+        return;
+      }
+      const slotKey = getSessionSlotKey(classId, sessionNumber);
+      const sourceKey = getActiveSlotKey();
+      if (slotKey === sourceKey) {
+        notify("Choisissez une autre séance que celle en cours d’édition.", "warn");
+        return;
+      }
+      const targetCfg = ensureSlotConfig(slotKey);
+      if (slotConfigHasAnswerOrLabelData(targetCfg)) {
+        const ok = window.confirm(
+          "La séance cible a déjà des codes ou libellés de balises. Les remplacer par ceux du tableau actuel ?"
+        );
+        if (!ok) return;
+      }
+      targetCfg.answerKeys = {};
+      targetCfg.beaconLabelsByNumber = {};
+      applyAutoCorrectionMapsToCfg(targetCfg, maps);
+      targetCfg.autoCorrectionEnabled = true;
+      saveState();
+      const classe = state.classes.find((c) => c.id === classId);
+      const label = classe ? `${classe.name} — Séance ${sessionNumber}` : `Séance ${sessionNumber}`;
+      notify(`Codes copiés vers ${label}. L’auto-correction y est activée.`, "success");
+    }
+
     function renderAutoCorrectionConfigDialog() {
       const sessionCourses = getSessionCourses();
       refs.autoCorrectionConfigTableBody.innerHTML = "";
@@ -4577,6 +5479,7 @@
 
       const configuredCourseIds = new Set();
       for (let number = 1; number <= state.ui.sessionCourseCount; number += 1) {
+        const beaconLabels = getBeaconLabelsForCourseNumber(number);
         const dividerRow = document.createElement("tr");
         dividerRow.className = "auto-config-course-divider";
         const rowHeader = document.createElement("th");
@@ -4591,7 +5494,14 @@
         for (let beaconIndex = 0; beaconIndex < state.ui.sessionBeaconCount; beaconIndex += 1) {
           const beaconRow = document.createElement("tr");
           const beaconLabel = document.createElement("th");
-          beaconLabel.textContent = `B${beaconIndex + 1}`;
+          const beaconLabelInput = document.createElement("input");
+          beaconLabelInput.type = "text";
+          beaconLabelInput.className = "auto-config-beacon-label-input";
+          beaconLabelInput.setAttribute("data-auto-course-number", String(number));
+          beaconLabelInput.setAttribute("data-auto-beacon-index", String(beaconIndex));
+          beaconLabelInput.placeholder = `Balise ${beaconIndex + 1}`;
+          beaconLabelInput.value = beaconLabels[beaconIndex] || String(beaconIndex + 1);
+          beaconLabel.appendChild(beaconLabelInput);
           beaconRow.appendChild(beaconLabel);
 
           for (const colorKey of VISUAL_COLOR_ORDER) {
@@ -4627,26 +5537,13 @@
     }
 
     function saveAutoCorrectionTableConfig() {
-      const cfg = getActiveSlotConfig(true);
-      const inputs = refs.autoCorrectionConfigTableBody.querySelectorAll("[data-auto-course-id]");
-      if (!inputs.length) {
+      const maps = readAutoCorrectionDomMaps();
+      if (!maps) {
         notify("Aucun parcours à enregistrer.", "warn");
         return;
       }
-      const courseCodeMap = new Map();
-      for (const input of inputs) {
-        const courseId = input.getAttribute("data-auto-course-id");
-        const beaconIndex = Number(input.getAttribute("data-auto-beacon-index"));
-        if (!courseId) continue;
-        if (!Number.isInteger(beaconIndex) || beaconIndex < 0 || beaconIndex >= state.ui.sessionBeaconCount) continue;
-        if (!courseCodeMap.has(courseId)) {
-          courseCodeMap.set(courseId, Array.from({ length: state.ui.sessionBeaconCount }, () => ""));
-        }
-        courseCodeMap.get(courseId)[beaconIndex] = String(input.value || "").trim();
-      }
-      for (const [courseId, codes] of courseCodeMap.entries()) {
-        cfg.answerKeys[courseId] = codes;
-      }
+      const cfg = getActiveSlotConfig(true);
+      applyAutoCorrectionMapsToCfg(cfg, maps);
       saveState();
       renderAutoCorrectionConfigDialog();
       notify("Tableau d'auto-correction enregistré.", "success");
@@ -4661,6 +5558,7 @@
       const cfg = getActiveSlotConfig(true);
       cfg.autoCorrectionEnabled = true;
       renderAutoCorrectionConfigDialog();
+      populateAutoCorrectionCopyTargets();
       refs.autoCorrectionConfigDialog.showModal();
     }
 
@@ -4698,14 +5596,130 @@
       return run.autoCorrectionDraft;
     }
 
-    function renderStudentAutoCodeInputs(initialValues = [], lockedFlags = []) {
+    function setActiveStudentAutoInput(targetInput) {
+      if (!targetInput || targetInput.readOnly) return false;
+      const allInputs = refs.studentAutoCodesGrid.querySelectorAll(".student-auto-code-input");
+      for (const input of allInputs) input.classList.remove("is-active");
+      targetInput.classList.add("is-active");
+      const idx = Number(targetInput.getAttribute("data-student-auto-beacon-index"));
+      state.ui.selectedStudentAutoInputIndex = Number.isInteger(idx) && idx >= 0 ? idx : 0;
+      return true;
+    }
+
+    function focusFirstEditableStudentAutoInput() {
+      const allInputs = refs.studentAutoCodesGrid.querySelectorAll(".student-auto-code-input");
+      for (const input of allInputs) {
+        if (input.readOnly) continue;
+        if (setActiveStudentAutoInput(input)) {
+          input.focus();
+          return input;
+        }
+      }
+      return null;
+    }
+
+    function getActiveStudentAutoInput() {
+      const active = refs.studentAutoCodesGrid.querySelector(".student-auto-code-input.is-active");
+      if (active && !active.readOnly) return active;
+      return focusFirstEditableStudentAutoInput();
+    }
+
+    function focusNextEditableStudentAutoInput(fromIndex) {
+      const allInputs = refs.studentAutoCodesGrid.querySelectorAll(".student-auto-code-input");
+      for (let i = fromIndex + 1; i < allInputs.length; i += 1) {
+        const input = allInputs[i];
+        if (input.readOnly) continue;
+        if (setActiveStudentAutoInput(input)) {
+          input.focus();
+          return input;
+        }
+      }
+      return null;
+    }
+
+    function applyStudentAutoKeyToInput(key) {
+      const target = getActiveStudentAutoInput();
+      if (!target) return;
+      if (key === "BACKSPACE") {
+        target.value = target.value.slice(0, -1);
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+      }
+      if (key === "CLEAR") {
+        target.value = "";
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+      }
+      if (!/^[A-Z0-9]$/.test(key)) return;
+      target.value = `${target.value}${key}`.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3);
+      target.dispatchEvent(new Event("input", { bubbles: true }));
+      if (target.value.length >= 3) {
+        const idx = Number(target.getAttribute("data-student-auto-beacon-index"));
+        if (Number.isInteger(idx) && idx >= 0) focusNextEditableStudentAutoInput(idx);
+      }
+    }
+
+    function renderStudentAutoKeypad() {
+      refs.studentAutoKeypad.innerHTML = "";
+      const row1 = document.createElement("div");
+      row1.className = "student-auto-keypad-row";
+      for (const key of ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "student-auto-key";
+        btn.textContent = key;
+        btn.addEventListener("click", () => applyStudentAutoKeyToInput(key));
+        row1.appendChild(btn);
+      }
+      const backBtn = document.createElement("button");
+      backBtn.type = "button";
+      backBtn.className = "student-auto-key student-auto-key-action student-auto-key-side";
+      backBtn.textContent = "⌫";
+      backBtn.addEventListener("click", () => applyStudentAutoKeyToInput("BACKSPACE"));
+      row1.appendChild(backBtn);
+      refs.studentAutoKeypad.appendChild(row1);
+
+      const row2 = document.createElement("div");
+      row2.className = "student-auto-keypad-row";
+      for (const key of ["A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P"]) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "student-auto-key";
+        btn.textContent = key;
+        btn.addEventListener("click", () => applyStudentAutoKeyToInput(key));
+        row2.appendChild(btn);
+      }
+      const clearBtn = document.createElement("button");
+      clearBtn.type = "button";
+      clearBtn.className = "student-auto-key student-auto-key-action student-auto-key-side";
+      clearBtn.textContent = "Effacer case";
+      clearBtn.addEventListener("click", () => applyStudentAutoKeyToInput("CLEAR"));
+      row2.appendChild(clearBtn);
+      refs.studentAutoKeypad.appendChild(row2);
+
+      for (const rowKeys of [["Q", "S", "D", "F", "G", "H", "J", "K", "L", "M"], ["W", "X", "C", "V", "B", "N"]]) {
+        const row = document.createElement("div");
+        row.className = "student-auto-keypad-row";
+        for (const key of rowKeys) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "student-auto-key";
+          btn.textContent = key;
+          btn.addEventListener("click", () => applyStudentAutoKeyToInput(key));
+          row.appendChild(btn);
+        }
+        refs.studentAutoKeypad.appendChild(row);
+      }
+    }
+
+    function renderStudentAutoCodeInputs(initialValues = [], lockedFlags = [], beaconLabels = []) {
       refs.studentAutoCodesGrid.innerHTML = "";
       for (let i = 0; i < state.ui.sessionBeaconCount; i += 1) {
         const row = document.createElement("div");
         row.className = "student-auto-code-row";
         const label = document.createElement("span");
         label.className = "student-auto-code-label";
-        label.textContent = `B${i + 1}`;
+        label.textContent = String(beaconLabels[i] || `B${i + 1}`);
         const input = document.createElement("input");
         input.type = "text";
         input.className = "student-auto-code-input";
@@ -4713,18 +5727,34 @@
         input.placeholder = `Code B${i + 1}`;
         input.value = initialValues[i] || "";
         input.autocapitalize = "characters";
+        input.inputMode = "none";
+        input.autocomplete = "off";
+        input.maxLength = 3;
         const isLocked = Boolean(lockedFlags[i]);
         if (isLocked) {
           input.classList.add("is-ok");
           input.readOnly = true;
+          input.setAttribute("readonly", "readonly");
         }
         input.addEventListener("input", () => {
           if (input.readOnly) return;
+          input.value = String(input.value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3);
           input.classList.remove("is-ko");
+          if (input.value.length >= 3) {
+            const idx = Number(input.getAttribute("data-student-auto-beacon-index"));
+            if (Number.isInteger(idx) && idx >= 0) focusNextEditableStudentAutoInput(idx);
+          }
         });
+        input.addEventListener("focus", () => setActiveStudentAutoInput(input));
+        input.addEventListener("click", () => setActiveStudentAutoInput(input));
         row.appendChild(label);
         row.appendChild(input);
         refs.studentAutoCodesGrid.appendChild(row);
+      }
+      const allInputs = refs.studentAutoCodesGrid.querySelectorAll(".student-auto-code-input");
+      const preferred = allInputs[state.ui.selectedStudentAutoInputIndex] || null;
+      if (!preferred || !setActiveStudentAutoInput(preferred)) {
+        focusFirstEditableStudentAutoInput();
       }
     }
 
@@ -4738,17 +5768,22 @@
         return;
       }
       const draft = getStudentAutoCorrectionDraft(student);
+      const beaconLabels = getBeaconLabelsForCourseNumber(student.currentRun.number);
       state.ui.selectedStudentForAutoCorrectionDialog = student.id;
+      state.ui.selectedStudentAutoInputIndex = 0;
       refs.studentAutoCorrectionTitle.textContent = `Auto-correction : ${getStudentDisplayName(student)}`;
       refs.studentAutoCorrectionInfo.textContent = `Parcours ${courseLabel} - ${state.ui.sessionBeaconCount} balises attendues (dans l'ordre).`;
-      renderStudentAutoCodeInputs(draft ? draft.values : [], draft ? draft.locked : []);
+      renderStudentAutoKeypad();
+      renderStudentAutoCodeInputs(draft ? draft.values : [], draft ? draft.locked : [], beaconLabels);
       refs.studentAutoCorrectionResults.innerHTML = "";
       refs.studentAutoCorrectionDialog.showModal();
     }
 
     function closeStudentAutoCorrectionDialog() {
       state.ui.selectedStudentForAutoCorrectionDialog = null;
+      state.ui.selectedStudentAutoInputIndex = 0;
       refs.studentAutoCodesGrid.innerHTML = "";
+      refs.studentAutoKeypad.innerHTML = "";
       refs.studentAutoCorrectionResults.innerHTML = "";
       if (refs.studentAutoCorrectionDialog.open) refs.studentAutoCorrectionDialog.close();
     }
@@ -4831,11 +5866,13 @@
             targetInput.classList.remove("is-ko");
             targetInput.classList.add("is-ok");
             targetInput.readOnly = true;
+            targetInput.setAttribute("readonly", "readonly");
           } else {
             targetInput.value = "";
             targetInput.classList.remove("is-ok");
             targetInput.classList.add("is-ko");
             targetInput.readOnly = false;
+            targetInput.removeAttribute("readonly");
           }
         }
         if (draft) {
@@ -4852,6 +5889,7 @@
       }
       saveState();
       if (okCount !== state.ui.sessionBeaconCount) {
+        focusFirstEditableStudentAutoInput();
         notify(`${okCount}/${state.ui.sessionBeaconCount} balises correctes.`, "warn");
         return;
       }
@@ -4908,17 +5946,41 @@
       if (refs.coreGroupColorSelect.value !== state.ui.groupLaunchColor) {
         refs.coreGroupColorSelect.value = state.ui.groupLaunchColor;
       }
-      const hasPreparedChoices = state.students.some((student) => Boolean(student.pendingRun));
-      refs.coreResetChoicesBtn.disabled = !hasPreparedChoices;
+      const preparedStudents = getPreparedStudents();
+      const preparedIds = new Set(preparedStudents.map((student) => student.id));
+      state.ui.coreResetChoiceTargets = state.ui.coreResetChoiceTargets.filter((id) => preparedIds.has(id));
+      if (!preparedStudents.length) {
+        state.ui.coreResetChoicesMode = false;
+      }
+      const isResetMode = state.ui.coreResetChoicesMode;
+      const selectedCount = state.ui.coreResetChoiceTargets.length;
+
+      refs.coreResetChoicesBtn.disabled = !preparedStudents.length;
+      refs.coreResetChoicesBtn.classList.toggle("view-hidden", isResetMode);
+      refs.coreGroupColorSelect.classList.toggle("view-hidden", isResetMode);
+      refs.corePrepModeBtn.classList.toggle("view-hidden", true);
+      refs.coreApplyResetChoicesBtn.classList.toggle("view-hidden", !isResetMode);
+      refs.coreSelectAllResetChoicesBtn.classList.toggle("view-hidden", !isResetMode);
+      refs.coreCancelResetChoicesBtn.classList.toggle("view-hidden", !isResetMode);
+      refs.coreActionsRow.classList.toggle("core-actions-reset-mode", isResetMode);
+      refs.coreApplyResetChoicesBtn.disabled = selectedCount === 0;
+      refs.coreSelectAllResetChoicesBtn.disabled = preparedStudents.length === 0;
+      refs.coreApplyResetChoicesBtn.textContent = selectedCount > 0
+        ? `Valider reset (${selectedCount})`
+        : "Valider reset choix";
       applyCoreGroupColorSelectStyle();
     }
 
     function createCoreStudentCard(student) {
       const card = document.createElement("article");
       card.className = "student-card";
+      card.dataset.studentId = student.id;
 
       const isActive = Boolean(student.currentRun);
       const isPrepared = !isActive && Boolean(student.pendingRun);
+      const isResetMode = state.ui.coreResetChoicesMode;
+      const canSelectForReset = isResetMode && isPrepared;
+      const isSelectedForReset = canSelectForReset && state.ui.coreResetChoiceTargets.includes(student.id);
       const isPaused = isActive && Boolean(student.currentRun.isPaused);
       const statusClass = isPaused ? "badge-idle" : (isActive ? "b-running" : (isPrepared ? "badge-idle" : "b-ready"));
       const statusLabel = isPaused ? "En pause" : (isActive ? "En action" : (isPrepared ? "Préparé" : "Disponible"));
@@ -4938,7 +6000,17 @@
         <div class="mini" data-core-timer="${student.id}">${isActive ? formatMs(getCurrentRunElapsedMs(student.currentRun)) : (isPrepared ? "En attente départ groupé" : "--:--:--")}</div>
         <div class="mini">${detailText}</div>
       `;
-      if (isActive && state.ui.sessionAutoCorrectionEnabled) {
+      if (canSelectForReset) card.classList.add("core-reset-choice-selectable");
+      if (isSelectedForReset) card.classList.add("core-reset-choice-selected");
+
+      if (isResetMode) {
+        card.addEventListener("click", () => {
+          if (!canSelectForReset) return;
+          toggleCoreResetChoiceTarget(student.id);
+        });
+      }
+
+      if (!isResetMode && isActive && state.ui.sessionAutoCorrectionEnabled) {
         const nameNode = card.querySelector(".name");
         if (nameNode) {
           nameNode.style.cursor = "pointer";
@@ -4949,6 +6021,15 @@
 
       const actions = document.createElement("div");
       actions.className = "actions";
+      if (isResetMode) {
+        const info = document.createElement("div");
+        info.className = "mini";
+        info.textContent = isPrepared
+          ? (isSelectedForReset ? "Sélectionné pour reset" : "Cliquer le bloc pour sélectionner")
+          : "Aucun choix préparé";
+        card.appendChild(info);
+        return card;
+      }
 
       if (isActive) {
         if (!state.ui.sessionAutoCorrectionEnabled) {
@@ -5010,6 +6091,19 @@
 
       for (const student of presentStudents) {
         refs.coreStudentsGrid.appendChild(createCoreStudentCard(student));
+      }
+      fitCoreActionButtonsSingleLine();
+    }
+
+    function fitCoreActionButtonsSingleLine() {
+      const buttons = refs.coreStudentsGrid.querySelectorAll(".actions .btn");
+      for (const btn of buttons) {
+        btn.style.fontSize = "0.72rem";
+        let px = 11.5;
+        while (btn.scrollWidth > btn.clientWidth && px > 9) {
+          px -= 0.3;
+          btn.style.fontSize = `${px}px`;
+        }
       }
     }
 
@@ -5366,6 +6460,7 @@
       for (const course of filtered) {
         const blockedByNumber = hasDoneNumber(student, course.number);
         const busy = occupied.has(course.id);
+        const classDone = isCourseDoneByClass(course.id);
         const allowed = canAssignCourse(student, course);
         const tile = createCourseTile(course, {
           busy,
@@ -5376,6 +6471,8 @@
           ? "Numéro déjà réalisé par cet élève."
           : busy
             ? "Parcours déjà réservé par un autre élève."
+            : classDone
+              ? "Parcours déjà validé dans cette classe (verrouillé)."
             : (prepForThisStudent ? "Cliquer pour préparer" : "Cliquer pour assigner");
         tile.addEventListener("click", () => {
           sendStudentOnCourse(student.id, course.id, { prepareOnly: prepForThisStudent });
@@ -5405,6 +6502,7 @@
       refs.backFromSessionSetupBtn.classList.toggle("view-hidden", !inWorkspace || step !== "setup");
       refs.coreBackToSessionsBtn.classList.toggle("view-hidden", !inWorkspace || step !== "core");
       refs.summaryBackBtn.classList.toggle("view-hidden", !inWorkspace || step !== "summary");
+      renderTeacherLockButtonState();
     }
 
     function render() {
@@ -5412,7 +6510,12 @@
       renderSetupView();
       syncFloatingNavBackButtons();
       const isCoreView = state.ui.appView === "workspace" && state.ui.sessionWorkspaceStep === "core";
+      if (!isCoreView && (state.ui.coreResetChoicesMode || state.ui.coreResetChoiceTargets.length)) {
+        state.ui.coreResetChoicesMode = false;
+        state.ui.coreResetChoiceTargets = [];
+      }
       refs.fullscreenToggleBtn.classList.toggle("view-hidden", !isCoreView);
+      requestAnimationFrame(positionFullscreenToggleAtTimerCorner);
       if (document.fullscreenElement === refs.sessionCoreView && !isCoreView) {
         document.exitFullscreen().catch(() => {});
       }
@@ -5433,6 +6536,30 @@
     function syncFullscreenToggleLabel() {
       const isCoreFullscreen = document.fullscreenElement === refs.sessionCoreView;
       refs.fullscreenToggleBtn.textContent = isCoreFullscreen ? "Quitter plein écran" : "Plein écran";
+      requestAnimationFrame(positionFullscreenToggleAtTimerCorner);
+    }
+
+    function positionFullscreenToggleAtTimerCorner() {
+      const btn = refs.fullscreenToggleBtn;
+      const topbar = refs.sessionCoreTopbar;
+      if (!btn) return;
+      const isCoreView = state.ui.appView === "workspace" && state.ui.sessionWorkspaceStep === "core";
+      if (!topbar || !isCoreView || btn.classList.contains("view-hidden")) {
+        btn.style.top = "";
+        btn.style.left = "";
+        btn.style.right = "";
+        return;
+      }
+      const topbarRect = topbar.getBoundingClientRect();
+      const btnWidth = btn.offsetWidth;
+      if (topbarRect.width <= 0 || btnWidth <= 0) return;
+
+      // Aligne le bouton sur le coin haut-droit du bandeau chrono.
+      const top = Math.max(6, topbarRect.top + 4);
+      const left = Math.max(6, topbarRect.right - btnWidth - 4);
+      btn.style.top = `${Math.round(top)}px`;
+      btn.style.left = `${Math.round(left)}px`;
+      btn.style.right = "auto";
     }
 
     async function toggleFullscreenMode() {
@@ -5454,6 +6581,8 @@
     refs.coreBackToSessionsBtn.addEventListener("click", backFromCoreToSessionSetup);
     refs.fullscreenToggleBtn.addEventListener("click", toggleFullscreenMode);
     document.addEventListener("fullscreenchange", syncFullscreenToggleLabel);
+    window.addEventListener("resize", () => requestAnimationFrame(positionFullscreenToggleAtTimerCorner));
+    window.addEventListener("scroll", () => requestAnimationFrame(positionFullscreenToggleAtTimerCorner), { passive: true });
     refs.pauseGlobalBtn.addEventListener("click", pauseGlobalTimer);
     refs.resetGlobalBtn.addEventListener("click", resetGlobalTimer);
     refs.endSessionFinBtn.addEventListener("click", endSessionFin);
@@ -5464,7 +6593,36 @@
     });
     refs.coreSummaryBtn.addEventListener("click", openSummaryView);
     refs.coreResetChoicesBtn.addEventListener("click", resetPreparedChoices);
+    refs.coreApplyResetChoicesBtn.addEventListener("click", applyCoreResetChoiceTargets);
+    refs.coreSelectAllResetChoicesBtn.addEventListener("click", selectAllCoreResetChoiceTargets);
+    refs.coreCancelResetChoicesBtn.addEventListener("click", () => cancelCoreResetChoicesMode({ silent: true }));
     refs.coreResetSessionBtn.addEventListener("click", resetApplicationData);
+    refs.changeTeacherCodeBtn.addEventListener("click", changeTeacherActionCode);
+    refs.teacherLockBtn.addEventListener("click", toggleTeacherPageLock);
+    refs.closeTeacherCodeDialogBtn.addEventListener("click", closeTeacherCodeDialog);
+    refs.saveTeacherCodeBtn.addEventListener("click", saveTeacherCodeFromDialog);
+    refs.disableTeacherCodeBtn.addEventListener("click", disableTeacherCodeFromDialog);
+    refs.teacherCodeInput.addEventListener("input", () => {
+      refs.teacherCodeInput.value = String(refs.teacherCodeInput.value || "").replace(/\D+/g, "").slice(0, 4);
+    });
+    refs.closeTeacherAuthDialogBtn.addEventListener("click", closeTeacherAuthDialog);
+    refs.teacherAuthDialog.addEventListener("close", () => {
+      refs.teacherAuthCodeInput.value = "";
+      if (!state.ui.teacherPageUnlocked) {
+        state.ui.pendingTeacherContinuation = "";
+        state.ui.pendingTeacherActionLabel = "";
+      }
+    });
+    refs.confirmTeacherAuthBtn.addEventListener("click", confirmTeacherAuthCode);
+    refs.teacherAuthCodeInput.addEventListener("input", () => {
+      refs.teacherAuthCodeInput.value = String(refs.teacherAuthCodeInput.value || "").replace(/\D+/g, "").slice(0, 4);
+    });
+    refs.teacherAuthCodeInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        confirmTeacherAuthCode();
+      }
+    });
     refs.backFromSessionSetupBtn.addEventListener("click", backToSessions);
     refs.goToCoreBtn.addEventListener("click", () => {
       state.ui.sessionWorkspaceStep = "core";
@@ -5481,6 +6639,7 @@
         return;
       }
       state.ui.selectedClassId = created.id;
+      syncSelectedSessionNumberToClass(created.id);
       refs.newClassInput.value = "";
       saveState();
       renderSetupView();
@@ -5569,8 +6728,10 @@
       const slotConfig = getActiveSlotConfig(true);
       slotConfig.autoCorrectionEnabled = enabled;
       state.ui.sessionAutoCorrectionEnabled = enabled;
+      state.ui.teacherPageUnlocked = false;
       saveState();
       renderSessionSetupPanel();
+      renderTeacherLockButtonState();
       if (!enabled) {
         closeAutoCorrectionConfigDialog();
         closeStudentAutoCorrectionDialog();
@@ -5580,6 +6741,10 @@
     refs.configureAutoCorrectionBtn.addEventListener("click", openAutoCorrectionConfigDialog);
     refs.saveAutoCorrectionAllBtn.addEventListener("click", saveAutoCorrectionTableConfig);
     refs.closeAutoCorrectionConfigBtn.addEventListener("click", closeAutoCorrectionConfigDialog);
+    refs.autoCorrectionCopyTargetClass.addEventListener("change", () => {
+      fillAutoCorrectionCopySessionSelect(refs.autoCorrectionCopyTargetClass.value);
+    });
+    refs.autoCorrectionCopyApplyBtn.addEventListener("click", applyAutoCorrectionCopyToSelectedSlot);
     refs.checkStudentAutoCodesBtn.addEventListener("click", checkStudentAutoCorrectionCodes);
     refs.closeStudentAutoCorrectionBtn.addEventListener("click", closeStudentAutoCorrectionDialog);
     refs.closeAutoAssignSuccessBtn.addEventListener("click", () => {
@@ -5587,7 +6752,9 @@
     });
     refs.studentAutoCorrectionDialog.addEventListener("close", () => {
       state.ui.selectedStudentForAutoCorrectionDialog = null;
+      state.ui.selectedStudentAutoInputIndex = 0;
       refs.studentAutoCodesGrid.innerHTML = "";
+      refs.studentAutoKeypad.innerHTML = "";
       refs.studentAutoCorrectionResults.innerHTML = "";
     });
 
@@ -5599,17 +6766,7 @@
 
     refs.closeAssignDialogBtn.addEventListener("click", () => refs.assignDialog.close());
     refs.closeSuccessDialogBtn.addEventListener("click", closeSuccessDialog);
-    refs.successPickColorFilter.addEventListener("change", (e) => {
-      state.ui.successPickColorFilter = e.target.value;
-      state.ui.successSelectedCourseId = null;
-      renderSuccessDialog();
-    });
     refs.closeFailureDialogBtn.addEventListener("click", closeFailureDialog);
-    refs.failurePickColorFilter.addEventListener("change", (e) => {
-      state.ui.failurePickColorFilter = e.target.value;
-      state.ui.failureSelectedCourseId = null;
-      renderFailureDialog();
-    });
     refs.summaryBackBtn.addEventListener("click", backToCoreFromSummary);
     refs.printSummaryBtn.addEventListener("click", printSummaryResults);
 
