@@ -1417,9 +1417,22 @@
       max-width: 100%;
     }
 
+    /* Fenêtre auto-correction : quasi pleine largeur pour afficher les 6 couleurs sans scroll horizontal. */
+    #autoCorrectionConfigDialog {
+      width: min(98vw, 1680px);
+      max-width: 98vw;
+    }
+
+    #autoCorrectionConfigDialog .modal {
+      width: 100%;
+      max-width: none;
+      box-sizing: border-box;
+    }
+
     #autoCorrectionConfigTableWrap {
       max-height: 54vh;
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       border: 1px solid rgba(31, 122, 90, 0.22);
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.9);
@@ -1428,8 +1441,24 @@
     #autoCorrectionConfigTable {
       width: 100%;
       border-collapse: collapse;
-      min-width: 860px;
+      min-width: 0;
       table-layout: fixed;
+    }
+
+    #autoCorrectionConfigTable thead th:first-child,
+    #autoCorrectionConfigTable tbody th {
+      width: clamp(5.5rem, 11vw, 9rem);
+    }
+
+    #autoCorrectionConfigTable thead th[class*="auto-config-col-"],
+    #autoCorrectionConfigTable tbody td[class*="auto-config-col-"] {
+      width: calc((100% - clamp(5.5rem, 11vw, 9rem)) / 6);
+    }
+
+    @media (max-width: 520px) {
+      #autoCorrectionConfigTableWrap {
+        overflow-x: auto;
+      }
     }
 
     #autoCorrectionConfigTable th,
