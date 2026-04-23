@@ -1,0 +1,25 @@
+{
+  "name": "CO",
+  "short_name": "CO",
+  "description": "Pilotage EPS pour la course d'orientation (tablette).",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f2744",
+  "theme_color": "#1a3a63",
+  "icons": [
+    {
+      "src": "logo-co.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo-co.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
